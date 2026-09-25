@@ -7,7 +7,7 @@ export const siteConfig = {
   locale: "en_US",
   twitter: "@kitflux",
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "wyhoyau@gmail.com",
-  adsenseClient: process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "",
+  adsenseClient: process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-3195860835704762",
 } as const;
 
 export function absoluteUrl(path = "/") {
