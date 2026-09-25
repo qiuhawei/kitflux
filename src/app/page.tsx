@@ -15,17 +15,17 @@ export default function HomePage() {
         <div className="shell">
           <div className="hero-copy">
             <p className="hero-brand">Fluxkit</p>
-            <h1>Free online tools that load fast and stay private.</h1>
+            <h1>Free AI & developer tools that stay private.</h1>
             <p className="lede">
-              JSON formatter, password generator, word counter, Base64, UUID, and more — all in
-              your browser. No account. No upload.
+              Count AI tokens, build better prompts, estimate API cost, format JSON, and more —
+              all in your browser. No account. No upload.
             </p>
             <div className="hero-actions">
               <Link href="/tools" className="btn btn-primary">
                 Browse all tools
               </Link>
-              <Link href="/tools/json-formatter" className="btn btn-secondary">
-                Open JSON Formatter
+              <Link href="/tools/ai-token-counter" className="btn btn-secondary">
+                Open AI Token Counter
               </Link>
             </div>
           </div>
@@ -83,18 +83,17 @@ export default function HomePage() {
 
       <section className="section why-section">
         <div className="shell prose-narrow">
-          <h2>Why people use Fluxkit</h2>
+          <h2>Built for AI workflows — without the AI markup</h2>
           <p>
-            Most online utilities either require an account or send your paste to a server. Fluxkit
-            tools are designed to finish the task in the browser: format JSON, generate a password,
-            count words, encode Base64, or mint UUIDs without creating yet another login.
+            Chat apps are crowded. Fluxkit focuses on the utilities around them: estimate tokens
+            before you hit a limit, assemble a clear prompt, and budget API spend. Classic
+            developer tools like JSON formatting stay one click away.
           </p>
           <p>
-            Each tool page includes steps, tips, and FAQs so you can use it immediately — and so
-            search engines can understand what the page is for. Start with the{" "}
-            <Link href="/tools/json-formatter">JSON Formatter</Link>,{" "}
-            <Link href="/tools/password-generator">Password Generator</Link>, or browse{" "}
-            <Link href="/tools">all tools</Link>.
+            Everything runs locally in your browser. Start with the{" "}
+            <Link href="/tools/ai-token-counter">AI Token Counter</Link>,{" "}
+            <Link href="/tools/prompt-builder">Prompt Builder</Link>, or{" "}
+            <Link href="/tools/ai-cost-calculator">AI Cost Calculator</Link>.
           </p>
         </div>
       </section>

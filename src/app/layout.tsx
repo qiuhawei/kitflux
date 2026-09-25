@@ -25,19 +25,19 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — Free Online Tools (JSON, Password, Word Counter)`,
+    default: `${siteConfig.name} — Free AI & Developer Tools`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
   keywords: [
+    "ai token counter",
+    "prompt builder",
+    "openai cost calculator",
     "free online tools",
     "json formatter",
     "password generator",
-    "word counter",
-    "base64 encode",
-    "uuid generator",
-    "browser tools",
+    "chatgpt tools",
   ],
   alternates: {
     canonical: absoluteUrl("/"),

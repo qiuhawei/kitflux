@@ -16,7 +16,7 @@ export const siteConfig = {
   name: "Fluxkit",
   tagline: "Free online tools that just work",
   description:
-    "Free online tools that run in your browser: JSON formatter, password generator, word counter, Base64, UUID, and more. Fast, private, no signup.",
+    "Free online tools for developers and AI users: token counter, prompt builder, API cost calculator, JSON formatter, password generator, and more. Private browser utilities — no signup.",
   url: normalizeSiteUrl(
     process.env.NEXT_PUBLIC_SITE_URL || "https://www.kitflux.com",
   ),

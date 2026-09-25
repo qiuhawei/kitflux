@@ -1,4 +1,4 @@
-export type ToolCategory = "text" | "developer" | "security" | "time";
+export type ToolCategory = "ai" | "text" | "developer" | "security" | "time";
 
 export type ToolDefinition = {
   slug: string;
@@ -20,6 +20,10 @@ export const categories: Record<
   ToolCategory,
   { label: string; description: string }
 > = {
+  ai: {
+    label: "AI",
+    description: "Token estimates, prompts, and API cost planning",
+  },
   text: {
     label: "Text",
     description: "Count, transform, and generate text",
@@ -39,6 +43,150 @@ export const categories: Record<
 };
 
 export const tools: ToolDefinition[] = [
+  {
+    slug: "ai-token-counter",
+    name: "AI Token Counter",
+    shortName: "AI Token Counter",
+    description:
+      "Estimate tokens for ChatGPT, Claude, and Gemini prompts in your browser. Plan context length before you hit send.",
+    keywords: [
+      "ai token counter",
+      "chatgpt token counter",
+      "claude token count",
+      "openai tokenizer",
+      "prompt token calculator",
+    ],
+    category: "ai",
+    guide: {
+      heading: "How to estimate AI tokens",
+      intro:
+        "Large language models bill and limit usage by tokens, not words. Exact counts depend on each model’s tokenizer. This tool gives a fast browser-side estimate so you can budget prompts and replies.",
+      steps: [
+        "Paste your prompt or the model’s reply into the box.",
+        "Pick the model family that best matches what you use.",
+        "Read the estimated token count, words, and characters.",
+        "Shorten the prompt if you are near a context limit.",
+      ],
+      tips: [
+        "English text is often ~4 characters per token for GPT-style models; other languages can differ.",
+        "System prompts and tool schemas also consume tokens in real APIs.",
+        "For billing-critical work, verify with the vendor’s official tokenizer.",
+      ],
+    },
+    faq: [
+      {
+        question: "Is this the official OpenAI tokenizer?",
+        answer:
+          "No. It is an approximation that runs locally. Official libraries may return a slightly different number.",
+      },
+      {
+        question: "Does my text get uploaded?",
+        answer:
+          "No. Counting happens in your browser. Nothing is sent to our servers for this tool.",
+      },
+      {
+        question: "Why estimate tokens at all?",
+        answer:
+          "Token limits and API pricing are based on tokens. Estimating early prevents truncated answers and surprise bills.",
+      },
+    ],
+  },
+  {
+    slug: "prompt-builder",
+    name: "AI Prompt Builder",
+    shortName: "Prompt Builder",
+    description:
+      "Build clear ChatGPT and Claude prompts from templates — role, task, constraints, and output format in one click.",
+    keywords: [
+      "prompt generator",
+      "chatgpt prompt template",
+      "ai prompt builder",
+      "prompt engineering tool",
+      "claude prompt",
+    ],
+    category: "ai",
+    guide: {
+      heading: "How to build a stronger prompt",
+      intro:
+        "Vague prompts get vague answers. A reliable pattern is role + task + input + constraints + output format. This builder fills that structure so you can paste straight into ChatGPT, Claude, or Gemini.",
+      steps: [
+        "Choose a template (rewrite, explain, code review, or SEO outline).",
+        "Add your topic or paste the source text.",
+        "Optionally add constraints such as tone or length.",
+        "Copy the finished prompt into your AI chat or API.",
+      ],
+      tips: [
+        "Be specific about the audience and the forbidden behaviors (for example: no fluff).",
+        "Ask for a format you can reuse: bullets, JSON, or a table.",
+        "Iterate: keep what worked and tighten one constraint at a time.",
+      ],
+    },
+    faq: [
+      {
+        question: "Will this call an AI model for me?",
+        answer:
+          "No. It only builds the prompt text locally. You paste it into ChatGPT or another model yourself.",
+      },
+      {
+        question: "Can I edit the result?",
+        answer:
+          "Yes. Copy it, then tweak any line before sending. Templates are starting points.",
+      },
+      {
+        question: "Which template should I start with?",
+        answer:
+          "Use Rewrite for messy drafts, Explain for learning, Code review for pull requests, and SEO outline for articles.",
+      },
+    ],
+  },
+  {
+    slug: "ai-cost-calculator",
+    name: "AI API Cost Calculator",
+    shortName: "AI Cost Calculator",
+    description:
+      "Estimate OpenAI and Claude-style API costs from input/output tokens and request volume. Plan budgets before you ship.",
+    keywords: [
+      "openai cost calculator",
+      "chatgpt api pricing calculator",
+      "claude api cost",
+      "llm cost estimator",
+      "token pricing calculator",
+    ],
+    category: "ai",
+    guide: {
+      heading: "How to estimate LLM API spend",
+      intro:
+        "API bills scale with tokens and traffic. Use this calculator with your expected prompt and completion sizes to forecast cost per day or per feature launch.",
+      steps: [
+        "Select a model price tier closest to what you use.",
+        "Enter average input and output tokens per request.",
+        "Set how many requests you expect.",
+        "Read total cost, input/output split, and cost per request.",
+      ],
+      tips: [
+        "Cache repeated prompts and shorten system instructions to cut input tokens.",
+        "Cheaper models are often enough for classification and drafts.",
+        "Prices change — treat results as planning estimates, not invoices.",
+      ],
+    },
+    faq: [
+      {
+        question: "Are these official live prices?",
+        answer:
+          "They are approximate list prices for planning. Always confirm on the provider’s pricing page before budgeting.",
+      },
+      {
+        question: "Does this include image or fine-tuning fees?",
+        answer:
+          "No. It focuses on text input/output token pricing for chat-style APIs.",
+      },
+      {
+        question: "How do I know my token counts?",
+        answer:
+          "Use our AI Token Counter on sample prompts, or log usage from your API dashboard.",
+      },
+    ],
+  },
   {
     slug: "json-formatter",
     name: "JSON Formatter & Validator",

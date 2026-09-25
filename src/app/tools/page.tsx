@@ -6,11 +6,11 @@ import { categories, tools, type ToolCategory } from "@/lib/tools";
 
 export const metadata: Metadata = {
   title: "All Free Online Tools",
-  description: `Browse all ${tools.length} free browser tools on ${siteConfig.name}: JSON formatter, password generator, word counter, Base64, UUID, and more.`,
+  description: `Browse all ${tools.length} free browser tools on ${siteConfig.name}: AI token counter, prompt builder, JSON formatter, password generator, and more.`,
   alternates: { canonical: absoluteUrl("/tools") },
 };
 
-const categoryOrder: ToolCategory[] = ["developer", "text", "security", "time"];
+const categoryOrder: ToolCategory[] = ["ai", "developer", "text", "security", "time"];
 
 export default function ToolsIndexPage() {
   return (
