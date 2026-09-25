@@ -482,6 +482,50 @@ textarea {
   padding: 1.5rem 0 4rem;
 }
 
+.header-actions {
+  margin-top: 0.9rem;
+}
+
+.category-block {
+  margin-top: 2rem;
+}
+
+.category-block h2 {
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.35rem;
+}
+
+.category-desc {
+  color: var(--ink-soft);
+  margin: 0 0 1rem;
+}
+
+.why-section {
+  padding-top: 0;
+}
+
+.prose-narrow {
+  max-width: 720px;
+}
+
+.prose-narrow h2 {
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: -0.04em;
+  margin: 0 0 0.8rem;
+}
+
+.prose-narrow p {
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+
+.prose-narrow a {
+  color: var(--brand-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .breadcrumb {
   display: flex;
   flex-wrap: wrap;

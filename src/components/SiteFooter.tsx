@@ -26,6 +26,9 @@ export function SiteFooter() {
           <p className="footer-label">Site</p>
           <ul>
             <li>
+              <Link href="/tools">All tools</Link>
+            </li>
+            <li>
               <Link href="/about">About</Link>
             </li>
             <li>

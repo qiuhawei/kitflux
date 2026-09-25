@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ToolDefinition } from "@/lib/tools";
 import { getRelatedTools } from "@/lib/tools";
 import { AdSlot } from "@/components/AdSlot";
+import { ShareButton } from "@/components/ShareButton";
 
 type ToolShellProps = {
   tool: ToolDefinition;
@@ -17,7 +18,7 @@ export function ToolShell({ tool, children }: ToolShellProps) {
         <nav className="breadcrumb" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <span>/</span>
-          <Link href="/#tools">Tools</Link>
+          <Link href="/tools">Tools</Link>
           <span>/</span>
           <span>{tool.shortName}</span>
         </nav>
@@ -26,6 +27,12 @@ export function ToolShell({ tool, children }: ToolShellProps) {
           <p className="eyebrow">{tool.category}</p>
           <h1>{tool.name}</h1>
           <p className="lede">{tool.description}</p>
+          <div className="tool-actions header-actions">
+            <ShareButton title={tool.name} />
+            <Link href="/tools" className="btn btn-secondary">
+              All tools
+            </Link>
+          </div>
         </header>
 
         <AdSlot className="ad-top" format="horizontal" />

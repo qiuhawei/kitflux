@@ -15,14 +15,14 @@ export default function HomePage() {
         <div className="shell">
           <div className="hero-copy">
             <p className="hero-brand">Fluxkit</p>
-            <h1>Free tools that load fast and stay private.</h1>
+            <h1>Free online tools that load fast and stay private.</h1>
             <p className="lede">
-              Format JSON, generate passwords, count words, and more — all in your browser.
-              No account. No upload.
+              JSON formatter, password generator, word counter, Base64, UUID, and more — all in
+              your browser. No account. No upload.
             </p>
             <div className="hero-actions">
-              <Link href="/#tools" className="btn btn-primary">
-                Browse tools
+              <Link href="/tools" className="btn btn-primary">
+                Browse all tools
               </Link>
               <Link href="/tools/json-formatter" className="btn btn-secondary">
                 Open JSON Formatter
@@ -60,10 +60,10 @@ export default function HomePage() {
         <div className="shell">
           <div className="section-head">
             <div>
-              <h2>Everyday tools, ready when you need them</h2>
+              <h2>Popular free tools</h2>
               <p>
-                Each utility includes clear instructions, tips, and answers so you can solve a
-                task without leaving the page.
+                Built for quick jobs developers and writers do every day.{" "}
+                <Link href="/tools">See the full directory →</Link>
               </p>
             </div>
           </div>
@@ -78,6 +78,24 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="section why-section">
+        <div className="shell prose-narrow">
+          <h2>Why people use Fluxkit</h2>
+          <p>
+            Most online utilities either require an account or send your paste to a server. Fluxkit
+            tools are designed to finish the task in the browser: format JSON, generate a password,
+            count words, encode Base64, or mint UUIDs without creating yet another login.
+          </p>
+          <p>
+            Each tool page includes steps, tips, and FAQs so you can use it immediately — and so
+            search engines can understand what the page is for. Start with the{" "}
+            <Link href="/tools/json-formatter">JSON Formatter</Link>,{" "}
+            <Link href="/tools/password-generator">Password Generator</Link>, or browse{" "}
+            <Link href="/tools">all tools</Link>.
+          </p>
         </div>
       </section>
     </>

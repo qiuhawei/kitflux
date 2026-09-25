@@ -44,7 +44,7 @@ export function SiteHeader() {
           className={open ? "nav nav-open" : "nav"}
           aria-label="Primary"
         >
-          <Link href="/#tools" onClick={close}>
+          <Link href="/tools" onClick={close}>
             Tools
           </Link>
           <Link href="/about" onClick={close}>
