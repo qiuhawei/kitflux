@@ -10,13 +10,13 @@ import {
   SAMPLE_PROMPT,
   buildFromParts,
   bumpSession,
+  chainStepCosts,
   chainToText,
   compareCosts,
   contextFill,
   countTokens,
   encodeShareHash,
   estimateCost,
-  estimateLatencyMs,
   exportSnippets,
   extractVariableKeys,
   heatmapSegments,
@@ -116,7 +116,6 @@ export function PromptWorkspace() {
     [model, input.tokens, outputTokens],
   );
   const fill = contextFill(input.tokens, outputTokens, model.contextWindow);
-  const latency = estimateLatencyMs(input.tokens, outputTokens);
   const rows = useMemo(() => compareCosts(resolved, outputRatio, 1), [resolved, outputRatio]);
   const tips = useMemo(() => promptTips(resolved), [resolved]);
   const optimized = useMemo(() => optimizePrompt(resolved), [resolved]);
@@ -127,6 +126,21 @@ export function PromptWorkspace() {
     () => measureOutputRatio(resolved, ratioResponse, model),
     [resolved, ratioResponse, model],
   );
+  const chainCosts = useMemo(() => chainStepCosts(chain, outputRatio), [chain, outputRatio]);
+  const chainTotals = useMemo(() => {
+    return chainCosts.reduce(
+      (acc, row) => ({
+        tokens: acc.tokens + row.input.tokens,
+        cost: acc.cost + row.cost.total,
+      }),
+      { tokens: 0, cost: 0 },
+    );
+  }, [chainCosts]);
+  const optimizeDelta = useMemo(() => {
+    const before = countTokens(resolved, model).tokens;
+    const after = countTokens(optimized.text, model).tokens;
+    return { before, after, saved: Math.max(0, before - after) };
+  }, [resolved, optimized.text, model]);
 
   useEffect(() => {
     if (!resolved.trim() || resolved.length < 20) return;
@@ -180,8 +194,13 @@ export function PromptWorkspace() {
   function applyOptimize() {
     setUndoText(resolved);
     setPrompt(optimized.text);
-    const saved = optimized.beforeChars - optimized.afterChars;
-    setStatus(saved > 0 ? `Optimized (−${saved} chars).` : "Already lean.");
+    setStatus(
+      optimizeDelta.saved > 0
+        ? `Cleanup applied (−${optimizeDelta.saved} tokens · −${optimized.beforeChars - optimized.afterChars} chars).`
+        : optimized.beforeChars > optimized.afterChars
+          ? `Cleanup applied (−${optimized.beforeChars - optimized.afterChars} chars).`
+          : "Already lean — no filler matched.",
+    );
   }
 
   return (
@@ -262,11 +281,11 @@ export function PromptWorkspace() {
               </button>
             </div>
             <div className="wx-actions">
-              <button type="button" className={view === "heatmap" ? "wx-btn on" : "wx-btn"} onClick={() => setView(view === "heatmap" ? "edit" : "heatmap")}>
+              <button type="button" className={view === "heatmap" ? "wx-btn on" : "wx-btn"} onClick={() => setView(view === "heatmap" ? "edit" : "heatmap")} title="Color each GPT tokenizer piece">
                 Heatmap
               </button>
-              <button type="button" className={view === "optimize" ? "wx-btn accent" : "wx-btn"} onClick={() => setView(view === "optimize" ? "edit" : "optimize")}>
-                {view === "optimize" ? "Hide optimizer" : "Optimize"}
+              <button type="button" className={view === "optimize" ? "wx-btn accent" : "wx-btn"} onClick={() => setView(view === "optimize" ? "edit" : "optimize")} title="Strip filler phrases and duplicate lines">
+                {view === "optimize" ? "Hide cleanup" : "Cleanup"}
               </button>
               <div className="wx-create">
                 <button type="button" className={createTab ? "wx-btn on" : "wx-btn"} onClick={() => setCreateTab(createTab ? null : "templates")}>
@@ -328,29 +347,39 @@ export function PromptWorkspace() {
 
           {createTab === "chain" ? (
             <div className="wx-sheet">
-              {chain.map((step, index) => (
-                <div key={step.id} className="wx-chain-step">
-                  <div className="wx-chain-head">
-                    <input value={step.name} onChange={(e) => setChain((prev) => prev.map((s) => (s.id === step.id ? { ...s, name: e.target.value } : s)))} placeholder={`Step ${index + 1}`} />
-                    <select value={step.modelId} onChange={(e) => setChain((prev) => prev.map((s) => (s.id === step.id ? { ...s, modelId: e.target.value } : s)))}>
-                      {PRICE_MODELS.map((m) => (
-                        <option key={m.id} value={m.id}>{m.label}</option>
-                      ))}
-                    </select>
+              {chain.map((step, index) => {
+                const row = chainCosts[index];
+                return (
+                  <div key={step.id} className="wx-chain-step">
+                    <div className="wx-chain-head">
+                      <input value={step.name} onChange={(e) => setChain((prev) => prev.map((s) => (s.id === step.id ? { ...s, name: e.target.value } : s)))} placeholder={`Step ${index + 1}`} />
+                      <select value={step.modelId} onChange={(e) => setChain((prev) => prev.map((s) => (s.id === step.id ? { ...s, modelId: e.target.value } : s)))}>
+                        {PRICE_MODELS.map((m) => (
+                          <option key={m.id} value={m.id}>{m.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <textarea rows={2} value={step.prompt} onChange={(e) => setChain((prev) => prev.map((s) => (s.id === step.id ? { ...s, prompt: e.target.value } : s)))} />
+                    <p className="wx-muted">
+                      {row ? `${row.input.tokens.toLocaleString()} tok · $${row.cost.total.toFixed(4)} · 1:${outputRatio}` : "—"}
+                      {row && !row.input.exact ? " · estimate" : row?.input.exact ? " · exact" : ""}
+                    </p>
                   </div>
-                  <textarea rows={2} value={step.prompt} onChange={(e) => setChain((prev) => prev.map((s) => (s.id === step.id ? { ...s, prompt: e.target.value } : s)))} />
-                </div>
-              ))}
+                );
+              })}
+              <p className="wx-muted">
+                Chain total (planning): {chainTotals.tokens.toLocaleString()} input tok · ${chainTotals.cost.toFixed(4)}
+              </p>
               <div className="wx-actions">
                 <button type="button" className="wx-btn" onClick={() => setChain((p) => [...p, newStep()])}>+ Step</button>
-                <button type="button" className="wx-btn accent" onClick={() => { setPrompt(chainToText(chain)); setStatus("Chain applied."); }}>Apply chain</button>
+                <button type="button" className="wx-btn accent" onClick={() => { setPrompt(chainToText(chain)); setStatus("Chain applied as text (does not call models)."); }}>Apply chain as text</button>
               </div>
             </div>
           ) : null}
 
           <div className="wx-editor-wrap">
             {view === "heatmap" ? (
-              <div className="wx-heat">
+              <div className="wx-heat" aria-label="GPT tokenizer heatmap">
                 {heat.map((seg) => (seg.text ? <span key={seg.key} className={`wx-heat-${seg.level}`}>{seg.text}</span> : null))}
               </div>
             ) : mode === "single" ? (
@@ -391,6 +420,11 @@ export function PromptWorkspace() {
             ) : null}
           </div>
 
+          {view === "heatmap" ? (
+            <p className="wx-meta">
+              <span>{heat.length.toLocaleString()} GPT tokens · longer pieces = denser color</span>
+            </p>
+          ) : (
           <div className="wx-meta">
             <span>
               {input.tokens.toLocaleString()} / {model.contextWindow.toLocaleString()}
@@ -401,13 +435,16 @@ export function PromptWorkspace() {
               <button type="button" className="wx-linkish" onClick={() => setPrompt(SAMPLE_PROMPT)}>Load sample</button>
             ) : null}
           </div>
+          )}
 
           {view === "optimize" ? (
             <div className="wx-sheet wx-optimize">
               <div className="wx-optimize-head">
-                <h2>Prompt tips</h2>
+                <h2>Cleanup (regex filler strip — not an LLM rewrite)</h2>
                 <div className="wx-actions">
-                  <button type="button" className="wx-btn accent" onClick={applyOptimize}>Apply cleanup</button>
+                  <button type="button" className="wx-btn accent" onClick={applyOptimize}>
+                    Apply cleanup{optimizeDelta.saved > 0 ? ` (−${optimizeDelta.saved} tok)` : ""}
+                  </button>
                   {undoText != null ? <button type="button" className="wx-btn" onClick={() => { setPrompt(undoText); setUndoText(null); }}>Undo</button> : null}
                 </div>
               </div>
@@ -421,6 +458,7 @@ export function PromptWorkspace() {
 
           {exportKind ? (
             <div className="wx-sheet">
+              <p className="wx-muted">OpenAI Chat Completions shape only — swap endpoint/SDK for other providers.</p>
               <div className="wx-seg">
                 {(["curl", "python", "node"] as const).map((kind) => (
                   <button key={kind} type="button" className={exportKind === kind ? "active" : undefined} onClick={() => setExportKind(kind)}>{kind}</button>
@@ -448,6 +486,7 @@ export function PromptWorkspace() {
               <strong className="is-green">{input.tokens.toLocaleString()}</strong>
               <em>
                 {input.words} words · {input.characters} chars
+                {input.exact ? " · exact" : " · estimate"}
               </em>
             </div>
             <div className="wx-metric">
@@ -457,12 +496,20 @@ export function PromptWorkspace() {
                   ? "$0.00"
                   : `$${cost.total < 0.01 ? cost.total.toFixed(4) : cost.total.toFixed(2)}`}
               </strong>
+              <em>
+                in ${cost.inputCost.toFixed(4)} · out ${cost.outputCost.toFixed(4)} · 1:{outputRatio}
+              </em>
             </div>
             <div className="wx-metric">
-              <span>Response time</span>
+              <span>Context fill</span>
               <strong className="is-white">
-                {input.tokens === 0 ? "--" : `${(latency / 1000).toFixed(1)}s`}
+                {input.tokens === 0 ? "--" : `${fill.pct.toFixed(fill.pct >= 10 ? 0 : 1)}%`}
               </strong>
+              <em>
+                {input.tokens === 0
+                  ? `${model.contextWindow.toLocaleString()} window`
+                  : `${fill.used.toLocaleString()} / ${model.contextWindow.toLocaleString()} (in+est out)`}
+              </em>
             </div>
           </div>
 

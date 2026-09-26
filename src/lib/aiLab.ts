@@ -1,4 +1,4 @@
-import { encode } from "gpt-tokenizer";
+import { decode, encode } from "gpt-tokenizer";
 
 export type ModelFamily =
   | "gpt"
@@ -300,7 +300,7 @@ export function estimateCost(options: {
   return { inputCost, outputCost, total, perRequest: requests > 0 ? total / requests : 0 };
 }
 
-/** Rough latency heuristic from tokens (planning only). */
+/** Planning-only latency guess — do not surface as a measured metric. */
 export function estimateLatencyMs(inputTokens: number, outputTokens: number) {
   if (inputTokens + outputTokens === 0) return 0;
   return Math.round(180 + inputTokens * 0.35 + outputTokens * 12);
@@ -428,22 +428,38 @@ export function promptTips(text: string): PromptTip[] {
     tips.push({
       id: "lean",
       title: "Looking solid",
-      body: "Try Optimize to strip filler, or compare costs across models in the sidebar.",
+      body: "Try Cleanup to strip filler, or compare costs across models in the sidebar.",
     });
   }
   return tips.slice(0, 4);
 }
 
+/**
+ * Real GPT tokenizer heatmap: each segment is one encode() token.
+ * Color by decoded length (longer pieces ≈ denser / costlier spans).
+ */
 export function heatmapSegments(text: string) {
   if (!text) return [];
-  const parts = text.split(/(\s+)/);
-  return parts.map((part, index) => {
-    if (/^\s+$/.test(part) || !part) {
-      return { key: `${index}`, text: part, level: 0 as const };
-    }
-    const density = part.length / Math.max(1, part.replace(/[^a-z0-9]/gi, "").length || part.length);
-    const level = part.length >= 12 || density > 1.4 ? 3 : part.length >= 8 ? 2 : part.length >= 5 ? 1 : 0;
-    return { key: `${index}`, text: part, level: level as 0 | 1 | 2 | 3 };
+  try {
+    const ids = encode(text);
+    return ids.map((id, index) => {
+      const piece = decode([id]);
+      const level =
+        piece.length >= 8 ? 3 : piece.length >= 5 ? 2 : piece.length >= 3 ? 1 : 0;
+      return { key: `${index}-${id}`, text: piece, level: level as 0 | 1 | 2 | 3 };
+    });
+  } catch {
+    return [{ key: "0", text, level: 0 as const }];
+  }
+}
+
+export function chainStepCosts(steps: ChainStep[], outputRatio: number) {
+  return steps.map((step) => {
+    const model = PRICE_MODELS.find((m) => m.id === step.modelId) ?? PRICE_MODELS[0];
+    const input = countTokens(step.prompt, model);
+    const outputTokens = Math.max(0, Math.round(input.tokens * outputRatio));
+    const cost = estimateCost({ model, inputTokens: input.tokens, outputTokens });
+    return { step, model, input, outputTokens, cost };
   });
 }
 
