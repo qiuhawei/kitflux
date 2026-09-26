@@ -1,4 +1,11 @@
-export type ToolCategory = "json" | "ai" | "text" | "developer" | "security" | "time";
+export type ToolCategory =
+  | "json"
+  | "video"
+  | "ai"
+  | "text"
+  | "developer"
+  | "security"
+  | "time";
 
 export type ToolDefinition = {
   slug: string;
@@ -26,6 +33,10 @@ export const categories: Record<
     label: "JSON Tools",
     description: "Format, convert, compare, and decode JSON in your browser",
   },
+  video: {
+    label: "Video Tools",
+    description: "YouTube & TikTok covers, embeds, URL parsing, and local file info",
+  },
   ai: {
     label: "AI",
     description: "Token estimates, prompts, and API cost planning",
@@ -50,6 +61,7 @@ export const categories: Record<
 
 export const categoryOrder: ToolCategory[] = [
   "json",
+  "video",
   "ai",
   "developer",
   "text",
@@ -568,6 +580,219 @@ export const tools: ToolDefinition[] = [
       {
         question: "Is the token uploaded?",
         answer: "No. Decoding runs in your browser.",
+      },
+    ],
+  },
+  {
+    slug: "youtube-thumbnail",
+    name: "YouTube Thumbnail Downloader",
+    shortName: "YouTube Thumbnail",
+    description:
+      "Free YouTube thumbnail downloader — grab max-res and HQ cover images from any public video URL. Runs in your browser; does not download video files.",
+    blurb: "Free YouTube cover / thumbnail download",
+    keywords: [
+      "youtube thumbnail downloader",
+      "youtube thumbnail",
+      "download youtube thumbnail",
+      "youtube cover image",
+      "yt thumbnail",
+    ],
+    category: "video",
+    guide: {
+      heading: "How to download a YouTube thumbnail",
+      intro:
+        "YouTube publishes public thumbnail images for each video ID. Paste a watch, Shorts, or youtu.be link to list available sizes and open/save the cover — without ripping the video stream.",
+      steps: [
+        "Paste a YouTube URL or 11-character video ID.",
+        "Click Get thumbnails.",
+        "Open the size you need and save the image.",
+      ],
+      tips: [
+        "maxresdefault is not available for every video; fall back to hqdefault.",
+        "This tool never fetches or saves the MP4/WebM stream.",
+      ],
+    },
+    faq: [
+      {
+        question: "Can I download the full YouTube video here?",
+        answer:
+          "No. Full-video rippers violate YouTube terms and often break AdSense policies. Use official YouTube features or content you own.",
+      },
+      {
+        question: "Is the video uploaded to Fluxkit?",
+        answer: "No. Only public thumbnail URLs are derived from the video ID in your browser.",
+      },
+    ],
+  },
+  {
+    slug: "youtube-embed",
+    name: "YouTube Embed Code Generator",
+    shortName: "YouTube Embed",
+    description:
+      "Generate a responsive YouTube iframe embed with optional start time. Official embeds only — no unofficial downloaders.",
+    blurb: "Official YouTube iframe embed + start time",
+    keywords: [
+      "youtube embed generator",
+      "youtube iframe",
+      "embed youtube video",
+      "youtube start time",
+    ],
+    category: "video",
+    guide: {
+      heading: "How to embed a YouTube video",
+      intro:
+        "Sites should use YouTube’s official embed player. Paste a link, set an optional start second, and copy the iframe HTML.",
+      steps: [
+        "Paste the YouTube URL.",
+        "Optionally set a start time in seconds.",
+        "Click Generate embed and copy the HTML.",
+      ],
+      tips: [
+        "Prefer embeds over downloading when you just need playback on a page.",
+        "Respect the creator’s embedding settings — some videos disallow embeds.",
+      ],
+    },
+    faq: [
+      {
+        question: "Why not a video downloader?",
+        answer:
+          "Downloading YouTube streams without permission infringes copyright and platform rules. Embeds are the supported way to play videos on other sites.",
+      },
+    ],
+  },
+  {
+    slug: "tiktok-cover",
+    name: "TikTok Cover & Info",
+    shortName: "TikTok Cover",
+    description:
+      "Free TikTok cover image and metadata lookup via official oEmbed. Get title, author, and thumbnail — not an MP4 downloader.",
+    blurb: "Free TikTok cover + title via oEmbed",
+    keywords: [
+      "tiktok thumbnail",
+      "tiktok cover download",
+      "tiktok oembed",
+      "download tiktok cover",
+      "tiktok video info",
+    ],
+    category: "video",
+    guide: {
+      heading: "How to get a TikTok cover",
+      intro:
+        "TikTok exposes public oEmbed data for many posts. Paste a public video link to fetch title, author, and cover image. Video file download is intentionally not offered.",
+      steps: [
+        "Paste a public TikTok video URL.",
+        "Click Fetch cover & info.",
+        "Open/save the cover image if available.",
+      ],
+      tips: [
+        "Private or region-blocked posts may fail.",
+        "Do not use ripper sites if you care about AdSense approval.",
+      ],
+    },
+    faq: [
+      {
+        question: "Can I download the TikTok video file?",
+        answer:
+          "No. This tool only uses TikTok’s public oEmbed metadata and cover. Ripping the video violates TikTok terms and copyright rules.",
+      },
+      {
+        question: "Why did fetch fail?",
+        answer:
+          "The post may be private, deleted, or blocked from oEmbed. Try another public link.",
+      },
+    ],
+  },
+  {
+    slug: "vimeo-thumbnail",
+    name: "Vimeo Thumbnail Downloader",
+    shortName: "Vimeo Thumbnail",
+    description:
+      "Fetch a Vimeo video’s public cover image and title through oEmbed. Free cover download — not a Vimeo stream ripper.",
+    blurb: "Free Vimeo cover via oEmbed",
+    keywords: ["vimeo thumbnail", "vimeo cover", "download vimeo thumbnail", "vimeo oembed"],
+    category: "video",
+    guide: {
+      heading: "How to get a Vimeo thumbnail",
+      intro:
+        "Public Vimeo videos expose cover art through oEmbed. Paste a vimeo.com link to preview and save the thumbnail.",
+      steps: [
+        "Paste a public Vimeo URL.",
+        "Click Get Vimeo cover.",
+        "Open/save the thumbnail image.",
+      ],
+      tips: ["Password-protected or private videos will not return oEmbed data."],
+    },
+    faq: [
+      {
+        question: "Does this download the Vimeo MP4?",
+        answer: "No. Only public cover metadata is fetched.",
+      },
+    ],
+  },
+  {
+    slug: "video-url-parser",
+    name: "Video URL Parser",
+    shortName: "Video URL Parser",
+    description:
+      "Detect platform and extract IDs from YouTube, TikTok, Vimeo, and Bilibili links. Handy before thumbnail or embed tools.",
+    blurb: "Parse YouTube / TikTok / Vimeo / Bilibili URLs",
+    keywords: [
+      "youtube url parser",
+      "tiktok url parser",
+      "extract youtube id",
+      "video link parser",
+    ],
+    category: "video",
+    guide: {
+      heading: "How to parse a video URL",
+      intro:
+        "Paste a share link to see which platform it is and which ID was extracted. Useful when cleaning messy mobile share URLs.",
+      steps: ["Paste the URL.", "Click Parse URL.", "Copy the JSON result."],
+      tips: ["Short links like youtu.be and vm.tiktok.com are supported when resolvable from the URL itself."],
+    },
+    faq: [
+      {
+        question: "Which platforms are supported?",
+        answer: "YouTube, TikTok, Vimeo, and Bilibili video URLs.",
+      },
+    ],
+  },
+  {
+    slug: "local-video-info",
+    name: "Local Video File Info",
+    shortName: "Local Video Info",
+    description:
+      "Inspect a video file on your device: duration, resolution, type, and size. Nothing is uploaded — great for checking your own exports.",
+    blurb: "Duration & size for files you already own",
+    keywords: [
+      "video file info",
+      "video duration checker",
+      "mp4 info",
+      "local video metadata",
+    ],
+    category: "video",
+    guide: {
+      heading: "How to inspect a local video",
+      intro:
+        "When you already own the file (exports, screen recordings, licensed stock), check duration and resolution in the browser without uploading.",
+      steps: [
+        "Click Choose video file.",
+        "Pick an MP4, WebM, MOV, or similar from your device.",
+        "Read duration, resolution, and size — optionally copy the JSON.",
+      ],
+      tips: [
+        "This is the right tool for videos you created or have rights to use.",
+        "Browser codecs may not read every container (some MKV builds fail).",
+      ],
+    },
+    faq: [
+      {
+        question: "Is my file uploaded?",
+        answer: "No. Metadata is read locally via the browser’s video element.",
+      },
+      {
+        question: "Can this pull videos from YouTube?",
+        answer: "No. Choose a file that is already on your computer.",
       },
     ],
   },

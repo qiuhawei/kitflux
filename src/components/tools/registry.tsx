@@ -13,13 +13,19 @@ import { JsonToTsTool } from "@/components/tools/JsonToTsTool";
 import { JsonValidateTool } from "@/components/tools/JsonValidateTool";
 import { JsonYamlTool } from "@/components/tools/JsonYamlTool";
 import { JwtDecoderTool } from "@/components/tools/JwtDecoderTool";
+import { LocalVideoInfoTool } from "@/components/tools/LocalVideoInfoTool";
 import { LoremIpsumTool } from "@/components/tools/LoremIpsumTool";
 import { PasswordGeneratorTool } from "@/components/tools/PasswordGeneratorTool";
 import { PromptBuilderTool } from "@/components/tools/PromptBuilderTool";
+import { TiktokCoverTool } from "@/components/tools/TiktokCoverTool";
 import { TimestampConverterTool } from "@/components/tools/TimestampConverterTool";
 import { UrlEncoderTool } from "@/components/tools/UrlEncoderTool";
 import { UuidGeneratorTool } from "@/components/tools/UuidGeneratorTool";
+import { VideoUrlParserTool } from "@/components/tools/VideoUrlParserTool";
+import { VimeoThumbnailTool } from "@/components/tools/VimeoThumbnailTool";
 import { WordCounterTool } from "@/components/tools/WordCounterTool";
+import { YoutubeEmbedTool } from "@/components/tools/YoutubeEmbedTool";
+import { YoutubeThumbnailTool } from "@/components/tools/YoutubeThumbnailTool";
 
 const toolComponents = {
   "ai-token-counter": AiTokenCounterTool,
@@ -35,6 +41,12 @@ const toolComponents = {
   "json-to-ts": JsonToTsTool,
   "json-escape": JsonEscapeTool,
   "jwt-decoder": JwtDecoderTool,
+  "youtube-thumbnail": YoutubeThumbnailTool,
+  "youtube-embed": YoutubeEmbedTool,
+  "tiktok-cover": TiktokCoverTool,
+  "vimeo-thumbnail": VimeoThumbnailTool,
+  "video-url-parser": VideoUrlParserTool,
+  "local-video-info": LocalVideoInfoTool,
   "password-generator": PasswordGeneratorTool,
   "word-counter": WordCounterTool,
   "uuid-generator": UuidGeneratorTool,

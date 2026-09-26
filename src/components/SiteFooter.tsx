@@ -26,6 +26,12 @@ export function SiteFooter() {
           <p className="footer-label">Site</p>
           <ul>
             <li>
+              <Link href="/json">JSON studio</Link>
+            </li>
+            <li>
+              <Link href="/video">Video tools</Link>
+            </li>
+            <li>
               <Link href="/tools">All tools</Link>
             </li>
             <li>

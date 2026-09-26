@@ -19,6 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.98,
     },
     {
+      url: absoluteUrl("/video"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.96,
+    },
+    {
       url: absoluteUrl("/tools"),
       lastModified: now,
       changeFrequency: "daily",

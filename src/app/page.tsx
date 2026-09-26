@@ -28,8 +28,8 @@ export default function HomePage() {
             <p className="hero-brand">Fluxkit</p>
             <h1>Free AI &amp; developer tools that stay private.</h1>
             <p className="lede">
-              {tools.length} browser utilities — JSON suite, AI token helpers, and everyday
-              converters. No account. No upload.
+              {tools.length} browser utilities — JSON suite, video covers &amp; embeds, AI helpers,
+              and everyday converters. No account. No upload.
             </p>
             <div className="hero-actions">
               <Link href="/tools" className="btn btn-primary">
@@ -37,6 +37,9 @@ export default function HomePage() {
               </Link>
               <Link href="/json" className="btn btn-secondary">
                 Open JSON studio
+              </Link>
+              <Link href="/video" className="btn btn-ghost">
+                Video tools
               </Link>
             </div>
           </div>

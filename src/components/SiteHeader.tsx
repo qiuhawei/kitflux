@@ -47,6 +47,9 @@ export function SiteHeader() {
           <Link href="/json" onClick={close}>
             JSON
           </Link>
+          <Link href="/video" onClick={close}>
+            Video
+          </Link>
           <Link href="/tools" onClick={close}>
             Tools
           </Link>
