@@ -29,6 +29,11 @@ export const categories: Record<
   ToolCategory,
   { label: string; description: string }
 > = {
+  ai: {
+    label: "AI Tools",
+    description:
+      "ChatGPT & Claude token counters, prompt builders, and API cost estimators — private in your browser",
+  },
   json: {
     label: "JSON Tools",
     description: "Format, convert, compare, and decode JSON in your browser",
@@ -36,10 +41,6 @@ export const categories: Record<
   video: {
     label: "Video Tools",
     description: "YouTube & TikTok covers, embeds, URL parsing, and local file info",
-  },
-  ai: {
-    label: "AI",
-    description: "Token estimates, prompts, and API cost planning",
   },
   text: {
     label: "Text",
@@ -60,9 +61,9 @@ export const categories: Record<
 };
 
 export const categoryOrder: ToolCategory[] = [
+  "ai",
   "json",
   "video",
-  "ai",
   "developer",
   "text",
   "security",
@@ -72,87 +73,110 @@ export const categoryOrder: ToolCategory[] = [
 export const tools: ToolDefinition[] = [
   {
     slug: "ai-token-counter",
-    name: "AI Token Counter",
+    name: "AI Token Counter for ChatGPT, Claude & Gemini",
     shortName: "AI Token Counter",
     description:
-      "Estimate tokens for ChatGPT, Claude, and Gemini prompts in your browser. Plan context length before you hit send.",
+      "Free AI token counter for ChatGPT, Claude, and Gemini. Estimate prompt and reply tokens in your browser before you hit send — private, no signup, nothing uploaded.",
+    blurb: "ChatGPT / Claude / Gemini token estimate",
     keywords: [
       "ai token counter",
       "chatgpt token counter",
-      "claude token count",
+      "claude token counter",
+      "gemini token counter",
       "openai tokenizer",
-      "prompt token calculator",
+      "gpt token calculator",
+      "prompt token counter",
+      "llm token estimator",
+      "how many tokens is my prompt",
+      "context length calculator",
     ],
     category: "ai",
     guide: {
-      heading: "How to estimate AI tokens",
+      heading: "How to count ChatGPT and Claude tokens",
       intro:
-        "Large language models bill and limit usage by tokens, not words. Exact counts depend on each model’s tokenizer. This tool gives a fast browser-side estimate so you can budget prompts and replies.",
+        "Large language models meter usage in tokens, not words. A token is a chunk of text the model reads or writes — often a short word or part of a longer word. Counting tokens before you send a prompt helps you stay under context limits, cut cost, and avoid truncated replies. This free AI token counter runs entirely in your browser for ChatGPT-style, Claude-style, and Gemini-style estimates.",
       steps: [
-        "Paste your prompt or the model’s reply into the box.",
-        "Pick the model family that best matches what you use.",
-        "Read the estimated token count, words, and characters.",
-        "Shorten the prompt if you are near a context limit.",
+        "Paste your system prompt, user message, or model reply into the box.",
+        "Choose the model family closest to what you use (GPT, Claude, or Gemini).",
+        "Read the estimated tokens plus word and character counts.",
+        "Shorten verbose instructions if you are near a context or budget limit.",
+        "Copy a trimmed version of the prompt back into ChatGPT, Claude, or your API client.",
       ],
       tips: [
-        "English text is often ~4 characters per token for GPT-style models; other languages can differ.",
-        "System prompts and tool schemas also consume tokens in real APIs.",
-        "For billing-critical work, verify with the vendor’s official tokenizer.",
+        "English often averages ~4 characters per token for GPT-family models; Chinese and code can differ.",
+        "System prompts, tool schemas, and chat history all consume tokens in real APIs.",
+        "For invoice-critical billing, double-check with the vendor’s official tokenizer.",
+        "Pair this tool with the AI Cost Calculator to turn token counts into dollar estimates.",
       ],
     },
     faq: [
       {
-        question: "Is this the official OpenAI tokenizer?",
+        question: "Is this the official OpenAI tiktoken tokenizer?",
         answer:
-          "No. It is an approximation that runs locally. Official libraries may return a slightly different number.",
+          "No. It is a fast local approximation for planning. Official libraries may return a slightly different number for the same text.",
       },
       {
-        question: "Does my text get uploaded?",
+        question: "Does my prompt get uploaded to a server?",
         answer:
-          "No. Counting happens in your browser. Nothing is sent to our servers for this tool.",
+          "No. Token estimation runs in your browser. Fluxkit does not send your prompt text to our servers for this tool.",
       },
       {
-        question: "Why estimate tokens at all?",
+        question: "Why do ChatGPT and Claude show different token counts?",
         answer:
-          "Token limits and API pricing are based on tokens. Estimating early prevents truncated answers and surprise bills.",
+          "Each model family uses its own tokenizer. The same sentence can produce different token totals across GPT, Claude, and Gemini.",
+      },
+      {
+        question: "Can I use this for GPT-4o, o1, or Claude 3.5?",
+        answer:
+          "Yes as a planning estimate. Pick the closest model family; treat the result as guidance before you send a production request.",
+      },
+      {
+        question: "How do tokens relate to price?",
+        answer:
+          "APIs usually charge separately for input and output tokens. Use our AI Cost Calculator after you know average sizes per request.",
       },
     ],
   },
   {
     slug: "prompt-builder",
-    name: "AI Prompt Builder",
+    name: "AI Prompt Builder for ChatGPT & Claude",
     shortName: "Prompt Builder",
     description:
-      "Build clear ChatGPT and Claude prompts from templates — role, task, constraints, and output format in one click.",
+      "Free AI prompt builder for ChatGPT and Claude. Turn a vague idea into a clear role + task + constraints prompt you can paste into any LLM — local and private.",
+    blurb: "Templates for ChatGPT & Claude prompts",
     keywords: [
       "prompt generator",
       "chatgpt prompt template",
       "ai prompt builder",
       "prompt engineering tool",
-      "claude prompt",
+      "claude prompt generator",
+      "chatgpt prompt maker",
+      "llm prompt template",
+      "system prompt builder",
     ],
     category: "ai",
     guide: {
-      heading: "How to build a stronger prompt",
+      heading: "How to write stronger ChatGPT prompts",
       intro:
-        "Vague prompts get vague answers. A reliable pattern is role + task + input + constraints + output format. This builder fills that structure so you can paste straight into ChatGPT, Claude, or Gemini.",
+        "Vague prompts get vague answers. A reliable pattern is role + task + input + constraints + output format. This AI prompt builder fills that structure so you can paste straight into ChatGPT, Claude, Gemini, or an API — without uploading your draft to our servers.",
       steps: [
         "Choose a template (rewrite, explain, code review, or SEO outline).",
         "Add your topic or paste the source text.",
-        "Optionally add constraints such as tone or length.",
-        "Copy the finished prompt into your AI chat or API.",
+        "Optionally add constraints such as tone, audience, or length.",
+        "Copy the finished prompt into your AI chat or API call.",
+        "Iterate: keep what worked and tighten one constraint at a time.",
       ],
       tips: [
-        "Be specific about the audience and the forbidden behaviors (for example: no fluff).",
-        "Ask for a format you can reuse: bullets, JSON, or a table.",
-        "Iterate: keep what worked and tighten one constraint at a time.",
+        "Be specific about the audience and forbidden behaviors (for example: no fluff).",
+        "Ask for a reusable format: bullets, JSON, or a table.",
+        "After drafting, run the AI Token Counter to see if the prompt is too long.",
       ],
     },
     faq: [
       {
-        question: "Will this call an AI model for me?",
+        question: "Will this call ChatGPT for me?",
         answer:
-          "No. It only builds the prompt text locally. You paste it into ChatGPT or another model yourself.",
+          "No. It only builds the prompt text locally. You paste it into ChatGPT, Claude, or another model yourself.",
       },
       {
         question: "Can I edit the result?",
@@ -164,53 +188,69 @@ export const tools: ToolDefinition[] = [
         answer:
           "Use Rewrite for messy drafts, Explain for learning, Code review for pull requests, and SEO outline for articles.",
       },
+      {
+        question: "Is prompt engineering still useful?",
+        answer:
+          "Yes. Clear role, constraints, and output format still improve reliability even on stronger models.",
+      },
     ],
   },
   {
     slug: "ai-cost-calculator",
-    name: "AI API Cost Calculator",
+    name: "AI API Cost Calculator (OpenAI & Claude)",
     shortName: "AI Cost Calculator",
     description:
-      "Estimate OpenAI and Claude-style API costs from input/output tokens and request volume. Plan budgets before you ship.",
+      "Free LLM API cost calculator for OpenAI and Claude-style pricing. Estimate spend from input/output tokens and request volume before you ship.",
+    blurb: "Estimate OpenAI & Claude API spend",
     keywords: [
       "openai cost calculator",
       "chatgpt api pricing calculator",
-      "claude api cost",
+      "claude api cost calculator",
       "llm cost estimator",
       "token pricing calculator",
+      "gpt-4o cost calculator",
+      "ai api budget planner",
+      "gemini api cost",
     ],
     category: "ai",
     guide: {
-      heading: "How to estimate LLM API spend",
+      heading: "How to estimate ChatGPT and Claude API spend",
       intro:
-        "API bills scale with tokens and traffic. Use this calculator with your expected prompt and completion sizes to forecast cost per day or per feature launch.",
+        "API bills scale with tokens and traffic. Use this AI cost calculator with your expected prompt and completion sizes to forecast cost per day or per feature launch — then trim prompts with the token counter if needed.",
       steps: [
         "Select a model price tier closest to what you use.",
         "Enter average input and output tokens per request.",
-        "Set how many requests you expect.",
+        "Set how many requests you expect (day, week, or launch).",
         "Read total cost, input/output split, and cost per request.",
+        "Adjust volume or model tier until the budget fits.",
       ],
       tips: [
         "Cache repeated prompts and shorten system instructions to cut input tokens.",
         "Cheaper models are often enough for classification and drafts.",
         "Prices change — treat results as planning estimates, not invoices.",
+        "Count real sample prompts with the AI Token Counter first for better inputs.",
       ],
     },
     faq: [
       {
-        question: "Are these official live prices?",
+        question: "Are these official OpenAI prices?",
         answer:
-          "They are approximate list prices for planning. Always confirm on the provider’s pricing page before budgeting.",
+          "No. Tiers are planning defaults. Always confirm current rates on the vendor’s pricing page.",
       },
       {
-        question: "Does this include image or fine-tuning fees?",
+        question: "Does this include image or audio models?",
         answer:
-          "No. It focuses on text input/output token pricing for chat-style APIs.",
+          "This calculator focuses on text token pricing. Multimodal billing can use different meters.",
       },
       {
-        question: "How do I know my token counts?",
+        question: "How do I get better token inputs?",
         answer:
           "Use our AI Token Counter on sample prompts, or log usage from your API dashboard.",
+      },
+      {
+        question: "Should I budget for retries and tool calls?",
+        answer:
+          "Yes. Failed requests, tool/function calls, and long agent loops can multiply token use — add a buffer.",
       },
     ],
   },

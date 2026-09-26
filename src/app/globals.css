@@ -1431,6 +1431,41 @@ textarea {
   overflow: hidden;
 }
 
+.featured-ai {
+  margin-top: 1rem;
+  padding: 1rem 1rem 0.35rem;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.06), rgba(255, 255, 255, 0.9));
+}
+
+.featured-ai .portal-section-head a {
+  color: var(--brand-deep);
+  font-weight: 600;
+}
+
+.ai-copy {
+  margin-top: 1.5rem;
+}
+
+.ai-copy h2 {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.25rem;
+  margin: 1.4rem 0 0.5rem;
+}
+
+.ai-copy p {
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+
+.ai-copy a {
+  color: var(--brand-deep);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .portal-foot {
   margin: 0.5rem 0 0;
   color: var(--ink-soft);

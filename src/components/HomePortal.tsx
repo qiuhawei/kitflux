@@ -131,6 +131,8 @@ export function HomePortal({ initialCategory = "all" }: HomePortalProps) {
 
       <p className="portal-foot">
         Prefer a focused workspace?{" "}
+        <Link href="/ai">AI tools</Link>
+        {" · "}
         <Link href="/json">JSON studio</Link>
         {" · "}
         <Link href="/video">Video tools</Link>

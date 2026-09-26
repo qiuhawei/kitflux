@@ -5,24 +5,30 @@ import { tools } from "@/lib/tools";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `Learn about ${siteConfig.name}, a collection of free private browser tools.`,
+  description: `About ${siteConfig.name}: free AI tools for ChatGPT and Claude (token counter, prompt builder, cost calculator) plus JSON and developer utilities — private in your browser.`,
   alternates: { canonical: absoluteUrl("/about") },
 };
 
 export default function AboutPage() {
+  const aiCount = tools.filter((tool) => tool.category === "ai").length;
+
   return (
     <article className="shell prose-page">
       <h1>About {siteConfig.name}</h1>
       <p>
-        {siteConfig.name} is a small collection of free online utilities for everyday text and
-        developer tasks. The goal is simple: open a page, finish the job, and move on—without
-        creating an account or uploading your content to our servers.
+        {siteConfig.name} is a free toolkit for AI workflows and everyday developer jobs. Start
+        with the <Link href="/ai">AI suite</Link> — token counting for ChatGPT/Claude/Gemini,
+        prompt building, and API cost planning — then jump into JSON, video, and classic utilities.
+        Open a page, finish the job, move on. No account required.
       </p>
       <h2>What we offer</h2>
       <p>
-        The toolkit currently includes {tools.length} utilities such as a JSON formatter,
-        password generator, word counter, UUID generator, Base64 converter, and more. Each tool
-        page explains when to use it, how to run the steps, and answers common questions.
+        The kit currently includes {tools.length} utilities, including {aiCount} AI-focused tools
+        such as the <Link href="/tools/ai-token-counter">AI Token Counter</Link>,{" "}
+        <Link href="/tools/prompt-builder">Prompt Builder</Link>, and{" "}
+        <Link href="/tools/ai-cost-calculator">AI Cost Calculator</Link>, plus a JSON studio and
+        more. Each tool page explains when to use it, how to run the steps, and answers common
+        questions for search and humans alike.
       </p>
       <h2>Privacy by design</h2>
       <p>

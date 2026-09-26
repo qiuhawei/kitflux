@@ -13,6 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: absoluteUrl("/ai"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.99,
+    },
+    {
       url: absoluteUrl("/json"),
       lastModified: now,
       changeFrequency: "weekly",
@@ -60,7 +66,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: absoluteUrl(`/tools/${tool.slug}`),
     lastModified: now,
     changeFrequency: "weekly",
-    priority: 0.9,
+    priority: tool.category === "ai" ? 0.95 : 0.9,
   }));
 
   return [...staticRoutes, ...toolRoutes];

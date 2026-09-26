@@ -27,19 +27,19 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — Free AI & Developer Tools`,
+    default: `${siteConfig.name} — Free AI Tools, JSON & Developer Utilities`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
   keywords: [
     "ai token counter",
-    "prompt builder",
+    "chatgpt token counter",
+    "claude token counter",
+    "ai prompt builder",
     "openai cost calculator",
-    "free online tools",
+    "free ai tools",
     "json formatter",
-    "youtube thumbnail downloader",
-    "password generator",
     "chatgpt tools",
   ],
   alternates: {

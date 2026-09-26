@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { siteConfig } from "@/lib/site";
 
 const links = [
+  { href: "/ai", label: "AI" },
   { href: "/json", label: "JSON" },
   { href: "/video", label: "Video" },
   { href: "/tools", label: "Tools" },

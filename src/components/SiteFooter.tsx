@@ -3,11 +3,11 @@ import { siteConfig } from "@/lib/site";
 import { tools } from "@/lib/tools";
 
 const popular = [
+  "ai-token-counter",
+  "prompt-builder",
+  "ai-cost-calculator",
   "json-formatter",
   "youtube-thumbnail",
-  "tiktok-cover",
-  "ai-token-counter",
-  "password-generator",
 ];
 
 export function SiteFooter() {
@@ -21,7 +21,8 @@ export function SiteFooter() {
         <div>
           <p className="footer-brand">{siteConfig.name}</p>
           <p className="footer-copy">
-            Private browser tools for builders — JSON, video, AI, and everyday utilities.
+            Free AI tools for ChatGPT &amp; Claude — plus JSON, video, and everyday utilities.
+            Private by design.
           </p>
         </div>
         <div>
@@ -43,6 +44,9 @@ export function SiteFooter() {
         <div>
           <p className="footer-label">Site</p>
           <ul>
+            <li>
+              <Link href="/ai">AI tools</Link>
+            </li>
             <li>
               <Link href="/json">JSON studio</Link>
             </li>
