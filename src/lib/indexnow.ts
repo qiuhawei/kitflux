@@ -5,6 +5,7 @@ import { tools } from "@/lib/tools";
 export function allIndexableUrls() {
   return [
     absoluteUrl("/"),
+    absoluteUrl("/json"),
     absoluteUrl("/tools"),
     absoluteUrl("/about"),
     absoluteUrl("/contact"),

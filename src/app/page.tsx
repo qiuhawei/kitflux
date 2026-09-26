@@ -24,8 +24,8 @@ export default function HomePage() {
               <Link href="/tools" className="btn btn-primary">
                 Browse all tools
               </Link>
-              <Link href="/tools/ai-token-counter" className="btn btn-secondary">
-                Open AI Token Counter
+              <Link href="/json" className="btn btn-secondary">
+                Open JSON studio
               </Link>
             </div>
           </div>

@@ -192,10 +192,13 @@ export const tools: ToolDefinition[] = [
     name: "JSON Formatter & Validator",
     shortName: "JSON Formatter",
     description:
-      "Paste messy JSON and instantly format, minify, or validate it. Runs entirely in your browser — nothing is uploaded.",
+      "Online JSON parser like a clean studio: format, compress, escape, validate, and browse a tree view. Runs in your browser — nothing uploaded.",
     keywords: [
       "json formatter",
+      "json online",
       "json validator",
+      "json parser",
+      "json tree",
       "pretty print json",
       "minify json",
       "json beautifier",
