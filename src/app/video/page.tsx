@@ -30,13 +30,12 @@ export default function VideoHubPage() {
 
   return (
     <div className="shell portal-page">
-      <header className="portal-header">
+      <header className="page-head">
         <div>
           <p className="eyebrow">Video suite</p>
           <h1>Video tools</h1>
           <p className="lede">
-            Grab covers, build embeds, parse links, and inspect files you already own —{" "}
-            {videoTools.length} free utilities in your browser.
+            Covers, embeds, URL parsing, and local file info — {videoTools.length} utilities.
           </p>
         </div>
         <Link href="/tools?cat=video" className="btn btn-secondary">

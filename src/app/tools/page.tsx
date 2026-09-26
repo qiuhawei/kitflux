@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CategoryChips, PortalGrid } from "@/components/PortalGrid";
+import { Suspense } from "react";
 import { AdSlot } from "@/components/AdSlot";
+import { ToolsDirectory } from "@/components/ToolsDirectory";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import { toolsIndexJsonLd } from "@/lib/seo";
-import {
-  categories,
-  categoryOrder,
-  tools,
-  type ToolCategory,
-} from "@/lib/tools";
+import { tools } from "@/lib/tools";
 
 export const metadata: Metadata = {
   title: "All Free Online Tools",
@@ -17,35 +13,7 @@ export const metadata: Metadata = {
   alternates: { canonical: absoluteUrl("/tools") },
 };
 
-type Props = {
-  searchParams: Promise<{ cat?: string }>;
-};
-
-export default async function ToolsIndexPage({ searchParams }: Props) {
-  const { cat } = await searchParams;
-  const active: ToolCategory | "all" =
-    cat && cat in categories ? (cat as ToolCategory) : "all";
-
-  const counts: Partial<Record<ToolCategory | "all", number>> = {
-    all: tools.length,
-  };
-  for (const tool of tools) {
-    counts[tool.category] = (counts[tool.category] ?? 0) + 1;
-  }
-
-  const visible =
-    active === "all" ? tools : tools.filter((tool) => tool.category === active);
-
-  const sections =
-    active === "all"
-      ? categoryOrder
-          .map((category) => ({
-            category,
-            items: tools.filter((tool) => tool.category === category),
-          }))
-          .filter((section) => section.items.length)
-      : [{ category: active, items: visible }];
-
+export default function ToolsIndexPage() {
   return (
     <>
       <script
@@ -53,39 +21,24 @@ export default async function ToolsIndexPage({ searchParams }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(toolsIndexJsonLd()) }}
       />
       <div className="shell portal-page">
-        <header className="portal-header">
+        <header className="page-head">
           <div>
             <p className="eyebrow">Directory</p>
-            <h1>All free online tools</h1>
+            <h1>All tools</h1>
             <p className="lede">
-              {tools.length} utilities — JSON, video, AI, and everyday converters. Private by
-              design. No account required.
+              {tools.length} free browser utilities. Search or filter — open any tool in one click.
             </p>
           </div>
-          <Link href="/json" className="btn btn-primary">
-            Open JSON studio
+          <Link href="/json" className="btn btn-secondary">
+            JSON studio
           </Link>
         </header>
 
-        <div className="portal-rail">
-          <CategoryChips active={active} counts={counts} />
-        </div>
         <AdSlot format="horizontal" />
 
-        {sections.map(({ category, items }) => (
-          <section key={category} className="portal-section">
-            <div className="portal-section-head">
-              <h2>{categories[category].label}</h2>
-              <p>{categories[category].description}</p>
-            </div>
-            <PortalGrid
-              tools={items}
-              hrefFor={(tool) =>
-                tool.slug === "json-formatter" ? "/json" : `/tools/${tool.slug}`
-              }
-            />
-          </section>
-        ))}
+        <Suspense fallback={<p className="lede">Loading tools…</p>}>
+          <ToolsDirectory />
+        </Suspense>
       </div>
     </>
   );

@@ -1,36 +1,35 @@
 import Link from "next/link";
-import type { ToolCategory, ToolDefinition } from "@/lib/tools";
-import { categories, categoryOrder } from "@/lib/tools";
+import type { ToolDefinition } from "@/lib/tools";
 
 const iconGlyph: Record<string, string> = {
   "json-formatter": "{}",
   "json-validate": "✓",
-  "json-minify": "⟦⟧",
-  "json-sort": "A↕",
-  "json-yaml": "Y",
+  "json-minify": "{}",
+  "json-sort": "A-Z",
+  "json-yaml": "YML",
   "json-csv": "CSV",
   "json-diff": "≠",
   "json-to-ts": "TS",
-  "json-escape": "\\“",
+  "json-escape": "\\",
   "jwt-decoder": "JWT",
   "youtube-thumbnail": "YT",
   "youtube-embed": "▶",
   "tiktok-cover": "TT",
-  "vimeo-thumbnail": "V",
+  "vimeo-thumbnail": "Vim",
   "video-url-parser": "URL",
   "local-video-info": "MP4",
   "ai-token-counter": "AI",
   "prompt-builder": "✎",
   "ai-cost-calculator": "$",
-  "password-generator": "⌘",
-  "word-counter": "W",
+  "password-generator": "PW",
+  "word-counter": "Abc",
   "uuid-generator": "ID",
   base64: "64",
   "timestamp-converter": "⏱",
   "case-converter": "Aa",
   "hash-generator": "#",
   "url-encoder": "%",
-  "lorem-ipsum": "¶",
+  "lorem-ipsum": "Lor",
 };
 
 type PortalCardProps = {
@@ -40,6 +39,8 @@ type PortalCardProps = {
 
 export function PortalCard({ tool, href }: PortalCardProps) {
   const to = href ?? `/tools/${tool.slug}`;
+  const raw = tool.blurb ?? tool.description;
+  const blurb = raw.length > 78 ? `${raw.slice(0, 75).trimEnd()}…` : raw;
   return (
     <Link href={to} className="portal-card" data-cat={tool.category}>
       <span className="portal-card-icon" aria-hidden>
@@ -47,10 +48,7 @@ export function PortalCard({ tool, href }: PortalCardProps) {
       </span>
       <span className="portal-card-body">
         <strong>{tool.shortName}</strong>
-        <span>{tool.blurb ?? tool.description}</span>
-      </span>
-      <span className="portal-card-go" aria-hidden>
-        →
+        <span>{blurb}</span>
       </span>
     </Link>
   );
@@ -68,45 +66,5 @@ export function PortalGrid({ tools: items, hrefFor }: PortalGridProps) {
         <PortalCard key={tool.slug} tool={tool} href={hrefFor?.(tool)} />
       ))}
     </div>
-  );
-}
-
-type CategoryChipsProps = {
-  active: ToolCategory | "all";
-  counts: Partial<Record<ToolCategory | "all", number>>;
-  basePath?: string;
-};
-
-export function CategoryChips({ active, counts, basePath = "/tools" }: CategoryChipsProps) {
-  const chips: { id: ToolCategory | "all"; label: string }[] = [
-    { id: "all", label: "All" },
-    ...categoryOrder.map((id) => ({
-      id,
-      label: categories[id].label,
-    })),
-  ];
-
-  return (
-    <nav className="portal-cats" aria-label="Tool categories">
-      {chips.map((chip) => {
-        const count = counts[chip.id] ?? 0;
-        if (chip.id !== "all" && count === 0) return null;
-        const href =
-          chip.id === "all" ? basePath : `${basePath}?cat=${encodeURIComponent(chip.id)}`;
-        const isActive = active === chip.id;
-        return (
-          <Link
-            key={chip.id}
-            href={href}
-            className={isActive ? "portal-cat portal-cat-active" : "portal-cat"}
-            data-cat={chip.id}
-            aria-current={isActive ? "page" : undefined}
-          >
-            <span className="portal-cat-label">{chip.label}</span>
-            <span className="portal-cat-count">{count}</span>
-          </Link>
-        );
-      })}
-    </nav>
   );
 }
