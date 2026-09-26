@@ -823,6 +823,17 @@ textarea {
 .guide-block,
 .faq-block,
 .related-block,
+.result-box,
+.prose-page {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.tool-workspace,
+.guide-block,
+.faq-block,
+.related-block,
 .prose-page {
   padding: 1.2rem;
   margin-top: 1rem;
