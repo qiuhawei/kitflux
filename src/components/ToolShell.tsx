@@ -11,7 +11,7 @@ type ToolShellProps = {
 
 export function ToolShell({ tool, children }: ToolShellProps) {
   const related = getRelatedTools(tool.slug);
-  const immersive = tool.slug === "json-formatter";
+  const immersive = tool.slug === "json-formatter" || tool.slug === "ai-lab";
 
   return (
     <div className={immersive ? "tool-page tool-page-immersive" : "tool-page"}>
@@ -30,9 +30,15 @@ export function ToolShell({ tool, children }: ToolShellProps) {
           <p className="lede">{tool.description}</p>
           <div className="tool-actions header-actions">
             <ShareButton title={tool.name} />
-            <Link href="/json" className="btn btn-secondary">
-              Open JSON studio
-            </Link>
+            {tool.category === "ai" ? (
+              <Link href="/ai" className="btn btn-secondary">
+                Open AI Lab
+              </Link>
+            ) : (
+              <Link href="/json" className="btn btn-secondary">
+                Open JSON studio
+              </Link>
+            )}
             <Link href="/tools" className="btn btn-ghost">
               All tools
             </Link>

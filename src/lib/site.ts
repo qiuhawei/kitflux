@@ -16,7 +16,7 @@ export const siteConfig = {
   name: "Fluxkit",
   tagline: "Free online tools that just work",
   description:
-    "Free AI tools for ChatGPT, Claude, and Gemini: token counter, prompt builder, and API cost calculator — plus JSON, video, and developer utilities. Private browser tools, no signup.",
+    "Private AI Lab for ChatGPT & Claude: draft prompts, compare tokens across models, and estimate API cost in one workspace — plus JSON and developer utilities. No signup.",
   url: normalizeSiteUrl(
     process.env.NEXT_PUBLIC_SITE_URL || "https://www.kitflux.com",
   ),

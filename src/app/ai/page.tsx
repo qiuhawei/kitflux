@@ -2,27 +2,27 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AdSlot } from "@/components/AdSlot";
 import { PortalGrid } from "@/components/PortalGrid";
+import { AiLabTool } from "@/components/tools/AiLabTool";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import { tools } from "@/lib/tools";
 
 export const metadata: Metadata = {
-  title: "AI Tools — ChatGPT Token Counter, Prompt Builder & API Cost",
+  title: "AI Lab — Prompt + Token Compare + Cost (Private)",
   description:
-    "Free AI tools for ChatGPT, Claude, and Gemini: token counter, prompt builder, and API cost calculator. Private browser utilities — no signup, nothing uploaded.",
+    "Fluxkit AI Lab: build a ChatGPT/Claude prompt, compare GPT vs Claude vs Gemini tokens side-by-side, and estimate API cost in one private browser workspace. Not just another token counter.",
   keywords: [
-    "ai tools",
-    "chatgpt token counter",
-    "claude token counter",
-    "ai prompt builder",
-    "openai cost calculator",
-    "llm tools",
-    "free chatgpt tools",
+    "ai lab",
+    "chatgpt token cost calculator",
+    "compare gpt claude tokens",
+    "prompt workspace",
+    "private ai tools",
+    "llm cost estimator",
   ],
   alternates: { canonical: absoluteUrl("/ai") },
   openGraph: {
-    title: `AI Tools | ${siteConfig.name}`,
+    title: `AI Lab | ${siteConfig.name}`,
     description:
-      "Token counters, prompt builders, and API cost planners for ChatGPT, Claude, and Gemini.",
+      "One private workspace: prompt drafting, multi-model token compare, and API cost forecast.",
     url: absoluteUrl("/ai"),
   },
 };
@@ -32,20 +32,28 @@ export default function AiHubPage() {
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: `AI Tools — ${siteConfig.name}`,
-    url: absoluteUrl("/ai"),
-    description:
-      "Free AI utilities for ChatGPT, Claude, and Gemini token counting, prompt writing, and API cost planning.",
-    mainEntity: {
-      "@type": "ItemList",
-      itemListElement: aiTools.map((tool, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        name: tool.name,
-        url: absoluteUrl(`/tools/${tool.slug}`),
-      })),
-    },
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        name: "Fluxkit AI Lab",
+        url: absoluteUrl("/ai"),
+        applicationCategory: "UtilitiesApplication",
+        operatingSystem: "Any",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        description:
+          "Private browser workspace to draft prompts, compare tokens across GPT/Claude/Gemini, and estimate API cost.",
+      },
+      {
+        "@type": "ItemList",
+        name: "AI tools",
+        itemListElement: aiTools.map((tool, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: tool.name,
+          url: absoluteUrl(`/tools/${tool.slug}`),
+        })),
+      },
+    ],
   };
 
   return (
@@ -54,65 +62,65 @@ export default function AiHubPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="shell portal-page">
-        <header className="page-head">
+      <div className="ai-lab-page">
+        <div className="shell page-head">
           <div>
-            <p className="eyebrow">AI suite</p>
-            <h1>AI tools for ChatGPT, Claude &amp; Gemini</h1>
+            <p className="eyebrow">Differentiation</p>
+            <h1>AI Lab — not another lone token counter</h1>
             <p className="lede">
-              Count tokens, build stronger prompts, and estimate API spend — {aiTools.length}{" "}
-              free utilities that stay in your browser.
+              Competitors sell one widget. Fluxkit connects prompt drafting, multi-model token
+              compare, and cost forecast in one private workspace.
             </p>
           </div>
-          <Link href="/tools/ai-token-counter" className="btn btn-primary">
-            Open token counter
+          <Link href="/tools/ai-lab" className="btn btn-secondary">
+            Tool page + guide
           </Link>
-        </header>
+        </div>
 
-        <AdSlot format="horizontal" />
+        <div className="shell">
+          <AdSlot format="horizontal" />
+        </div>
 
-        <section className="portal-section">
-          <div className="portal-section-head">
-            <h2>All AI tools</h2>
-            <p>Tokens · prompts · API cost</p>
-          </div>
-          <PortalGrid tools={aiTools} />
-        </section>
+        <div className="shell ai-lab-embed">
+          <AiLabTool />
+        </div>
 
-        <article className="prose-narrow ai-copy">
-          <h2>Why AI token counting matters</h2>
-          <p>
-            ChatGPT, Claude, and Gemini all meter usage in <strong>tokens</strong>, not words.
-            Knowing your prompt size before you hit send helps you avoid context overflows,
-            truncated answers, and surprise API bills. Fluxkit’s{" "}
-            <Link href="/tools/ai-token-counter">AI Token Counter</Link> gives a fast local
-            estimate so you can trim system prompts and chat history with confidence.
-          </p>
+        <div className="shell portal-page">
+          <section className="portal-section">
+            <div className="portal-section-head">
+              <h2>Also available solo</h2>
+              <p>Focused landing pages when you only need one job.</p>
+            </div>
+            <PortalGrid
+              tools={aiTools}
+              hrefFor={(tool) => (tool.slug === "ai-lab" ? "/ai" : `/tools/${tool.slug}`)}
+            />
+          </section>
 
-          <h2>Build prompts that models actually follow</h2>
-          <p>
-            Strong prompts usually include a role, a clear task, constraints, and an output
-            format. The <Link href="/tools/prompt-builder">AI Prompt Builder</Link> turns that
-            pattern into paste-ready text for ChatGPT or Claude — without calling any model on
-            our servers.
-          </p>
-
-          <h2>Plan LLM API budgets early</h2>
-          <p>
-            Once you know typical input and output sizes, use the{" "}
-            <Link href="/tools/ai-cost-calculator">AI Cost Calculator</Link> to forecast OpenAI-
-            or Claude-style spend for a day, a week, or a product launch. Pair it with the token
-            counter on real sample prompts for better numbers.
-          </p>
-
-          <h2>Private by design</h2>
-          <p>
-            These AI utilities run in your browser. We do not require an account, and we do not
-            upload your prompts for token counting or prompt building. Need JSON or video helpers
-            too? Browse the <Link href="/json">JSON studio</Link> or{" "}
-            <Link href="/tools">full tool directory</Link>.
-          </p>
-        </article>
+          <article className="prose-narrow ai-copy">
+            <h2>Why this is differentiated</h2>
+            <ul>
+              <li>
+                <strong>Workflow, not widgets</strong> — one draft drives tokens and cost together
+              </li>
+              <li>
+                <strong>Multi-model compare</strong> — GPT / Claude / Gemini estimates side-by-side
+              </li>
+              <li>
+                <strong>Local history</strong> — revisit drafts without creating an account
+              </li>
+              <li>
+                <strong>Privacy-first</strong> — prompts are not uploaded for these calculations
+              </li>
+            </ul>
+            <p>
+              Prefer a single job? Open the{" "}
+              <Link href="/tools/ai-token-counter">token counter</Link>,{" "}
+              <Link href="/tools/prompt-builder">prompt builder</Link>, or{" "}
+              <Link href="/tools/ai-cost-calculator">cost calculator</Link>.
+            </p>
+          </article>
+        </div>
       </div>
     </>
   );

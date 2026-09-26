@@ -2,62 +2,30 @@
 
 import { useMemo, useState } from "react";
 import { CopyButton } from "@/components/CopyButton";
-
-type PriceRow = {
-  id: string;
-  label: string;
-  inputPerMillion: number;
-  outputPerMillion: number;
-};
-
-/** Approximate public list prices in USD per 1M tokens — update periodically. */
-const MODELS: PriceRow[] = [
-  {
-    id: "gpt-4o-mini",
-    label: "GPT-4o mini",
-    inputPerMillion: 0.15,
-    outputPerMillion: 0.6,
-  },
-  {
-    id: "gpt-4o",
-    label: "GPT-4o",
-    inputPerMillion: 2.5,
-    outputPerMillion: 10,
-  },
-  {
-    id: "claude-sonnet",
-    label: "Claude Sonnet (approx.)",
-    inputPerMillion: 3,
-    outputPerMillion: 15,
-  },
-];
+import { PRICE_MODELS, estimateCost } from "@/lib/aiLab";
 
 export function AiCostCalculatorTool() {
-  const [modelId, setModelId] = useState(MODELS[0].id);
+  const [modelId, setModelId] = useState(PRICE_MODELS[0].id);
   const [inputTokens, setInputTokens] = useState(2000);
   const [outputTokens, setOutputTokens] = useState(500);
   const [requests, setRequests] = useState(100);
 
-  const model = MODELS.find((item) => item.id === modelId) ?? MODELS[0];
-
-  const result = useMemo(() => {
-    const inputCost = (inputTokens / 1_000_000) * model.inputPerMillion * requests;
-    const outputCost = (outputTokens / 1_000_000) * model.outputPerMillion * requests;
-    const total = inputCost + outputCost;
-    return {
-      inputCost,
-      outputCost,
-      total,
-      perRequest: requests > 0 ? total / requests : 0,
-    };
-  }, [model, inputTokens, outputTokens, requests]);
+  const model = PRICE_MODELS.find((item) => item.id === modelId) ?? PRICE_MODELS[0];
+  const result = useMemo(
+    () => estimateCost({ model, inputTokens, outputTokens, requests }),
+    [model, inputTokens, outputTokens, requests],
+  );
 
   const summary = `Est. $${result.total.toFixed(4)} for ${requests} requests (${model.label})`;
 
   return (
     <div className="tool-panel">
+      <p className="tool-hint">
+        Want prompt size to drive cost automatically? Use{" "}
+        <a href="/ai">AI Lab</a> — this page is the focused calculator.
+      </p>
       <div className="tool-actions" role="group" aria-label="Model pricing">
-        {MODELS.map((item) => (
+        {PRICE_MODELS.map((item) => (
           <button
             key={item.id}
             type="button"
@@ -70,9 +38,6 @@ export function AiCostCalculatorTool() {
         ))}
         <CopyButton value={summary} label="Copy estimate" />
       </div>
-      <p className="tool-hint">
-        Ballpark only — vendor prices change. Pair with the token counter for prompt size.
-      </p>
       <div className="split-editors">
         <label className="field">
           <span>Input tokens / request</span>

@@ -66,7 +66,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: absoluteUrl(`/tools/${tool.slug}`),
     lastModified: now,
     changeFrequency: "weekly",
-    priority: tool.category === "ai" ? 0.95 : 0.9,
+    priority: tool.slug === "ai-lab" || tool.category === "ai" ? 0.96 : 0.9,
   }));
 
   return [...staticRoutes, ...toolRoutes];

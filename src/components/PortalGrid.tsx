@@ -18,6 +18,7 @@ const iconGlyph: Record<string, string> = {
   "vimeo-thumbnail": "Vim",
   "video-url-parser": "URL",
   "local-video-info": "MP4",
+  "ai-lab": "Lab",
   "ai-token-counter": "AI",
   "prompt-builder": "✎",
   "ai-cost-calculator": "$",

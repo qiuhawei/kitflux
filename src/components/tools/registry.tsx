@@ -1,4 +1,5 @@
 import { AiCostCalculatorTool } from "@/components/tools/AiCostCalculatorTool";
+import { AiLabTool } from "@/components/tools/AiLabTool";
 import { AiTokenCounterTool } from "@/components/tools/AiTokenCounterTool";
 import { Base64Tool } from "@/components/tools/Base64Tool";
 import { CaseConverterTool } from "@/components/tools/CaseConverterTool";
@@ -28,6 +29,7 @@ import { YoutubeEmbedTool } from "@/components/tools/YoutubeEmbedTool";
 import { YoutubeThumbnailTool } from "@/components/tools/YoutubeThumbnailTool";
 
 const toolComponents = {
+  "ai-lab": AiLabTool,
   "ai-token-counter": AiTokenCounterTool,
   "prompt-builder": PromptBuilderTool,
   "ai-cost-calculator": AiCostCalculatorTool,

@@ -32,7 +32,7 @@ export const categories: Record<
   ai: {
     label: "AI Tools",
     description:
-      "ChatGPT & Claude token counters, prompt builders, and API cost estimators — private in your browser",
+      "AI Lab workflow: build a prompt, compare tokens across models, and estimate API cost — private in your browser",
   },
   json: {
     label: "JSON Tools",
@@ -71,6 +71,64 @@ export const categoryOrder: ToolCategory[] = [
 ];
 
 export const tools: ToolDefinition[] = [
+  {
+    slug: "ai-lab",
+    name: "AI Lab — Prompt, Tokens & Cost in One Workspace",
+    shortName: "AI Lab",
+    description:
+      "Unlike single-purpose token counters: draft a ChatGPT/Claude prompt, compare GPT vs Claude vs Gemini token estimates side-by-side, and forecast API spend — all from one private browser workspace with local history.",
+    blurb: "Prompt + multi-model tokens + cost in one flow",
+    keywords: [
+      "ai lab",
+      "chatgpt prompt and token calculator",
+      "claude token cost calculator",
+      "llm prompt workspace",
+      "compare gpt claude tokens",
+      "ai prompt cost estimator",
+      "private chatgpt tools",
+      "prompt engineering workspace",
+    ],
+    category: "ai",
+    guide: {
+      heading: "How to use Fluxkit AI Lab",
+      intro:
+        "Most sites give you either a token counter or a prompt template. AI Lab connects both with a cost forecast: one draft, three model-family estimates, and a spend projection that stays on your device.",
+      steps: [
+        "Pick a template or paste your working prompt.",
+        "Watch GPT, Claude, and Gemini token estimates update live.",
+        "Choose a price tier and request volume to see estimated spend.",
+        "Save the draft to local history if you want to revisit it later.",
+        "Copy the prompt or lab summary into ChatGPT, Claude, or your API client.",
+      ],
+      tips: [
+        "Use the same draft across models to spot which family is “cheaper” in tokens for your wording.",
+        "Output size is a slider — agent replies are often longer than the prompt.",
+        "History never leaves this browser; clear it anytime.",
+      ],
+    },
+    faq: [
+      {
+        question: "How is this different from a normal token counter?",
+        answer:
+          "AI Lab is a workflow: templates, multi-model comparison, cost projection, and local history in one place — not a single isolated counter.",
+      },
+      {
+        question: "Is my prompt uploaded?",
+        answer:
+          "No. Drafting, token estimates, cost math, and history all run locally in your browser.",
+      },
+      {
+        question: "Are token and price numbers official?",
+        answer:
+          "They are planning approximations. Confirm with vendor tokenizers and pricing pages for billing-critical work.",
+      },
+      {
+        question: "Can I still use the standalone tools?",
+        answer:
+          "Yes. Token Counter, Prompt Builder, and Cost Calculator remain available for focused jobs and SEO landing pages.",
+      },
+    ],
+  },
   {
     slug: "ai-token-counter",
     name: "AI Token Counter for ChatGPT, Claude & Gemini",

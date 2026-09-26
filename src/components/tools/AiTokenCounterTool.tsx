@@ -2,19 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { CopyButton } from "@/components/CopyButton";
-
-type ModelPreset = {
-  id: string;
-  label: string;
-  /** Rough chars-per-token for English-heavy text */
-  charsPerToken: number;
-};
-
-const PRESETS: ModelPreset[] = [
-  { id: "gpt", label: "ChatGPT / GPT-4o (approx.)", charsPerToken: 4 },
-  { id: "claude", label: "Claude (approx.)", charsPerToken: 3.5 },
-  { id: "gemini", label: "Gemini (approx.)", charsPerToken: 4 },
-];
+import { TOKEN_PRESETS, estimateTokens } from "@/lib/aiLab";
 
 export function AiTokenCounterTool() {
   const [text, setText] = useState(
@@ -22,19 +10,20 @@ export function AiTokenCounterTool() {
   );
   const [presetId, setPresetId] = useState("gpt");
 
-  const preset = PRESETS.find((item) => item.id === presetId) ?? PRESETS[0];
-
-  const stats = useMemo(() => {
-    const characters = text.length;
-    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-    const tokens = characters === 0 ? 0 : Math.max(1, Math.ceil(characters / preset.charsPerToken));
-    return { characters, words, tokens };
-  }, [text, preset.charsPerToken]);
+  const preset = TOKEN_PRESETS.find((item) => item.id === presetId) ?? TOKEN_PRESETS[0];
+  const stats = useMemo(
+    () => estimateTokens(text, preset.charsPerToken),
+    [text, preset.charsPerToken],
+  );
 
   return (
     <div className="tool-panel">
+      <p className="tool-hint">
+        Need tokens + cost + templates together? Open the{" "}
+        <a href="/ai">AI Lab workspace</a> — this page is the focused counter.
+      </p>
       <div className="tool-actions" role="group" aria-label="Model estimate">
-        {PRESETS.map((item) => (
+        {TOKEN_PRESETS.map((item) => (
           <button
             key={item.id}
             type="button"
@@ -47,10 +36,6 @@ export function AiTokenCounterTool() {
         ))}
         <CopyButton value={String(stats.tokens)} label="Copy tokens" />
       </div>
-      <p className="tool-hint">
-        Estimates only — real tokenizers differ by model. Useful for prompt budgeting before you
-        paste into ChatGPT, Claude, or an API.
-      </p>
       <div className="stat-grid" aria-live="polite">
         <div>
           <strong>{stats.tokens}</strong>

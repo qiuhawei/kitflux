@@ -3,11 +3,11 @@ import { siteConfig } from "@/lib/site";
 import { tools } from "@/lib/tools";
 
 const popular = [
+  "ai-lab",
   "ai-token-counter",
   "prompt-builder",
   "ai-cost-calculator",
   "json-formatter",
-  "youtube-thumbnail",
 ];
 
 export function SiteFooter() {

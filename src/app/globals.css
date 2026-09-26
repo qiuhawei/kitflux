@@ -1470,6 +1470,151 @@ textarea {
   text-underline-offset: 2px;
 }
 
+.ai-lab-page {
+  padding-bottom: 2.5rem;
+}
+
+.ai-lab-embed {
+  margin-top: 0.5rem;
+}
+
+.lab-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.lab-privacy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  align-items: baseline;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(13, 148, 136, 0.28);
+  background: rgba(13, 148, 136, 0.08);
+}
+
+.lab-privacy strong {
+  color: var(--brand-deep);
+}
+
+.lab-privacy span {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.9fr);
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.lab-side {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.lab-section-head h2 {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.05rem;
+  margin: 0 0 0.2rem;
+}
+
+.lab-section-head p {
+  margin: 0 0 0.75rem;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+.lab-compare {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.lab-compare-card {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #f8fafc;
+  text-align: center;
+}
+
+.lab-compare-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--brand-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.lab-compare-card strong {
+  font-size: 1.35rem;
+  letter-spacing: -0.03em;
+}
+
+.lab-compare-card span:last-child {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.lab-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.lab-history-item {
+  width: 100%;
+  display: grid;
+  gap: 0.15rem;
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+}
+
+.lab-history-item:hover {
+  border-color: var(--brand);
+  background: #f3fbf9;
+}
+
+.lab-history-item strong {
+  font-size: 0.88rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lab-history-item span {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.field-note {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 900px) {
+  .lab-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lab-compare {
+    grid-template-columns: 1fr;
+  }
+}
+
 .portal-foot {
   margin: 0.5rem 0 0;
   color: var(--ink-soft);

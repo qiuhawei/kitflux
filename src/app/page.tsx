@@ -3,9 +3,10 @@ import { AdSlot } from "@/components/AdSlot";
 import { HomePortal } from "@/components/HomePortal";
 import { PortalGrid } from "@/components/PortalGrid";
 import { homeJsonLd } from "@/lib/seo";
-import { tools } from "@/lib/tools";
+import { getTool, tools } from "@/lib/tools";
 
 export default function HomePage() {
+  const aiLab = getTool("ai-lab");
   const aiTools = tools.filter((tool) => tool.category === "ai");
 
   return (
@@ -18,16 +19,17 @@ export default function HomePage() {
       <section className="home-intro">
         <div className="shell home-intro-inner">
           <div className="home-intro-copy">
-            <p className="home-kicker">Free AI · Private · In-browser</p>
+            <p className="home-kicker">Differentiated · Private · In-browser</p>
             <h1 className="home-brand">Fluxkit</h1>
             <p className="home-lede">
-              ChatGPT token counter, prompt builder, API cost calculator, plus JSON &amp; video
-              utilities — {tools.length} tools, nothing uploaded.
+              Not another clone counter. <strong>AI Lab</strong> drafts prompts, compares GPT /
+              Claude / Gemini tokens, and estimates API cost in one private workspace — plus JSON
+              &amp; video utilities.
             </p>
           </div>
           <div className="home-intro-actions">
             <Link href="/ai" className="btn btn-primary">
-              AI tools
+              Open AI Lab
             </Link>
             <Link href="/tools/ai-token-counter" className="btn btn-secondary">
               Token counter
@@ -39,12 +41,16 @@ export default function HomePage() {
       <div className="shell" id="tools">
         <section className="portal-section featured-ai">
           <div className="portal-section-head">
-            <h2>Featured AI tools</h2>
+            <h2>Start with AI Lab</h2>
             <p>
-              <Link href="/ai">See the full AI suite →</Link>
+              <Link href="/ai">Full workspace →</Link>
             </p>
           </div>
-          <PortalGrid tools={aiTools} />
+          {aiLab ? (
+            <PortalGrid tools={[aiLab, ...aiTools.filter((t) => t.slug !== "ai-lab")]} />
+          ) : (
+            <PortalGrid tools={aiTools} />
+          )}
         </section>
 
         <AdSlot format="horizontal" />
