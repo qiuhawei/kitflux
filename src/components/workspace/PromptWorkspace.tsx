@@ -42,8 +42,8 @@ import {
 
 type Mode = "single" | "conversation";
 type View = "edit" | "heatmap" | "optimize";
-type CreateTab = null | "templates" | "builder" | "chain";
-type ExportKind = "curl" | "python" | "node" | null;
+type CreateTab = "templates" | "builder" | "chain";
+type ExportKind = "curl" | "python" | "node";
 
 function uid() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -60,7 +60,8 @@ function newStep(): ChainStep {
 export function PromptWorkspace() {
   const [mode, setMode] = useState<Mode>("single");
   const [view, setView] = useState<View>("edit");
-  const [createTab, setCreateTab] = useState<CreateTab>(null);
+  const [createTab, setCreateTab] = useState<CreateTab | null>(null);
+  const [createMenuOpen, setCreateMenuOpen] = useState(false);
   const [text, setText] = useState("");
   const [turns, setTurns] = useState<ChatTurn[]>([newTurn("system"), newTurn("user")]);
   const [modelId, setModelId] = useState(DEFAULT_MODEL_ID);
@@ -72,7 +73,7 @@ export function PromptWorkspace() {
   const [snippets, setSnippets] = useState<LabHistoryItem[]>([]);
   const [session, setSession] = useState<SessionStats>({ prompts: 0, tokens: 0, cost: 0 });
   const [status, setStatus] = useState("");
-  const [exportKind, setExportKind] = useState<ExportKind>(null);
+  const [exportKind, setExportKind] = useState<ExportKind | null>(null);
   const [compareMode, setCompareMode] = useState<"chart" | "table">("chart");
   const [undoText, setUndoText] = useState<string | null>(null);
   const [showRatioCalc, setShowRatioCalc] = useState(false);
@@ -87,12 +88,16 @@ export function PromptWorkspace() {
   });
   const [chain, setChain] = useState<ChainStep[]>([newStep(), newStep()]);
   const sessionBump = useRef("");
+  const createRef = useRef<HTMLDivElement>(null);
+  const statusTimer = useRef<number | null>(null);
 
   const model = PRICE_MODELS.find((m) => m.id === modelId) ?? PRICE_MODELS[0];
   const filteredModels =
     providerFilter === "All"
       ? PRICE_MODELS
       : PRICE_MODELS.filter((m) => m.provider === providerFilter);
+  const selectedHidden =
+    providerFilter !== "All" && !filteredModels.some((m) => m.id === modelId);
 
   useEffect(() => {
     setHistory(loadHistory());
@@ -106,7 +111,31 @@ export function PromptWorkspace() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!createMenuOpen) return;
+    function onDoc(event: MouseEvent) {
+      if (!createRef.current?.contains(event.target as Node)) {
+        setCreateMenuOpen(false);
+      }
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setCreateMenuOpen(false);
+        setCreateTab(null);
+        setExportKind(null);
+        if (view !== "edit") setView("edit");
+      }
+    }
+    document.addEventListener("mousedown", onDoc);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [createMenuOpen, view]);
+
   const rawText = mode === "single" ? text : turnsToText(turns);
+  const hasContent = Boolean(rawText.trim());
   const varKeys = useMemo(() => extractVariableKeys(rawText), [rawText]);
   const resolved = useMemo(() => resolveVariables(rawText, vars), [rawText, vars]);
   const input = useMemo(() => countTokens(resolved, model), [resolved, model]);
@@ -127,15 +156,17 @@ export function PromptWorkspace() {
     [resolved, ratioResponse, model],
   );
   const chainCosts = useMemo(() => chainStepCosts(chain, outputRatio), [chain, outputRatio]);
-  const chainTotals = useMemo(() => {
-    return chainCosts.reduce(
-      (acc, row) => ({
-        tokens: acc.tokens + row.input.tokens,
-        cost: acc.cost + row.cost.total,
-      }),
-      { tokens: 0, cost: 0 },
-    );
-  }, [chainCosts]);
+  const chainTotals = useMemo(
+    () =>
+      chainCosts.reduce(
+        (acc, row) => ({
+          tokens: acc.tokens + row.input.tokens,
+          cost: acc.cost + row.cost.total,
+        }),
+        { tokens: 0, cost: 0 },
+      ),
+    [chainCosts],
+  );
   const optimizeDelta = useMemo(() => {
     const before = countTokens(resolved, model).tokens;
     const after = countTokens(optimized.text, model).tokens;
@@ -143,13 +174,13 @@ export function PromptWorkspace() {
   }, [resolved, optimized.text, model]);
 
   useEffect(() => {
-    if (!resolved.trim() || resolved.length < 20) return;
-    const key = `${resolved.slice(0, 80)}:${input.tokens}:${model.id}`;
+    if (!resolved.trim() || resolved.length < 24) return;
+    const key = `${resolved}:${model.id}`;
     if (sessionBump.current === key) return;
     const t = window.setTimeout(() => {
       sessionBump.current = key;
       setSession((prev) => bumpSession(prev, input.tokens, cost.total));
-      setHistory(
+      setHistory((prev) =>
         pushHistory(
           {
             preview: resolved.slice(0, 72).replace(/\s+/g, " "),
@@ -157,50 +188,149 @@ export function PromptWorkspace() {
             modelId: model.id,
             tokens: input.tokens,
           },
-          history,
+          prev,
         ),
       );
-    }, 1400);
+    }, 1600);
     return () => window.clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resolved, input.tokens, cost.total, model.id]);
+
+  function flash(message: string) {
+    setStatus(message);
+    if (statusTimer.current) window.clearTimeout(statusTimer.current);
+    statusTimer.current = window.setTimeout(() => setStatus(""), 3200);
+  }
 
   function setPrompt(next: string) {
     setMode("single");
     setText(next);
     setView("edit");
     setCreateTab(null);
+    setCreateMenuOpen(false);
+    setExportKind(null);
+  }
+
+  function switchMode(next: Mode) {
+    if (next === mode) return;
+    if (next === "conversation" && mode === "single") {
+      if (text.trim()) {
+        setTurns([newTurn("system"), newTurn("user", text)]);
+      }
+    } else if (next === "single" && mode === "conversation") {
+      const joined = turnsToText(turns);
+      if (joined.trim()) setText(joined);
+    }
+    setMode(next);
+    setView("edit");
+    setCreateMenuOpen(false);
+  }
+
+  function openCreate(tab: CreateTab) {
+    setCreateTab(tab);
+    setCreateMenuOpen(false);
+    setExportKind(null);
+    setView("edit");
+  }
+
+  function toggleHeatmap() {
+    if (!hasContent) {
+      flash("Paste a prompt first to open the heatmap.");
+      return;
+    }
+    setView((v) => (v === "heatmap" ? "edit" : "heatmap"));
+    setCreateMenuOpen(false);
+  }
+
+  function toggleCleanup() {
+    if (!hasContent && view !== "optimize") {
+      flash("Paste a prompt first to run cleanup.");
+      return;
+    }
+    setView((v) => (v === "optimize" ? "edit" : "optimize"));
+    setCreateMenuOpen(false);
+  }
+
+  function toggleExport() {
+    if (!hasContent && !exportKind) {
+      flash("Paste a prompt first to export.");
+      return;
+    }
+    setExportKind((k) => (k ? null : "curl"));
+    setCreateMenuOpen(false);
+    setCreateTab(null);
   }
 
   function copyText(value: string, label: string) {
+    if (!value.trim()) {
+      flash("Nothing to copy yet.");
+      return;
+    }
     void navigator.clipboard.writeText(value).then(
-      () => setStatus(`${label} copied.`),
-      () => setStatus("Copy failed."),
+      () => flash(`${label} copied.`),
+      () => flash("Copy failed — check clipboard permission."),
     );
   }
 
   function onShare() {
+    if (!resolved.trim()) {
+      flash("Nothing to share yet.");
+      return;
+    }
     if (resolved.length > 8000) {
-      setStatus("Too long for URL share — save a snippet.");
+      flash("Too long for URL share — save a snippet instead.");
       return;
     }
     const hash = encodeShareHash(resolved);
-    void navigator.clipboard.writeText(shareUrl(resolved)).then(() => {
-      window.location.hash = hash;
-      setStatus("Share link copied.");
-    });
+    void navigator.clipboard.writeText(shareUrl(resolved)).then(
+      () => {
+        window.location.hash = hash;
+        flash("Share link copied.");
+      },
+      () => flash("Share copy failed."),
+    );
   }
 
   function applyOptimize() {
+    if (!resolved.trim()) {
+      flash("Nothing to clean up.");
+      return;
+    }
     setUndoText(resolved);
     setPrompt(optimized.text);
-    setStatus(
+    flash(
       optimizeDelta.saved > 0
         ? `Cleanup applied (−${optimizeDelta.saved} tokens · −${optimized.beforeChars - optimized.afterChars} chars).`
         : optimized.beforeChars > optimized.afterChars
           ? `Cleanup applied (−${optimized.beforeChars - optimized.afterChars} chars).`
           : "Already lean — no filler matched.",
     );
+  }
+
+  function onSaveVersion() {
+    if (!resolved.trim()) {
+      flash("Write a prompt before saving a version.");
+      return;
+    }
+    setVersions(saveVersion(resolved, versions));
+    flash("Version saved.");
+  }
+
+  function onSaveSnippet() {
+    if (!resolved.trim()) {
+      flash("Write a prompt before saving.");
+      return;
+    }
+    setSnippets(saveSnippet(resolved, snippets));
+    flash("Snippet saved.");
+  }
+
+  function clearPrompt() {
+    setText("");
+    setTurns([newTurn("system"), newTurn("user")]);
+    setVars({});
+    setUndoText(null);
+    setView("edit");
+    flash("Cleared.");
   }
 
   return (
@@ -273,114 +403,250 @@ export function PromptWorkspace() {
         <div className="wx-stage">
           <div className="wx-toolbar">
             <div className="wx-seg" role="tablist" aria-label="Mode">
-              <button type="button" className={mode === "single" ? "active" : undefined} onClick={() => setMode("single")}>
+              <button
+                type="button"
+                className={mode === "single" ? "active" : undefined}
+                onClick={() => switchMode("single")}
+              >
                 Single prompt
               </button>
-              <button type="button" className={mode === "conversation" ? "active" : undefined} onClick={() => setMode("conversation")}>
+              <button
+                type="button"
+                className={mode === "conversation" ? "active" : undefined}
+                onClick={() => switchMode("conversation")}
+              >
                 Conversation
               </button>
             </div>
             <div className="wx-actions">
-              <button type="button" className={view === "heatmap" ? "wx-btn on" : "wx-btn"} onClick={() => setView(view === "heatmap" ? "edit" : "heatmap")} title="Color each GPT tokenizer piece">
-                Heatmap
+              <button
+                type="button"
+                className={view === "heatmap" ? "wx-btn on" : "wx-btn"}
+                onClick={toggleHeatmap}
+                aria-pressed={view === "heatmap"}
+                title="Color each GPT tokenizer piece"
+              >
+                {view === "heatmap" ? "Exit heatmap" : "Heatmap"}
               </button>
-              <button type="button" className={view === "optimize" ? "wx-btn accent" : "wx-btn"} onClick={() => setView(view === "optimize" ? "edit" : "optimize")} title="Strip filler phrases and duplicate lines">
+              <button
+                type="button"
+                className={view === "optimize" ? "wx-btn accent" : "wx-btn"}
+                onClick={toggleCleanup}
+                aria-pressed={view === "optimize"}
+                title="Strip filler phrases and duplicate lines"
+              >
                 {view === "optimize" ? "Hide cleanup" : "Cleanup"}
               </button>
-              <div className="wx-create">
-                <button type="button" className={createTab ? "wx-btn on" : "wx-btn"} onClick={() => setCreateTab(createTab ? null : "templates")}>
+              <div className="wx-create" ref={createRef}>
+                <button
+                  type="button"
+                  className={createTab || createMenuOpen ? "wx-btn on" : "wx-btn"}
+                  aria-expanded={createMenuOpen}
+                  aria-haspopup="menu"
+                  onClick={() => setCreateMenuOpen((o) => !o)}
+                >
                   Create ▾
                 </button>
-                {createTab ? (
-                  <div className="wx-create-menu">
+                {createMenuOpen ? (
+                  <div className="wx-create-menu" role="menu">
                     {(["templates", "builder", "chain"] as const).map((tab) => (
-                      <button key={tab} type="button" className={createTab === tab ? "active" : undefined} onClick={() => setCreateTab(tab)}>
+                      <button
+                        key={tab}
+                        type="button"
+                        role="menuitem"
+                        className={createTab === tab ? "active" : undefined}
+                        onClick={() => openCreate(tab)}
+                      >
                         {tab[0].toUpperCase() + tab.slice(1)}
                       </button>
                     ))}
                   </div>
                 ) : null}
               </div>
-              <button type="button" className="wx-btn" onClick={() => copyText(resolved, "Prompt")}>Copy</button>
-              <button type="button" className="wx-btn" onClick={onShare}>Share</button>
-              <button type="button" className="wx-btn" onClick={() => setExportKind(exportKind ? null : "curl")}>Export</button>
+              <button type="button" className="wx-btn" onClick={() => copyText(resolved, "Prompt")} disabled={!hasContent}>
+                Copy
+              </button>
+              <button type="button" className="wx-btn" onClick={onShare} disabled={!hasContent}>
+                Share
+              </button>
+              <button
+                type="button"
+                className={exportKind ? "wx-btn on" : "wx-btn"}
+                onClick={toggleExport}
+                aria-pressed={Boolean(exportKind)}
+              >
+                {exportKind ? "Hide export" : "Export"}
+              </button>
+              {hasContent ? (
+                <button type="button" className="wx-btn" onClick={clearPrompt}>
+                  Clear
+                </button>
+              ) : null}
             </div>
           </div>
 
-          {createTab === "templates" ? (
+          {createTab ? (
             <div className="wx-sheet">
-              <div className="wx-template-grid">
-                {PROMPT_TEMPLATES.map((tpl) => (
-                  <button key={tpl.id} type="button" onClick={() => { setPrompt(tpl.text); setStatus(`Template: ${tpl.name}`); }}>
-                    <strong>{tpl.name}</strong>
-                    <span>{tpl.blurb}</span>
-                  </button>
-                ))}
+              <div className="wx-sheet-head">
+                <strong>{createTab[0].toUpperCase() + createTab.slice(1)}</strong>
+                <button type="button" className="wx-btn tiny" onClick={() => setCreateTab(null)}>
+                  Close
+                </button>
               </div>
-            </div>
-          ) : null}
 
-          {createTab === "builder" ? (
-            <div className="wx-sheet">
-              <div className="wx-builder-grid">
-                {(
-                  [
-                    ["role", "Role"],
-                    ["task", "Task"],
-                    ["context", "Context"],
-                    ["constraints", "Constraints"],
-                    ["format", "Output format"],
-                    ["examples", "Examples"],
-                  ] as const
-                ).map(([key, label]) => (
-                  <label key={key}>
-                    <span>{label}</span>
-                    <textarea rows={2} value={builder[key]} onChange={(e) => setBuilder((b) => ({ ...b, [key]: e.target.value }))} />
-                  </label>
-                ))}
-              </div>
-              <button type="button" className="wx-btn accent" onClick={() => { setPrompt(buildFromParts(builder)); setStatus("Builder applied."); }}>
-                Apply builder
-              </button>
-            </div>
-          ) : null}
+              {createTab === "templates" ? (
+                <div className="wx-template-grid">
+                  {PROMPT_TEMPLATES.map((tpl) => (
+                    <button
+                      key={tpl.id}
+                      type="button"
+                      onClick={() => {
+                        setPrompt(tpl.text);
+                        flash(`Template: ${tpl.name}`);
+                      }}
+                    >
+                      <strong>{tpl.name}</strong>
+                      <span>{tpl.blurb}</span>
+                    </button>
+                  ))}
+                </div>
+              ) : null}
 
-          {createTab === "chain" ? (
-            <div className="wx-sheet">
-              {chain.map((step, index) => {
-                const row = chainCosts[index];
-                return (
-                  <div key={step.id} className="wx-chain-step">
-                    <div className="wx-chain-head">
-                      <input value={step.name} onChange={(e) => setChain((prev) => prev.map((s) => (s.id === step.id ? { ...s, name: e.target.value } : s)))} placeholder={`Step ${index + 1}`} />
-                      <select value={step.modelId} onChange={(e) => setChain((prev) => prev.map((s) => (s.id === step.id ? { ...s, modelId: e.target.value } : s)))}>
-                        {PRICE_MODELS.map((m) => (
-                          <option key={m.id} value={m.id}>{m.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <textarea rows={2} value={step.prompt} onChange={(e) => setChain((prev) => prev.map((s) => (s.id === step.id ? { ...s, prompt: e.target.value } : s)))} />
-                    <p className="wx-muted">
-                      {row ? `${row.input.tokens.toLocaleString()} tok · $${row.cost.total.toFixed(4)} · 1:${outputRatio}` : "—"}
-                      {row && !row.input.exact ? " · estimate" : row?.input.exact ? " · exact" : ""}
-                    </p>
+              {createTab === "builder" ? (
+                <>
+                  <div className="wx-builder-grid">
+                    {(
+                      [
+                        ["role", "Role"],
+                        ["task", "Task"],
+                        ["context", "Context"],
+                        ["constraints", "Constraints"],
+                        ["format", "Output format"],
+                        ["examples", "Examples"],
+                      ] as const
+                    ).map(([key, label]) => (
+                      <label key={key}>
+                        <span>{label}</span>
+                        <textarea
+                          rows={2}
+                          value={builder[key]}
+                          onChange={(e) => setBuilder((b) => ({ ...b, [key]: e.target.value }))}
+                        />
+                      </label>
+                    ))}
                   </div>
-                );
-              })}
-              <p className="wx-muted">
-                Chain total (planning): {chainTotals.tokens.toLocaleString()} input tok · ${chainTotals.cost.toFixed(4)}
-              </p>
-              <div className="wx-actions">
-                <button type="button" className="wx-btn" onClick={() => setChain((p) => [...p, newStep()])}>+ Step</button>
-                <button type="button" className="wx-btn accent" onClick={() => { setPrompt(chainToText(chain)); setStatus("Chain applied as text (does not call models)."); }}>Apply chain as text</button>
-              </div>
+                  <button
+                    type="button"
+                    className="wx-btn accent"
+                    onClick={() => {
+                      setPrompt(buildFromParts(builder));
+                      flash("Builder applied.");
+                    }}
+                  >
+                    Apply builder
+                  </button>
+                </>
+              ) : null}
+
+              {createTab === "chain" ? (
+                <>
+                  {chain.map((step, index) => {
+                    const row = chainCosts[index];
+                    return (
+                      <div key={step.id} className="wx-chain-step">
+                        <div className="wx-chain-head">
+                          <input
+                            value={step.name}
+                            onChange={(e) =>
+                              setChain((prev) =>
+                                prev.map((s) => (s.id === step.id ? { ...s, name: e.target.value } : s)),
+                              )
+                            }
+                            placeholder={`Step ${index + 1}`}
+                          />
+                          <select
+                            value={step.modelId}
+                            onChange={(e) =>
+                              setChain((prev) =>
+                                prev.map((s) =>
+                                  s.id === step.id ? { ...s, modelId: e.target.value } : s,
+                                ),
+                              )
+                            }
+                          >
+                            {PRICE_MODELS.map((m) => (
+                              <option key={m.id} value={m.id}>
+                                {m.label}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            className="wx-btn tiny"
+                            disabled={chain.length <= 1}
+                            onClick={() => setChain((prev) => prev.filter((s) => s.id !== step.id))}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <textarea
+                          rows={2}
+                          value={step.prompt}
+                          onChange={(e) =>
+                            setChain((prev) =>
+                              prev.map((s) =>
+                                s.id === step.id ? { ...s, prompt: e.target.value } : s,
+                              ),
+                            )
+                          }
+                        />
+                        <p className="wx-muted">
+                          {row
+                            ? `${row.input.tokens.toLocaleString()} tok · $${row.cost.total.toFixed(4)} · 1:${outputRatio}`
+                            : "—"}
+                          {row?.input.exact ? " · exact" : row ? " · estimate" : ""}
+                        </p>
+                      </div>
+                    );
+                  })}
+                  <p className="wx-muted">
+                    Chain total (planning): {chainTotals.tokens.toLocaleString()} input tok · $
+                    {chainTotals.cost.toFixed(4)}
+                  </p>
+                  <div className="wx-actions">
+                    <button type="button" className="wx-btn" onClick={() => setChain((p) => [...p, newStep()])}>
+                      + Step
+                    </button>
+                    <button
+                      type="button"
+                      className="wx-btn accent"
+                      onClick={() => {
+                        setPrompt(chainToText(chain));
+                        flash("Chain applied as text (does not call models).");
+                      }}
+                    >
+                      Apply chain as text
+                    </button>
+                  </div>
+                </>
+              ) : null}
             </div>
           ) : null}
 
           <div className="wx-editor-wrap">
             {view === "heatmap" ? (
               <div className="wx-heat" aria-label="GPT tokenizer heatmap">
-                {heat.map((seg) => (seg.text ? <span key={seg.key} className={`wx-heat-${seg.level}`}>{seg.text}</span> : null))}
+                {heat.length === 0 ? (
+                  <span className="wx-heat-empty">No tokens to map.</span>
+                ) : (
+                  heat.map((seg) =>
+                    seg.text ? (
+                      <span key={seg.key} className={`wx-heat-${seg.level}`}>
+                        {seg.text}
+                      </span>
+                    ) : null,
+                  )
+                )}
               </div>
             ) : mode === "single" ? (
               <textarea
@@ -396,17 +662,52 @@ export function PromptWorkspace() {
                 {turns.map((turn) => (
                   <div key={turn.id} className="wx-turn">
                     <div className="wx-turn-head">
-                      <select value={turn.role} onChange={(e) => setTurns((prev) => prev.map((t) => (t.id === turn.id ? { ...t, role: e.target.value as ChatTurn["role"] } : t)))}>
+                      <select
+                        value={turn.role}
+                        onChange={(e) =>
+                          setTurns((prev) =>
+                            prev.map((t) =>
+                              t.id === turn.id
+                                ? { ...t, role: e.target.value as ChatTurn["role"] }
+                                : t,
+                            ),
+                          )
+                        }
+                      >
                         <option value="system">system</option>
                         <option value="user">user</option>
                         <option value="assistant">assistant</option>
                       </select>
-                      <button type="button" className="wx-btn tiny" onClick={() => setTurns((prev) => prev.filter((t) => t.id !== turn.id))} disabled={turns.length <= 1}>Remove</button>
+                      <button
+                        type="button"
+                        className="wx-btn tiny"
+                        onClick={() => setTurns((prev) => prev.filter((t) => t.id !== turn.id))}
+                        disabled={turns.length <= 1}
+                      >
+                        Remove
+                      </button>
                     </div>
-                    <textarea value={turn.content} onChange={(e) => setTurns((prev) => prev.map((t) => (t.id === turn.id ? { ...t, content: e.target.value } : t)))} rows={3} spellCheck={false} />
+                    <textarea
+                      value={turn.content}
+                      onChange={(e) =>
+                        setTurns((prev) =>
+                          prev.map((t) =>
+                            t.id === turn.id ? { ...t, content: e.target.value } : t,
+                          ),
+                        )
+                      }
+                      rows={3}
+                      spellCheck={false}
+                    />
                   </div>
                 ))}
-                <button type="button" className="wx-btn" onClick={() => setTurns((prev) => [...prev, newTurn("user")])}>+ Add message</button>
+                <button
+                  type="button"
+                  className="wx-btn"
+                  onClick={() => setTurns((prev) => [...prev, newTurn("user")])}
+                >
+                  + Add message
+                </button>
               </div>
             )}
             {!text && mode === "single" && view === "edit" ? (
@@ -421,20 +722,25 @@ export function PromptWorkspace() {
           </div>
 
           {view === "heatmap" ? (
-            <p className="wx-meta">
+            <div className="wx-meta">
               <span>{heat.length.toLocaleString()} GPT tokens · longer pieces = denser color</span>
-            </p>
+              <button type="button" className="wx-linkish" onClick={() => setView("edit")}>
+                Back to editor
+              </button>
+            </div>
           ) : (
-          <div className="wx-meta">
-            <span>
-              {input.tokens.toLocaleString()} / {model.contextWindow.toLocaleString()}
-              {input.exact ? " · exact" : " · estimate"}
-              {fill.pct > 0 ? ` · ${fill.pct.toFixed(1)}% fill` : ""}
-            </span>
-            {text ? (
-              <button type="button" className="wx-linkish" onClick={() => setPrompt(SAMPLE_PROMPT)}>Load sample</button>
-            ) : null}
-          </div>
+            <div className="wx-meta">
+              <span>
+                {input.tokens.toLocaleString()} / {model.contextWindow.toLocaleString()}
+                {input.exact ? " · exact" : " · estimate"}
+                {fill.pct > 0 ? ` · ${fill.pct.toFixed(1)}% fill` : ""}
+              </span>
+              {mode === "single" && text ? (
+                <button type="button" className="wx-linkish" onClick={() => setPrompt(SAMPLE_PROMPT)}>
+                  Load sample
+                </button>
+              ) : null}
+            </div>
           )}
 
           {view === "optimize" ? (
@@ -442,15 +748,30 @@ export function PromptWorkspace() {
               <div className="wx-optimize-head">
                 <h2>Cleanup (regex filler strip — not an LLM rewrite)</h2>
                 <div className="wx-actions">
-                  <button type="button" className="wx-btn accent" onClick={applyOptimize}>
+                  <button type="button" className="wx-btn accent" onClick={applyOptimize} disabled={!hasContent}>
                     Apply cleanup{optimizeDelta.saved > 0 ? ` (−${optimizeDelta.saved} tok)` : ""}
                   </button>
-                  {undoText != null ? <button type="button" className="wx-btn" onClick={() => { setPrompt(undoText); setUndoText(null); }}>Undo</button> : null}
+                  {undoText != null ? (
+                    <button
+                      type="button"
+                      className="wx-btn"
+                      onClick={() => {
+                        setPrompt(undoText);
+                        setUndoText(null);
+                        flash("Undo applied.");
+                      }}
+                    >
+                      Undo
+                    </button>
+                  ) : null}
                 </div>
               </div>
               <div className="wx-tips">
                 {tips.map((tip) => (
-                  <article key={tip.id}><strong>{tip.title}</strong><p>{tip.body}</p></article>
+                  <article key={tip.id}>
+                    <strong>{tip.title}</strong>
+                    <p>{tip.body}</p>
+                  </article>
                 ))}
               </div>
             </div>
@@ -458,14 +779,35 @@ export function PromptWorkspace() {
 
           {exportKind ? (
             <div className="wx-sheet">
-              <p className="wx-muted">OpenAI Chat Completions shape only — swap endpoint/SDK for other providers.</p>
+              <div className="wx-sheet-head">
+                <strong>Export</strong>
+                <button type="button" className="wx-btn tiny" onClick={() => setExportKind(null)}>
+                  Close
+                </button>
+              </div>
+              <p className="wx-muted">
+                OpenAI Chat Completions shape only — swap endpoint/SDK for other providers.
+              </p>
               <div className="wx-seg">
                 {(["curl", "python", "node"] as const).map((kind) => (
-                  <button key={kind} type="button" className={exportKind === kind ? "active" : undefined} onClick={() => setExportKind(kind)}>{kind}</button>
+                  <button
+                    key={kind}
+                    type="button"
+                    className={exportKind === kind ? "active" : undefined}
+                    onClick={() => setExportKind(kind)}
+                  >
+                    {kind}
+                  </button>
                 ))}
               </div>
               <pre className="wx-pre">{exports[exportKind]}</pre>
-              <button type="button" className="wx-btn" onClick={() => copyText(exports[exportKind!], "Export")}>Copy snippet</button>
+              <button
+                type="button"
+                className="wx-btn"
+                onClick={() => copyText(exports[exportKind], "Export")}
+              >
+                Copy snippet
+              </button>
             </div>
           ) : null}
 
@@ -474,7 +816,11 @@ export function PromptWorkspace() {
               {varKeys.map((key) => (
                 <label key={key}>
                   <span>{`{{${key}}}`}</span>
-                  <input value={vars[key] ?? ""} onChange={(e) => setVars((prev) => ({ ...prev, [key]: e.target.value }))} />
+                  <input
+                    value={vars[key] ?? ""}
+                    onChange={(e) => setVars((prev) => ({ ...prev, [key]: e.target.value }))}
+                    placeholder="Value counted after resolve"
+                  />
                 </label>
               ))}
             </div>
@@ -513,7 +859,7 @@ export function PromptWorkspace() {
             </div>
           </div>
 
-          {status ? <p className="wx-status">{status}</p> : null}
+          {status ? <p className="wx-status" role="status">{status}</p> : null}
         </div>
 
         <aside className="wx-rail">
@@ -523,14 +869,43 @@ export function PromptWorkspace() {
               <span>{MODELS_UPDATED}</span>
             </header>
             <div className="wx-provider-filters">
-              <button type="button" className={providerFilter === "All" ? "active" : undefined} onClick={() => setProviderFilter("All")}>All</button>
+              <button
+                type="button"
+                className={providerFilter === "All" ? "active" : undefined}
+                onClick={() => setProviderFilter("All")}
+              >
+                All
+              </button>
               {PROVIDERS.map((p) => (
-                <button key={p} type="button" className={providerFilter === p ? "active" : undefined} onClick={() => setProviderFilter(p)}>{p}</button>
+                <button
+                  key={p}
+                  type="button"
+                  className={providerFilter === p ? "active" : undefined}
+                  onClick={() => setProviderFilter(p)}
+                >
+                  {p}
+                </button>
               ))}
             </div>
+            {selectedHidden ? (
+              <p className="wx-muted">
+                Selected {model.label} is hidden by filter.{" "}
+                <button type="button" className="wx-linkish" onClick={() => setProviderFilter("All")}>
+                  Show all
+                </button>
+              </p>
+            ) : null}
             <div className="wx-models">
               {filteredModels.map((item) => (
-                <button key={item.id} type="button" className={modelId === item.id ? "active" : undefined} onClick={() => setModelId(item.id)}>
+                <button
+                  key={item.id}
+                  type="button"
+                  className={modelId === item.id ? "active" : undefined}
+                  onClick={() => {
+                    setModelId(item.id);
+                    flash(`${item.label} selected.`);
+                  }}
+                >
                   <strong>{item.label}</strong>
                   <span>{item.exact ? "exact" : "est."}</span>
                 </button>
@@ -539,11 +914,29 @@ export function PromptWorkspace() {
           </section>
 
           <section className="wx-panel">
-            <header><h2>Output ratio</h2><span>1:{outputRatio}</span></header>
-            <input type="range" min={0.5} max={5} step={0.5} value={outputRatio} onChange={(e) => setOutputRatio(Number(e.target.value))} />
+            <header>
+              <h2>Output ratio</h2>
+              <span>1:{outputRatio}</span>
+            </header>
+            <input
+              type="range"
+              min={0.5}
+              max={5}
+              step={0.5}
+              value={outputRatio}
+              aria-label={`Output ratio 1 to ${outputRatio}`}
+              onChange={(e) => setOutputRatio(Number(e.target.value))}
+            />
             <div className="wx-ratio-presets">
               {[0.5, 1, 3, 5].map((v) => (
-                <button key={v} type="button" className={outputRatio === v ? "active" : undefined} onClick={() => setOutputRatio(v)}>1:{v}</button>
+                <button
+                  key={v}
+                  type="button"
+                  className={outputRatio === v ? "active" : undefined}
+                  onClick={() => setOutputRatio(v)}
+                >
+                  1:{v}
+                </button>
               ))}
             </div>
             <button type="button" className="wx-btn block" onClick={() => setShowRatioCalc((v) => !v)}>
@@ -551,9 +944,26 @@ export function PromptWorkspace() {
             </button>
             {showRatioCalc ? (
               <div className="wx-ratio-calc">
-                <textarea rows={3} value={ratioResponse} onChange={(e) => setRatioResponse(e.target.value)} placeholder="Paste a real model response…" />
-                <p className="wx-muted">Measured 1:{measured.ratio.toFixed(2)}</p>
-                <button type="button" className="wx-btn accent block" disabled={!ratioResponse.trim()} onClick={() => { setOutputRatio(Math.min(5, Math.max(0.5, Math.round(measured.ratio * 2) / 2 || 1))); setStatus("Ratio updated."); }}>
+                <textarea
+                  rows={3}
+                  value={ratioResponse}
+                  onChange={(e) => setRatioResponse(e.target.value)}
+                  placeholder="Paste a real model response…"
+                />
+                <p className="wx-muted">
+                  Measured 1:{measured.ratio.toFixed(2)}
+                  {!hasContent ? " · needs a prompt above" : ""}
+                </p>
+                <button
+                  type="button"
+                  className="wx-btn accent block"
+                  disabled={!ratioResponse.trim() || !hasContent}
+                  onClick={() => {
+                    const next = Math.min(5, Math.max(0.5, Math.round(measured.ratio * 2) / 2 || 1));
+                    setOutputRatio(next);
+                    flash(`Ratio set to 1:${next}.`);
+                  }}
+                >
                   Apply measured ratio
                 </button>
               </div>
@@ -564,8 +974,20 @@ export function PromptWorkspace() {
             <header>
               <h2>Cost comparison</h2>
               <div className="wx-seg mini">
-                <button type="button" className={compareMode === "chart" ? "active" : undefined} onClick={() => setCompareMode("chart")}>Chart</button>
-                <button type="button" className={compareMode === "table" ? "active" : undefined} onClick={() => setCompareMode("table")}>Table</button>
+                <button
+                  type="button"
+                  className={compareMode === "chart" ? "active" : undefined}
+                  onClick={() => setCompareMode("chart")}
+                >
+                  Chart
+                </button>
+                <button
+                  type="button"
+                  className={compareMode === "table" ? "active" : undefined}
+                  onClick={() => setCompareMode("table")}
+                >
+                  Table
+                </button>
               </div>
             </header>
             <p className="wx-cheap">Cheapest: {rows[0]?.model.label ?? "—"}</p>
@@ -573,18 +995,52 @@ export function PromptWorkspace() {
               <ul className="wx-bars">
                 {rows.slice(0, 8).map((row) => (
                   <li key={row.model.id}>
-                    <div className="wx-bar-label"><span>{row.model.label}</span><span>${row.cost.total.toFixed(4)}</span></div>
-                    <div className="wx-bar-track"><span style={{ width: `${(row.cost.total / maxBar) * 100}%` }} /></div>
+                    <button
+                      type="button"
+                      className="wx-bar-hit"
+                      onClick={() => {
+                        setModelId(row.model.id);
+                        setProviderFilter("All");
+                        flash(`${row.model.label} selected.`);
+                      }}
+                    >
+                      <div className="wx-bar-label">
+                        <span>{row.model.label}</span>
+                        <span>${row.cost.total.toFixed(4)}</span>
+                      </div>
+                      <div className="wx-bar-track">
+                        <span style={{ width: `${(row.cost.total / maxBar) * 100}%` }} />
+                      </div>
+                    </button>
                   </li>
                 ))}
               </ul>
             ) : (
               <div className="wx-table-wrap">
                 <table>
-                  <thead><tr><th>Model</th><th>$</th></tr></thead>
+                  <thead>
+                    <tr>
+                      <th>Model</th>
+                      <th>$</th>
+                    </tr>
+                  </thead>
                   <tbody>
                     {rows.map((row) => (
-                      <tr key={row.model.id}><td>{row.model.label}</td><td>${row.cost.total.toFixed(4)}</td></tr>
+                      <tr key={row.model.id}>
+                        <td>
+                          <button
+                            type="button"
+                            className="wx-linkish"
+                            onClick={() => {
+                              setModelId(row.model.id);
+                              setProviderFilter("All");
+                            }}
+                          >
+                            {row.model.label}
+                          </button>
+                        </td>
+                        <td>${row.cost.total.toFixed(4)}</td>
+                      </tr>
                     ))}
                   </tbody>
                 </table>
@@ -595,12 +1051,25 @@ export function PromptWorkspace() {
           <section className="wx-panel">
             <header>
               <h2>Versions</h2>
-              <button type="button" className="wx-btn tiny" onClick={() => { setVersions(saveVersion(resolved, versions)); setStatus("Version saved."); }}>+ Save</button>
+              <button
+                type="button"
+                className="wx-btn tiny"
+                onClick={onSaveVersion}
+                disabled={!hasContent}
+              >
+                + Save
+              </button>
             </header>
-            {versions.length === 0 ? <p className="wx-muted">Save versions to track changes.</p> : (
+            {versions.length === 0 ? (
+              <p className="wx-muted">Save versions to track changes.</p>
+            ) : (
               <ul className="wx-list">
                 {versions.map((item) => (
-                  <li key={item.id}><button type="button" onClick={() => setPrompt(item.text)}>{item.preview}</button></li>
+                  <li key={item.id}>
+                    <button type="button" onClick={() => setPrompt(item.text)}>
+                      {item.preview}
+                    </button>
+                  </li>
                 ))}
               </ul>
             )}
@@ -609,29 +1078,76 @@ export function PromptWorkspace() {
           <section className="wx-panel">
             <header>
               <h2>Saved prompts</h2>
-              <button type="button" className="wx-btn tiny" onClick={() => { setSnippets(saveSnippet(resolved, snippets)); setStatus("Snippet saved."); }}>Save</button>
+              <button
+                type="button"
+                className="wx-btn tiny"
+                onClick={onSaveSnippet}
+                disabled={!hasContent}
+              >
+                Save
+              </button>
             </header>
-            {snippets.length === 0 ? <p className="wx-muted">Pin prompts you reuse often.</p> : (
+            {snippets.length === 0 ? (
+              <p className="wx-muted">Pin prompts you reuse often.</p>
+            ) : (
               <ul className="wx-list">
                 {snippets.map((item) => (
-                  <li key={item.id}><button type="button" onClick={() => setPrompt(item.text)}>{item.preview}</button></li>
+                  <li key={item.id}>
+                    <button type="button" onClick={() => setPrompt(item.text)}>
+                      {item.preview}
+                    </button>
+                  </li>
                 ))}
               </ul>
             )}
           </section>
 
           <section className="wx-panel">
-            <header><h2>Session</h2></header>
+            <header>
+              <h2>Session</h2>
+              <button
+                type="button"
+                className="wx-btn tiny"
+                onClick={() => {
+                  const cleared = { prompts: 0, tokens: 0, cost: 0 };
+                  setSession(cleared);
+                  try {
+                    window.localStorage.setItem(
+                      "fluxkit-weigh-session-v1",
+                      JSON.stringify(cleared),
+                    );
+                  } catch {
+                    /* ignore */
+                  }
+                  flash("Session cleared.");
+                }}
+              >
+                Reset
+              </button>
+            </header>
             <div className="wx-session-grid">
-              <div><strong>{session.prompts}</strong><span>prompts</span></div>
-              <div><strong>{session.tokens.toLocaleString()}</strong><span>tokens</span></div>
-              <div><strong>${session.cost.toFixed(3)}</strong><span>est.</span></div>
+              <div>
+                <strong>{session.prompts}</strong>
+                <span>prompts</span>
+              </div>
+              <div>
+                <strong>{session.tokens.toLocaleString()}</strong>
+                <span>tokens</span>
+              </div>
+              <div>
+                <strong>${session.cost.toFixed(3)}</strong>
+                <span>est.</span>
+              </div>
             </div>
           </section>
 
           <section className="wx-panel">
-            <header><h2>History</h2></header>
-            {history.length === 0 ? <p className="wx-muted">Recent prompts appear here.</p> : (
+            <header>
+              <h2>History</h2>
+            </header>
+            {history.length === 0 ? (
+              <p className="wx-muted">Recent prompts appear here.</p>
+            ) : (
               <ul className="wx-list">
                 {history.slice(0, 8).map((item) => (
                   <li key={item.id}>

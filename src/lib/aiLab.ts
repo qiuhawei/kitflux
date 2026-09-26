@@ -684,7 +684,7 @@ export function readShareHash(): string | null {
 }
 
 export function shareUrl(text: string, origin = typeof window !== "undefined" ? window.location.origin : "") {
-  return `${origin}/${encodeShareHash(text)}`;
+  return `${origin}${encodeShareHash(text)}`;
 }
 
 export function diffLines(a: string, b: string) {

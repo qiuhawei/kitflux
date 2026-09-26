@@ -304,6 +304,16 @@ button, input, textarea, select { font: inherit; color: inherit; }
   border-color: var(--line-strong);
 }
 
+.wx-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.wx-btn:disabled:hover {
+  color: var(--ink-soft);
+  border-color: var(--line);
+}
+
 .wx-btn.on,
 .wx-btn.accent {
   background: rgba(37, 99, 235, 0.12);
@@ -351,6 +361,18 @@ button, input, textarea, select { font: inherit; color: inherit; }
   border-radius: var(--radius);
   border: 1px solid var(--line);
   background: rgba(15, 23, 42, 0.65);
+}
+
+.wx-sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.wx-sheet-head strong {
+  font-size: 0.88rem;
 }
 
 .wx-template-grid {
@@ -450,6 +472,13 @@ button, input, textarea, select { font: inherit; color: inherit; }
 .wx-heat-1 { background: rgba(37, 99, 235, 0.14); border-radius: 3px; }
 .wx-heat-2 { background: rgba(251, 191, 36, 0.16); border-radius: 3px; }
 .wx-heat-3 { background: rgba(248, 113, 113, 0.2); border-radius: 3px; }
+
+.wx-heat-empty {
+  display: block;
+  padding: 1.5rem 0.25rem;
+  color: var(--ink-mute);
+  font-size: 0.86rem;
+}
 
 .wx-sample {
   position: absolute;
@@ -728,6 +757,20 @@ button, input, textarea, select { font: inherit; color: inherit; }
   padding: 0;
   display: grid;
   gap: 0.4rem;
+}
+
+.wx-bar-hit {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0.15rem 0;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 6px;
+}
+
+.wx-bar-hit:hover .wx-bar-label {
+  color: var(--ink);
 }
 
 .wx-bar-label {
