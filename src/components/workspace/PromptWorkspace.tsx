@@ -5,6 +5,8 @@ import {
   PRICE_MODELS,
   PROMPT_TEMPLATES,
   PROVIDERS,
+  DEFAULT_MODEL_ID,
+  MODELS_UPDATED,
   SAMPLE_PROMPT,
   buildFromParts,
   bumpSession,
@@ -55,7 +57,7 @@ function newTurn(role: ChatTurn["role"], content = ""): ChatTurn {
 }
 
 function newStep(): ChainStep {
-  return { id: uid(), name: "Step", modelId: PRICE_MODELS[0].id, prompt: "" };
+  return { id: uid(), name: "Step", modelId: DEFAULT_MODEL_ID, prompt: "" };
 }
 
 export function PromptWorkspace() {
@@ -67,7 +69,7 @@ export function PromptWorkspace() {
     newTurn("system", "You are a careful assistant."),
     newTurn("user", "Explain tokens vs words in one short paragraph."),
   ]);
-  const [modelId, setModelId] = useState("gpt-4o");
+  const [modelId, setModelId] = useState(DEFAULT_MODEL_ID);
   const [providerFilter, setProviderFilter] = useState("All");
   const [outputRatio, setOutputRatio] = useState(3);
   const [requests, setRequests] = useState(1000);
@@ -224,7 +226,8 @@ export function PromptWorkspace() {
           </h1>
           <p>
             Count tokens and estimate API cost across {PRICE_MODELS.length} models ·{" "}
-            {PROVIDERS.length} providers. Optimize, compare, and ship — 100% in your browser.
+            {PROVIDERS.length} providers (GPT-5.4, Claude Opus 4.7, Gemini 3.1, Grok 4.6, DeepSeek
+            V4…). Optimize, compare, and ship — 100% in your browser.
           </p>
           <div className="wx-pills">
             <span>
@@ -461,6 +464,9 @@ export function PromptWorkspace() {
         <aside className="wx-side">
           <section className="wx-panel">
             <h2>Model</h2>
+            <p className="wx-muted" style={{ marginBottom: "0.45rem" }}>
+              Updated {MODELS_UPDATED} · {PRICE_MODELS.length} models · planning prices
+            </p>
             <div className="wx-provider-filters">
               <button type="button" className={providerFilter === "All" ? "active" : undefined} onClick={() => setProviderFilter("All")}>All</button>
               {PROVIDERS.map((p) => (

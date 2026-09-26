@@ -62,44 +62,60 @@ export type ChainStep = {
   prompt: string;
 };
 
-/** Planning tiers — confirm on vendor pages. */
+/** Planning tiers — confirm on vendor pages. Updated 2026-09-26. */
+export const MODELS_UPDATED = "2026-09-26";
+
 export const PRICE_MODELS: PriceModel[] = [
-  { id: "gpt-4o", label: "GPT-4o", provider: "OpenAI", family: "gpt", inputPerMillion: 2.5, outputPerMillion: 10, contextWindow: 128_000, exact: true, charsPerToken: 4 },
-  { id: "gpt-4o-mini", label: "GPT-4o mini", provider: "OpenAI", family: "gpt", inputPerMillion: 0.15, outputPerMillion: 0.6, contextWindow: 128_000, exact: true, charsPerToken: 4 },
+  // OpenAI — current flagship + still-common
+  { id: "gpt-5.4", label: "GPT-5.4", provider: "OpenAI", family: "gpt", inputPerMillion: 2.5, outputPerMillion: 15, contextWindow: 400_000, exact: true, charsPerToken: 4 },
+  { id: "gpt-5.4-mini", label: "GPT-5.4 mini", provider: "OpenAI", family: "gpt", inputPerMillion: 0.75, outputPerMillion: 4.5, contextWindow: 400_000, exact: true, charsPerToken: 4 },
+  { id: "gpt-5", label: "GPT-5", provider: "OpenAI", family: "gpt", inputPerMillion: 1.25, outputPerMillion: 10, contextWindow: 400_000, exact: true, charsPerToken: 4 },
+  { id: "gpt-5-pro", label: "GPT-5 Pro", provider: "OpenAI", family: "gpt", inputPerMillion: 15, outputPerMillion: 120, contextWindow: 400_000, exact: true, charsPerToken: 4 },
+  { id: "o3", label: "o3", provider: "OpenAI", family: "gpt", inputPerMillion: 10, outputPerMillion: 40, contextWindow: 200_000, exact: true, charsPerToken: 4 },
+  { id: "o4-mini", label: "o4-mini", provider: "OpenAI", family: "gpt", inputPerMillion: 1.1, outputPerMillion: 4.4, contextWindow: 200_000, exact: true, charsPerToken: 4 },
   { id: "gpt-4.1", label: "GPT-4.1", provider: "OpenAI", family: "gpt", inputPerMillion: 2, outputPerMillion: 8, contextWindow: 1_047_576, exact: true, charsPerToken: 4 },
   { id: "gpt-4.1-mini", label: "GPT-4.1 mini", provider: "OpenAI", family: "gpt", inputPerMillion: 0.4, outputPerMillion: 1.6, contextWindow: 1_047_576, exact: true, charsPerToken: 4 },
-  { id: "gpt-4.1-nano", label: "GPT-4.1 nano", provider: "OpenAI", family: "gpt", inputPerMillion: 0.1, outputPerMillion: 0.4, contextWindow: 1_047_576, exact: true, charsPerToken: 4 },
-  { id: "o3", label: "o3", provider: "OpenAI", family: "gpt", inputPerMillion: 10, outputPerMillion: 40, contextWindow: 200_000, exact: true, charsPerToken: 4 },
-  { id: "o3-mini", label: "o3-mini", provider: "OpenAI", family: "gpt", inputPerMillion: 1.1, outputPerMillion: 4.4, contextWindow: 200_000, exact: true, charsPerToken: 4 },
-  { id: "o4-mini", label: "o4-mini", provider: "OpenAI", family: "gpt", inputPerMillion: 1.1, outputPerMillion: 4.4, contextWindow: 200_000, exact: true, charsPerToken: 4 },
-  { id: "gpt-4-turbo", label: "GPT-4 Turbo", provider: "OpenAI", family: "gpt", inputPerMillion: 10, outputPerMillion: 30, contextWindow: 128_000, exact: true, charsPerToken: 4 },
-  { id: "gpt-3.5-turbo", label: "GPT-3.5 Turbo", provider: "OpenAI", family: "gpt", inputPerMillion: 0.5, outputPerMillion: 1.5, contextWindow: 16_385, exact: true, charsPerToken: 4 },
-  { id: "claude-opus-4", label: "Claude Opus 4", provider: "Anthropic", family: "claude", inputPerMillion: 15, outputPerMillion: 75, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
-  { id: "claude-sonnet-4", label: "Claude Sonnet 4", provider: "Anthropic", family: "claude", inputPerMillion: 3, outputPerMillion: 15, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
-  { id: "claude-haiku-3.5", label: "Claude Haiku 3.5", provider: "Anthropic", family: "claude", inputPerMillion: 0.8, outputPerMillion: 4, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
-  { id: "claude-3.7-sonnet", label: "Claude 3.7 Sonnet", provider: "Anthropic", family: "claude", inputPerMillion: 3, outputPerMillion: 15, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
-  { id: "claude-3.5-sonnet", label: "Claude 3.5 Sonnet", provider: "Anthropic", family: "claude", inputPerMillion: 3, outputPerMillion: 15, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
-  { id: "claude-3-opus", label: "Claude 3 Opus", provider: "Anthropic", family: "claude", inputPerMillion: 15, outputPerMillion: 75, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
+  { id: "gpt-4o", label: "GPT-4o", provider: "OpenAI", family: "gpt", inputPerMillion: 2.5, outputPerMillion: 10, contextWindow: 128_000, exact: true, charsPerToken: 4 },
+  { id: "gpt-4o-mini", label: "GPT-4o mini", provider: "OpenAI", family: "gpt", inputPerMillion: 0.15, outputPerMillion: 0.6, contextWindow: 128_000, exact: true, charsPerToken: 4 },
+
+  // Anthropic
+  { id: "claude-opus-4.7", label: "Claude Opus 4.7", provider: "Anthropic", family: "claude", inputPerMillion: 5, outputPerMillion: 25, contextWindow: 1_000_000, exact: false, charsPerToken: 3.5 },
+  { id: "claude-opus-4.6", label: "Claude Opus 4.6", provider: "Anthropic", family: "claude", inputPerMillion: 5, outputPerMillion: 25, contextWindow: 1_000_000, exact: false, charsPerToken: 3.5 },
+  { id: "claude-sonnet-4.6", label: "Claude Sonnet 4.6", provider: "Anthropic", family: "claude", inputPerMillion: 3, outputPerMillion: 15, contextWindow: 1_000_000, exact: false, charsPerToken: 3.5 },
+  { id: "claude-sonnet-4.5", label: "Claude Sonnet 4.5", provider: "Anthropic", family: "claude", inputPerMillion: 3, outputPerMillion: 15, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
+  { id: "claude-sonnet-5", label: "Claude Sonnet 5", provider: "Anthropic", family: "claude", inputPerMillion: 2, outputPerMillion: 10, contextWindow: 1_000_000, exact: false, charsPerToken: 3.5 },
+  { id: "claude-haiku-4.5", label: "Claude Haiku 4.5", provider: "Anthropic", family: "claude", inputPerMillion: 1, outputPerMillion: 5, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
+
+  // Google
+  { id: "gemini-3.1-pro", label: "Gemini 3.1 Pro", provider: "Google", family: "gemini", inputPerMillion: 2, outputPerMillion: 12, contextWindow: 1_048_576, exact: false, charsPerToken: 4 },
+  { id: "gemini-3.1-flash-lite", label: "Gemini 3.1 Flash-Lite", provider: "Google", family: "gemini", inputPerMillion: 0.25, outputPerMillion: 1.5, contextWindow: 1_048_576, exact: false, charsPerToken: 4 },
   { id: "gemini-2.5-pro", label: "Gemini 2.5 Pro", provider: "Google", family: "gemini", inputPerMillion: 1.25, outputPerMillion: 10, contextWindow: 1_000_000, exact: false, charsPerToken: 4 },
   { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash", provider: "Google", family: "gemini", inputPerMillion: 0.15, outputPerMillion: 0.6, contextWindow: 1_000_000, exact: false, charsPerToken: 4 },
   { id: "gemini-2.0-flash", label: "Gemini 2.0 Flash", provider: "Google", family: "gemini", inputPerMillion: 0.1, outputPerMillion: 0.4, contextWindow: 1_000_000, exact: false, charsPerToken: 4 },
-  { id: "gemini-1.5-pro", label: "Gemini 1.5 Pro", provider: "Google", family: "gemini", inputPerMillion: 1.25, outputPerMillion: 5, contextWindow: 2_000_000, exact: false, charsPerToken: 4 },
-  { id: "gemini-1.5-flash", label: "Gemini 1.5 Flash", provider: "Google", family: "gemini", inputPerMillion: 0.075, outputPerMillion: 0.3, contextWindow: 1_000_000, exact: false, charsPerToken: 4 },
-  { id: "grok-2", label: "Grok 2", provider: "xAI", family: "grok", inputPerMillion: 2, outputPerMillion: 10, contextWindow: 131_072, exact: false, charsPerToken: 4 },
-  { id: "grok-3", label: "Grok 3", provider: "xAI", family: "grok", inputPerMillion: 3, outputPerMillion: 15, contextWindow: 131_072, exact: false, charsPerToken: 4 },
-  { id: "deepseek-v3", label: "DeepSeek V3", provider: "DeepSeek", family: "deepseek", inputPerMillion: 0.27, outputPerMillion: 1.1, contextWindow: 128_000, exact: false, charsPerToken: 3.8 },
+
+  // xAI
+  { id: "grok-4.6", label: "Grok 4.6", provider: "xAI", family: "grok", inputPerMillion: 2, outputPerMillion: 6, contextWindow: 500_000, exact: false, charsPerToken: 4 },
+  { id: "grok-4.20", label: "Grok 4.20", provider: "xAI", family: "grok", inputPerMillion: 1.25, outputPerMillion: 2.5, contextWindow: 1_000_000, exact: false, charsPerToken: 4 },
+  { id: "grok-4.3", label: "Grok 4.3", provider: "xAI", family: "grok", inputPerMillion: 1.25, outputPerMillion: 2.5, contextWindow: 1_000_000, exact: false, charsPerToken: 4 },
+  { id: "grok-4.1-fast", label: "Grok 4.1 Fast", provider: "xAI", family: "grok", inputPerMillion: 0.2, outputPerMillion: 0.5, contextWindow: 2_000_000, exact: false, charsPerToken: 4 },
+
+  // DeepSeek
+  { id: "deepseek-v4-pro", label: "DeepSeek V4 Pro", provider: "DeepSeek", family: "deepseek", inputPerMillion: 0.435, outputPerMillion: 0.87, contextWindow: 1_000_000, exact: false, charsPerToken: 3.8 },
+  { id: "deepseek-v4-flash", label: "DeepSeek V4 Flash", provider: "DeepSeek", family: "deepseek", inputPerMillion: 0.14, outputPerMillion: 0.28, contextWindow: 1_000_000, exact: false, charsPerToken: 3.8 },
   { id: "deepseek-r1", label: "DeepSeek R1", provider: "DeepSeek", family: "deepseek", inputPerMillion: 0.55, outputPerMillion: 2.19, contextWindow: 128_000, exact: false, charsPerToken: 3.8 },
-  { id: "deepseek-chat", label: "DeepSeek Chat", provider: "DeepSeek", family: "deepseek", inputPerMillion: 0.14, outputPerMillion: 0.28, contextWindow: 64_000, exact: false, charsPerToken: 3.8 },
+
+  // Mistral / Meta / Alibaba
   { id: "mistral-large", label: "Mistral Large", provider: "Mistral", family: "mistral", inputPerMillion: 2, outputPerMillion: 6, contextWindow: 128_000, exact: false, charsPerToken: 3.9 },
   { id: "mistral-small", label: "Mistral Small", provider: "Mistral", family: "mistral", inputPerMillion: 0.1, outputPerMillion: 0.3, contextWindow: 128_000, exact: false, charsPerToken: 3.9 },
-  { id: "mistral-nemo", label: "Mistral Nemo", provider: "Mistral", family: "mistral", inputPerMillion: 0.15, outputPerMillion: 0.15, contextWindow: 128_000, exact: false, charsPerToken: 3.9 },
-  { id: "llama-3.1-70b", label: "Llama 3.1 70B", provider: "Meta", family: "llama", inputPerMillion: 0.59, outputPerMillion: 0.79, contextWindow: 128_000, exact: false, charsPerToken: 4 },
+  { id: "llama-4-maverick", label: "Llama 4 Maverick", provider: "Meta", family: "llama", inputPerMillion: 0.27, outputPerMillion: 0.85, contextWindow: 1_000_000, exact: false, charsPerToken: 4 },
   { id: "llama-3.3-70b", label: "Llama 3.3 70B", provider: "Meta", family: "llama", inputPerMillion: 0.59, outputPerMillion: 0.79, contextWindow: 128_000, exact: false, charsPerToken: 4 },
+  { id: "qwen-3-235b", label: "Qwen3 235B", provider: "Alibaba", family: "qwen", inputPerMillion: 0.2, outputPerMillion: 0.6, contextWindow: 262_144, exact: false, charsPerToken: 3.7 },
   { id: "qwen-2.5-72b", label: "Qwen 2.5 72B", provider: "Alibaba", family: "qwen", inputPerMillion: 0.35, outputPerMillion: 0.4, contextWindow: 131_072, exact: false, charsPerToken: 3.7 },
 ];
 
 export const PROVIDERS = [...new Set(PRICE_MODELS.map((m) => m.provider))];
 export const PROVIDER_COUNT = PROVIDERS.length;
+export const DEFAULT_MODEL_ID = "gpt-5.4";
 
 export const SAMPLE_PROMPT = `You are a senior software engineer with deep expertise in TypeScript and React. You prioritize correctness, clarity, and maintainability.
 

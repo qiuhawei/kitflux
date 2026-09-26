@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AdSlot } from "@/components/AdSlot";
-import { PRICE_MODELS, PROVIDERS } from "@/lib/aiLab";
+import { PRICE_MODELS, PROVIDERS, MODELS_UPDATED } from "@/lib/aiLab";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -48,8 +48,8 @@ export default function ComparePage() {
             <p className="eyebrow">Compare</p>
             <h1>AI model pricing & context</h1>
             <p className="lede">
-              {PRICE_MODELS.length} planning tiers across {PROVIDERS.length} providers. Sticker
-              prices lie without your prompt — open the{" "}
+              {PRICE_MODELS.length} planning tiers across {PROVIDERS.length} providers. Catalog
+              updated {MODELS_UPDATED}. Sticker prices lie without your prompt — open the{" "}
               <Link href="/">token counter</Link> to weigh a real draft.
             </p>
           </div>
