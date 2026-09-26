@@ -7,9 +7,9 @@ import { siteConfig } from "@/lib/site";
 
 const links = [
   { href: "/", label: "Token Counter" },
+  { href: "/system-prompts", label: "System Prompts" },
   { href: "/compare", label: "Compare" },
-  { href: "/guides", label: "Guides" },
-  { href: "/about", label: "About" },
+  { href: "/deprecations", label: "Deprecations" },
 ] as const;
 
 export function SiteHeader() {
@@ -66,6 +66,10 @@ export function SiteHeader() {
               </Link>
             );
           })}
+          <Link href="/guides" className="nav-guide" onClick={() => setOpen(false)}>
+            <span className="nav-guide-dot" aria-hidden />
+            Guide
+          </Link>
         </nav>
       </div>
     </header>

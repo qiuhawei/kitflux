@@ -19,7 +19,13 @@ export function SiteFooter() {
               <Link href="/">Token Counter</Link>
             </li>
             <li>
+              <Link href="/system-prompts">System Prompts</Link>
+            </li>
+            <li>
               <Link href="/compare">Model Compare</Link>
+            </li>
+            <li>
+              <Link href="/deprecations">Deprecations</Link>
             </li>
             <li>
               <Link href="/guides">Guides</Link>
