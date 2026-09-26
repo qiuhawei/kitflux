@@ -20,7 +20,9 @@ export function AiTokenCounterTool() {
     <div className="tool-panel">
       <p className="tool-hint">
         Need tokens + cost + templates together? Open the{" "}
-        <a href="/ai">AI Lab workspace</a> — this page is the focused counter.
+        <a href="/ai">AI Lab workspace</a> — this page is the focused counter. New to tokens? Read
+        the <a href="/guides/chatgpt-token-counter-guide">token guide</a> or{" "}
+        <a href="/guides/private-ai-token-counter">private counting</a>.
       </p>
       <div className="tool-actions" role="group" aria-label="Model estimate">
         {TOKEN_PRESETS.map((item) => (

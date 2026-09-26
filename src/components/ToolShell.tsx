@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ToolDefinition } from "@/lib/tools";
+import { getGuidesForTool } from "@/lib/guides";
 import { categories, getRelatedTools } from "@/lib/tools";
 import { AdSlot } from "@/components/AdSlot";
 import { ShareButton } from "@/components/ShareButton";
@@ -11,6 +12,7 @@ type ToolShellProps = {
 
 export function ToolShell({ tool, children }: ToolShellProps) {
   const related = getRelatedTools(tool.slug);
+  const relatedGuides = getGuidesForTool(tool.slug);
   const immersive = tool.slug === "json-formatter" || tool.slug === "ai-lab";
 
   return (
@@ -94,6 +96,20 @@ export function ToolShell({ tool, children }: ToolShellProps) {
             </p>
           </section>
         )}
+
+        {relatedGuides.length > 0 ? (
+          <section className="related-block">
+            <h2>Guides that deepen this tool</h2>
+            <div className="related-grid">
+              {relatedGuides.map((guide) => (
+                <Link key={guide.slug} href={`/guides/${guide.slug}`} className="related-card">
+                  <strong>{guide.title}</strong>
+                  <span>{guide.description}</span>
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section className="related-block">
           <h2>Related tools</h2>

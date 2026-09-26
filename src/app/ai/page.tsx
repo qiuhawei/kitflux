@@ -116,10 +116,12 @@ export default function AiHubPage() {
             </ul>
             <p>
               New here? Read the{" "}
-              <Link href="/guides/chatgpt-token-counter-guide">token counter guide</Link>,{" "}
-              <Link href="/guides/estimate-openai-api-cost">API cost guide</Link>, or{" "}
-              <Link href="/guides/gpt-vs-claude-tokens">GPT vs Claude tokens</Link> — then open the
-              lab.
+              <Link href="/guides/chatgpt-token-counter-guide">token guide</Link>,{" "}
+              <Link href="/guides/estimate-openai-api-cost">API cost</Link>,{" "}
+              <Link href="/guides/reduce-chatgpt-api-cost">cut spend</Link>,{" "}
+              <Link href="/guides/private-ai-token-counter">private counting</Link>,{" "}
+              <Link href="/guides/prompt-token-budget">token budgets</Link>, or{" "}
+              <Link href="/guides/gpt-vs-claude-tokens">GPT vs Claude</Link> — then open the lab.
             </p>
           </article>
         </div>

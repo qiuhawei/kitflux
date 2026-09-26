@@ -168,8 +168,168 @@ export const guides: GuideArticle[] = [
       },
     ],
   },
+  {
+    slug: "reduce-chatgpt-api-cost",
+    title: "How to Reduce ChatGPT & Claude API Cost Without Killing Quality",
+    description:
+      "Concrete levers to cut LLM spend: shorter prompts, smarter model tiers, caching, and output caps — with a Fluxkit AI Lab checklist.",
+    keywords: [
+      "reduce chatgpt api cost",
+      "lower claude api bill",
+      "llm cost optimization",
+      "cheap gpt-4o mini prompts",
+    ],
+    updated: "2026-09-26",
+    readingMinutes: 8,
+    relatedToolSlugs: ["ai-lab", "ai-cost-calculator", "prompt-builder"],
+    sections: [
+      {
+        heading: "Cut tokens before you cut quality",
+        paragraphs: [
+          "Most teams jump straight to a cheaper model. Often the faster win is deleting dead weight: unused system rules, duplicate examples, full HTML dumps, and chat history that is no longer relevant. Every token you remove multiplies across every request.",
+          "Paste a real production prompt into Fluxkit AI Lab, note the GPT/Claude/Gemini estimates, trim, then re-check. If the draft still works in a quick smoke test, you saved money without changing vendors.",
+        ],
+      },
+      {
+        heading: "Match the model to the job",
+        paragraphs: [
+          "Classification, extraction, and formatting rarely need a frontier model. Keep large models for hard reasoning and use mini/haiku tiers for high-volume mundane work. AI Lab’s price chips make the gap obvious once you set request volume.",
+        ],
+        bullets: [
+          "Route easy traffic to a small model; escalate only on low confidence.",
+          "Cap max output tokens — long answers are often the silent cost killer.",
+          "Cache static system prompts when the provider supports prompt caching.",
+        ],
+      },
+      {
+        heading: "Measure, then lock a budget",
+        paragraphs: [
+          "After you trim and tier, run the cost calculator with realistic request counts (including retries and evals). Share an AI Lab hash link with the team so everyone sees the same draft assumptions — not a spreadsheet guess.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "What is the biggest LLM cost lever?",
+        answer:
+          "Usually prompt and context size at volume. Model tier is second. Output length is third and often underestimated.",
+      },
+      {
+        question: "Can Fluxkit change my live OpenAI bill?",
+        answer:
+          "No. It helps you plan and compare. Billing still happens on the provider after you ship.",
+      },
+    ],
+  },
+  {
+    slug: "private-ai-token-counter",
+    title: "Private AI Token Counter: Count Tokens Without Uploading Prompts",
+    description:
+      "Why browser-local token estimates matter for secret prompts, and how Fluxkit AI Lab compares GPT/Claude/Gemini counts privately.",
+    keywords: [
+      "private token counter",
+      "count chatgpt tokens offline",
+      "browser token counter",
+      "no upload prompt counter",
+    ],
+    updated: "2026-09-26",
+    readingMinutes: 5,
+    relatedToolSlugs: ["ai-lab", "ai-token-counter"],
+    sections: [
+      {
+        heading: "Prompts can contain secrets",
+        paragraphs: [
+          "Customer names, API keys in examples, unreleased product copy, and internal strategy often live inside drafts. Pasting that text into a random online counter means you trust that site’s logs, CDN, and ads stack.",
+          "Fluxkit’s token tools are designed to run in your browser. Estimates happen locally so you can check size without sending the draft to Fluxkit for tokenization.",
+        ],
+      },
+      {
+        heading: "Privacy plus a workflow",
+        paragraphs: [
+          "A private single text box is good. A private workspace is better: draft with templates, compare families, forecast cost, keep local history, and share via #prompt= hash links that decode on the recipient’s device.",
+          "That combination is the differentiation versus clone “token counter” pages that only expose one number.",
+        ],
+        bullets: [
+          "Use AI Lab for full drafts; use the focused token counter when you only need one estimate.",
+          "Treat browser estimates as planning — vendor dashboards remain billing truth.",
+          "Clear local history on shared machines if drafts are sensitive.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Does Fluxkit store my prompt on a server?",
+        answer:
+          "Token and cost estimates are computed in the browser. Hash share links put the draft in the URL fragment, which browsers do not send to the server on navigation.",
+      },
+      {
+        question: "Is offline counting exact?",
+        answer:
+          "It is an approximation for planning. For invoice-grade counts, use the provider’s tokenizer.",
+      },
+    ],
+  },
+  {
+    slug: "prompt-token-budget",
+    title: "How to Set a Prompt Token Budget for RAG, Agents, and Chat",
+    description:
+      "A simple framework to allocate tokens across system prompt, retrieval, history, and output — then validate with Fluxkit AI Lab.",
+    keywords: [
+      "prompt token budget",
+      "rag context window budget",
+      "agent token allocation",
+      "chatgpt context limit planning",
+    ],
+    updated: "2026-09-26",
+    readingMinutes: 7,
+    relatedToolSlugs: ["ai-lab", "ai-token-counter", "prompt-builder"],
+    sections: [
+      {
+        heading: "Split the window into jobs",
+        paragraphs: [
+          "A context window is a budget. If retrieval eats 80% and history eats the rest, the model has no room for a useful answer. Decide up front: system instructions, tools/schemas, retrieved chunks, conversation history, and reserved output.",
+          "Write those slices as percentages or hard caps (for example: 10% system, 50% RAG, 20% history, 20% output reserve). Then measure real text — do not trust word-count guesses.",
+        ],
+      },
+      {
+        heading: "Validate with one draft",
+        paragraphs: [
+          "Assemble a worst-case prompt (long system + top-k chunks + multi-turn history) in AI Lab. Compare GPT/Claude/Gemini estimates. If you are over budget on the family you ship, shrink retrieval first, then history, then instructions.",
+        ],
+        bullets: [
+          "Prefer fewer high-signal chunks over dumping an entire corpus.",
+          "Summarize old turns instead of replaying full transcripts.",
+          "Rebuild the prompt with the Prompt Builder template, then re-measure.",
+        ],
+      },
+      {
+        heading: "Revisit when models change",
+        paragraphs: [
+          "New model tiers change both price and practical context. Keep a golden fixture prompt and re-run it in AI Lab whenever you switch vendors or raise top-k. Share the hash link in the PR so reviewers see the budget impact.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "How large should the system prompt be?",
+        answer:
+          "As small as it can be while staying reliable. Many products waste hundreds of tokens on unused rules. Measure, delete, and re-test.",
+      },
+      {
+        question: "Do RAG chunks count as input tokens?",
+        answer:
+          "Yes. Retrieved text is input. It often dominates cost more than the user question itself.",
+      },
+    ],
+  },
 ];
 
 export function getGuide(slug: string) {
   return guides.find((guide) => guide.slug === slug);
+}
+
+export function getGuidesForTool(toolSlug: string, limit = 3) {
+  return guides
+    .filter((guide) => guide.relatedToolSlugs.includes(toolSlug))
+    .slice(0, limit);
 }

@@ -6,7 +6,7 @@ import { guides } from "@/lib/guides";
 export const metadata: Metadata = {
   title: "AI Guides — Tokens, Cost & Prompt Workflows",
   description:
-    "Practical guides on ChatGPT tokens, GPT vs Claude counts, and estimating OpenAI/Claude API cost — written for builders using Fluxkit AI Lab.",
+    "Practical guides on ChatGPT tokens, private counting, GPT vs Claude, prompt budgets, and cutting OpenAI/Claude API cost — written for builders using Fluxkit AI Lab.",
   alternates: { canonical: absoluteUrl("/guides") },
   openGraph: {
     title: `AI Guides | ${siteConfig.name}`,
@@ -21,10 +21,10 @@ export default function GuidesIndexPage() {
       <header className="page-head">
         <div>
           <p className="eyebrow">Learn</p>
-          <h1>AI guides for traffic that converts</h1>
+          <h1>AI guides for builders</h1>
           <p className="lede">
-            Long-tail explainers that funnel into Fluxkit’s differentiated AI Lab — not generic
-            “another counter” pages.
+            Long-tail explainers on tokens, cost, privacy, and prompt budgets — each one leads into
+            Fluxkit’s differentiated AI Lab workflow.
           </p>
         </div>
         <Link href="/ai" className="btn btn-primary">

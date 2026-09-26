@@ -21,8 +21,10 @@ export function AiCostCalculatorTool() {
   return (
     <div className="tool-panel">
       <p className="tool-hint">
-        Want prompt size to drive cost automatically? Use{" "}
-        <a href="/ai">AI Lab</a> — this page is the focused calculator.
+        Want prompt size to drive cost automatically? Use <a href="/ai">AI Lab</a> — this page is
+        the focused calculator. See also{" "}
+        <a href="/guides/estimate-openai-api-cost">estimating API cost</a> and{" "}
+        <a href="/guides/reduce-chatgpt-api-cost">cutting LLM spend</a>.
       </p>
       <div className="tool-actions" role="group" aria-label="Model pricing">
         {PRICE_MODELS.map((item) => (

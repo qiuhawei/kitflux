@@ -27,8 +27,8 @@ export default function AboutPage() {
         such as the <Link href="/tools/ai-token-counter">AI Token Counter</Link>,{" "}
         <Link href="/tools/prompt-builder">Prompt Builder</Link>, and{" "}
         <Link href="/tools/ai-cost-calculator">AI Cost Calculator</Link>, plus a JSON studio and
-        more. Each tool page explains when to use it, how to run the steps, and answers common
-        questions for search and humans alike.
+        more. For deeper workflows, start in the <Link href="/ai">AI Lab</Link> or read the{" "}
+        <Link href="/guides">AI guides</Link> on tokens, API cost, and private counting.
       </p>
       <h2>Privacy by design</h2>
       <p>

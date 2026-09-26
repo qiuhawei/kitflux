@@ -32,7 +32,7 @@ export default function HomePage() {
               Open AI Lab
             </Link>
             <Link href="/guides" className="btn btn-secondary">
-              SEO guides
+              Read guides
             </Link>
           </div>
         </div>
