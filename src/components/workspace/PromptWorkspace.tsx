@@ -8,6 +8,7 @@ import {
   DEFAULT_MODEL_ID,
   MODELS_UPDATED,
   SAMPLE_PROMPT,
+  SAMPLE_CONVERSATION,
   buildFromParts,
   bumpSession,
   chainStepCosts,
@@ -63,7 +64,11 @@ export function PromptWorkspace() {
   const [createTab, setCreateTab] = useState<CreateTab | null>(null);
   const [createMenuOpen, setCreateMenuOpen] = useState(false);
   const [text, setText] = useState("");
-  const [turns, setTurns] = useState<ChatTurn[]>([newTurn("system"), newTurn("user")]);
+  const [turns, setTurns] = useState<ChatTurn[]>([
+    newTurn("system"),
+    newTurn("user"),
+    newTurn("assistant"),
+  ]);
   const [modelId, setModelId] = useState(DEFAULT_MODEL_ID);
   const [providerFilter, setProviderFilter] = useState("All");
   const [outputRatio, setOutputRatio] = useState(3);
@@ -214,15 +219,46 @@ export function PromptWorkspace() {
     if (next === mode) return;
     if (next === "conversation" && mode === "single") {
       if (text.trim()) {
-        setTurns([newTurn("system"), newTurn("user", text)]);
+        setTurns([newTurn("system"), newTurn("user", text), newTurn("assistant")]);
+      } else if (!turns.some((t) => t.content.trim())) {
+        setTurns([newTurn("system"), newTurn("user"), newTurn("assistant")]);
       }
     } else if (next === "single" && mode === "conversation") {
-      const joined = turnsToText(turns);
+      const joined = turnsToText(turns, true);
       if (joined.trim()) setText(joined);
     }
     setMode(next);
     setView("edit");
     setCreateMenuOpen(false);
+  }
+
+  function addTurn() {
+    setTurns((prev) => {
+      const last = [...prev].reverse().find((t) => t.role !== "system");
+      const role: ChatTurn["role"] = !last ? "user" : last.role === "user" ? "assistant" : "user";
+      return [...prev, newTurn(role)];
+    });
+  }
+
+  function loadSampleConversation() {
+    setMode("conversation");
+    setTurns(SAMPLE_CONVERSATION.map((t) => ({ ...t, id: uid() })));
+    setView("edit");
+    setCreateTab(null);
+    setCreateMenuOpen(false);
+    setExportKind(null);
+    flash("Sample conversation loaded.");
+  }
+
+  function cycleRole(id: string) {
+    const order: ChatTurn["role"][] = ["system", "user", "assistant"];
+    setTurns((prev) =>
+      prev.map((t) => {
+        if (t.id !== id) return t;
+        const i = order.indexOf(t.role);
+        return { ...t, role: order[(i + 1) % order.length] };
+      }),
+    );
   }
 
   function openCreate(tab: CreateTab) {
@@ -326,7 +362,7 @@ export function PromptWorkspace() {
 
   function clearPrompt() {
     setText("");
-    setTurns([newTurn("system"), newTurn("user")]);
+    setTurns([newTurn("system"), newTurn("user"), newTurn("assistant")]);
     setVars({});
     setUndoText(null);
     setView("edit");
@@ -659,55 +695,74 @@ export function PromptWorkspace() {
               />
             ) : (
               <div className="wx-turns">
-                {turns.map((turn) => (
-                  <div key={turn.id} className="wx-turn">
-                    <div className="wx-turn-head">
-                      <select
-                        value={turn.role}
+                <p className="wx-turns-hint">
+                  Weigh a multi-turn chat as total input. Role badges cycle on click · tokens update live.
+                </p>
+                {turns.map((turn, index) => {
+                  const turnTok = countTokens(turn.content, model).tokens;
+                  const canRemove = turn.role !== "system" || turns.filter((t) => t.role === "system").length > 1;
+                  const placeholder =
+                    turn.role === "system"
+                      ? "System message…"
+                      : turn.role === "user"
+                        ? "User message…"
+                        : "Assistant message…";
+                  return (
+                    <div key={turn.id} className={`wx-turn role-${turn.role}`}>
+                      <div className="wx-turn-head">
+                        <button
+                          type="button"
+                          className={`wx-role-badge role-${turn.role}`}
+                          title="Click to change role"
+                          onClick={() => cycleRole(turn.id)}
+                        >
+                          {turn.role === "system"
+                            ? "System"
+                            : turn.role === "user"
+                              ? "User"
+                              : "Assistant"}
+                        </button>
+                        <div className="wx-turn-meta">
+                          <span>{turnTok > 0 ? `${turnTok} tok` : ""}</span>
+                          {canRemove ? (
+                            <button
+                              type="button"
+                              className="wx-turn-remove"
+                              aria-label={`Remove ${turn.role} turn`}
+                              onClick={() => setTurns((prev) => prev.filter((t) => t.id !== turn.id))}
+                            >
+                              Remove
+                            </button>
+                          ) : (
+                            <span className="wx-turn-index">#{index + 1}</span>
+                          )}
+                        </div>
+                      </div>
+                      <textarea
+                        value={turn.content}
                         onChange={(e) =>
                           setTurns((prev) =>
                             prev.map((t) =>
-                              t.id === turn.id
-                                ? { ...t, role: e.target.value as ChatTurn["role"] }
-                                : t,
+                              t.id === turn.id ? { ...t, content: e.target.value } : t,
                             ),
                           )
                         }
-                      >
-                        <option value="system">system</option>
-                        <option value="user">user</option>
-                        <option value="assistant">assistant</option>
-                      </select>
-                      <button
-                        type="button"
-                        className="wx-btn tiny"
-                        onClick={() => setTurns((prev) => prev.filter((t) => t.id !== turn.id))}
-                        disabled={turns.length <= 1}
-                      >
-                        Remove
-                      </button>
+                        placeholder={placeholder}
+                        aria-label={`${turn.role} message input`}
+                        rows={turn.role === "system" ? 2 : 3}
+                        spellCheck={false}
+                      />
                     </div>
-                    <textarea
-                      value={turn.content}
-                      onChange={(e) =>
-                        setTurns((prev) =>
-                          prev.map((t) =>
-                            t.id === turn.id ? { ...t, content: e.target.value } : t,
-                          ),
-                        )
-                      }
-                      rows={3}
-                      spellCheck={false}
-                    />
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  className="wx-btn"
-                  onClick={() => setTurns((prev) => [...prev, newTurn("user")])}
-                >
-                  + Add message
+                  );
+                })}
+                <button type="button" className="wx-add-turn" onClick={addTurn}>
+                  + Add turn
                 </button>
+                {!hasContent ? (
+                  <button type="button" className="wx-sample wx-sample-inline" onClick={loadSampleConversation}>
+                    Try a sample conversation
+                  </button>
+                ) : null}
               </div>
             )}
             {!text && mode === "single" && view === "edit" ? (

@@ -463,12 +463,31 @@ export function chainStepCosts(steps: ChainStep[], outputRatio: number) {
   });
 }
 
-export function turnsToText(turns: ChatTurn[]) {
+export function turnsToText(turns: ChatTurn[], withRoles = false) {
   return turns
     .filter((t) => t.content.trim())
-    .map((t) => `${t.role.toUpperCase()}:\n${t.content.trim()}`)
+    .map((t) => (withRoles ? `${t.role}:\n${t.content.trim()}` : t.content.trim()))
     .join("\n\n");
 }
+
+export const SAMPLE_CONVERSATION: ChatTurn[] = [
+  {
+    id: "sample-sys",
+    role: "system",
+    content: "You are a concise product advisor. Prefer short answers with concrete numbers.",
+  },
+  {
+    id: "sample-user",
+    role: "user",
+    content: "We send ~2k token prompts and get ~6k token replies, 10k requests/day on GPT-5.4. Rough monthly cost?",
+  },
+  {
+    id: "sample-asst",
+    role: "assistant",
+    content:
+      "At planning rates: input ≈ $50–80/day, output ≈ $300–450/day → about $10k–$16k/month before caching. Switch long replies to a cheaper model to cut output spend first.",
+  },
+];
 
 export function buildFromParts(parts: {
   role: string;
