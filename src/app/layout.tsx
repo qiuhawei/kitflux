@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Outfit, Syne } from "next/font/google";
+import { JetBrains_Mono, Noto_Sans_SC, Outfit, Syne } from "next/font/google";
 import { AdSenseScript } from "@/components/AdSenseScript";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -10,18 +10,32 @@ const syne = Syne({
   variable: "--font-syne",
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
+  display: "swap",
+  preload: true,
 });
 
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
+  preload: true,
+});
+
+const notoSansSc = Noto_Sans_SC({
+  variable: "--font-noto-sc",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
+  preload: false,
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
   weight: ["400", "500"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -58,6 +72,10 @@ export const metadata: Metadata = {
     title: `${siteConfig.name} — Free Online Tools`,
     description: siteConfig.description,
   },
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    shortcut: "/favicon.svg",
+  },
   robots: {
     index: true,
     follow: true,
@@ -71,7 +89,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${outfit.variable} ${jetbrainsMono.variable} h-full`}
+      className={`${syne.variable} ${outfit.variable} ${notoSansSc.variable} ${jetbrainsMono.variable} h-full`}
     >
       <head>
         {/* AdSense site ownership verification — required in <head> */}
@@ -81,7 +99,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           crossOrigin="anonymous"
         />
       </head>
-      <body className="min-h-full flex flex-col antialiased">
+      <body className={`${outfit.className} min-h-full flex flex-col antialiased`}>
         <AdSenseScript />
         <SiteHeader />
         <main className="flex-1">{children}</main>
