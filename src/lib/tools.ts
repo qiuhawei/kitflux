@@ -1,4 +1,4 @@
-export type ToolCategory = "ai" | "text" | "developer" | "security" | "time";
+export type ToolCategory = "json" | "ai" | "text" | "developer" | "security" | "time";
 
 export type ToolDefinition = {
   slug: string;
@@ -7,6 +7,8 @@ export type ToolDefinition = {
   description: string;
   keywords: string[];
   category: ToolCategory;
+  /** One-line blurb for dense portal cards */
+  blurb?: string;
   guide: {
     heading: string;
     intro: string;
@@ -20,6 +22,10 @@ export const categories: Record<
   ToolCategory,
   { label: string; description: string }
 > = {
+  json: {
+    label: "JSON Tools",
+    description: "Format, convert, compare, and decode JSON in your browser",
+  },
   ai: {
     label: "AI",
     description: "Token estimates, prompts, and API cost planning",
@@ -30,7 +36,7 @@ export const categories: Record<
   },
   developer: {
     label: "Developer",
-    description: "Format, encode, and inspect data",
+    description: "Encode, inspect, and transform data",
   },
   security: {
     label: "Security",
@@ -41,6 +47,15 @@ export const categories: Record<
     description: "Convert timestamps and dates",
   },
 };
+
+export const categoryOrder: ToolCategory[] = [
+  "json",
+  "ai",
+  "developer",
+  "text",
+  "security",
+  "time",
+];
 
 export const tools: ToolDefinition[] = [
   {
@@ -193,6 +208,7 @@ export const tools: ToolDefinition[] = [
     shortName: "JSON Formatter",
     description:
       "Online JSON parser like a clean studio: format, compress, escape, validate, and browse a tree view. Runs in your browser — nothing uploaded.",
+    blurb: "Pretty-print, minify, escape, and tree view",
     keywords: [
       "json formatter",
       "json online",
@@ -203,7 +219,7 @@ export const tools: ToolDefinition[] = [
       "minify json",
       "json beautifier",
     ],
-    category: "developer",
+    category: "json",
     guide: {
       heading: "How to format and validate JSON",
       intro:
@@ -235,6 +251,323 @@ export const tools: ToolDefinition[] = [
         question: "Why does valid-looking JSON still fail?",
         answer:
           "Common causes include single quotes, comments, trailing commas, or NaN/undefined values that are not part of the JSON standard.",
+      },
+    ],
+  },
+  {
+    slug: "json-validate",
+    name: "JSON Validator",
+    shortName: "JSON Validator",
+    description:
+      "Check whether a string is valid JSON and see its top-level type, key count, or array length — entirely in your browser.",
+    blurb: "Syntax check with type and size summary",
+    keywords: ["json validator", "validate json", "json checker", "json lint"],
+    category: "json",
+    guide: {
+      heading: "How to validate JSON",
+      intro:
+        "Before you ship a payload or paste config into an app, confirm it parses as JSON. This tool reports validity and a short structural summary without uploading your data.",
+      steps: [
+        "Paste the JSON text into the input box.",
+        "Click Validate.",
+        "If it fails, fix the reported syntax issue and try again.",
+        "If it passes, review the type and size summary, then copy if needed.",
+      ],
+      tips: [
+        "Comments and trailing commas are not valid in standard JSON.",
+        "Use the full JSON studio when you also need formatting or a tree view.",
+      ],
+    },
+    faq: [
+      {
+        question: "Does validation upload my data?",
+        answer: "No. Parsing runs locally in your browser.",
+      },
+      {
+        question: "What does the summary show?",
+        answer:
+          "For valid JSON it reports the top-level type and, when useful, object key count or array length.",
+      },
+    ],
+  },
+  {
+    slug: "json-minify",
+    name: "JSON Minify / Compress",
+    shortName: "JSON Minify",
+    description:
+      "Compress JSON into a single line for APIs and storage. Removes whitespace while keeping valid structure.",
+    blurb: "One-line compress for API payloads",
+    keywords: ["json minify", "json compress", "minify json", "json compact"],
+    category: "json",
+    guide: {
+      heading: "How to minify JSON",
+      intro:
+        "Pretty JSON is easy to read; minified JSON is smaller on the wire. Paste formatted JSON and compress it for requests, cookies, or embedded configs.",
+      steps: [
+        "Paste formatted or messy JSON.",
+        "Click Minify.",
+        "Copy the single-line output into your API client or config.",
+      ],
+      tips: [
+        "Minifying does not change values — only whitespace and formatting.",
+        "Invalid JSON cannot be minified until syntax errors are fixed.",
+      ],
+    },
+    faq: [
+      {
+        question: "Is minified JSON still valid?",
+        answer: "Yes. It is the same document without extra spaces and newlines.",
+      },
+      {
+        question: "Can I expand it again?",
+        answer: "Use the JSON Formatter tool or studio to pretty-print it.",
+      },
+    ],
+  },
+  {
+    slug: "json-sort",
+    name: "JSON Sort Keys",
+    shortName: "JSON Sort",
+    description:
+      "Recursively sort object keys alphabetically so diffs and reviews stay stable. Arrays keep order; nested objects are sorted too.",
+    blurb: "Alphabetical key sort, nested",
+    keywords: ["json sort", "sort json keys", "json key order", "normalize json"],
+    category: "json",
+    guide: {
+      heading: "How to sort JSON keys",
+      intro:
+        "Unstable key order makes code reviews noisy. Sorting keys recursively produces a canonical layout for comparison and storage.",
+      steps: [
+        "Paste your JSON object or array.",
+        "Click Sort keys.",
+        "Copy the normalized output for diffs or commits.",
+      ],
+      tips: [
+        "Array item order is preserved; only object keys are sorted.",
+        "Sorting does not change values — only key order.",
+      ],
+    },
+    faq: [
+      {
+        question: "Are nested objects sorted?",
+        answer: "Yes. Sorting walks the whole tree.",
+      },
+      {
+        question: "Do arrays get reordered?",
+        answer: "No. Array order stays the same.",
+      },
+    ],
+  },
+  {
+    slug: "json-yaml",
+    name: "JSON to YAML",
+    shortName: "JSON → YAML",
+    description:
+      "Convert JSON to readable YAML for Kubernetes, CI configs, and docs. Conversion runs locally in your browser.",
+    blurb: "JSON to YAML for configs",
+    keywords: ["json to yaml", "yaml converter", "json yaml", "convert json yaml"],
+    category: "json",
+    guide: {
+      heading: "How to convert JSON to YAML",
+      intro:
+        "Many ops tools prefer YAML. Paste JSON and get indented YAML without installing a CLI.",
+      steps: [
+        "Paste valid JSON.",
+        "Click To YAML.",
+        "Copy the YAML into your manifest or config file.",
+      ],
+      tips: [
+        "Strings with special characters are quoted automatically.",
+        "Empty objects and arrays become {} and [].",
+      ],
+    },
+    faq: [
+      {
+        question: "Is YAML uploaded?",
+        answer: "No. Conversion is local.",
+      },
+      {
+        question: "Can I convert YAML back to JSON?",
+        answer:
+          "This page focuses on JSON → YAML. Paste YAML into a dedicated YAML parser if you need the reverse.",
+      },
+    ],
+  },
+  {
+    slug: "json-csv",
+    name: "JSON to CSV",
+    shortName: "JSON → CSV",
+    description:
+      "Turn a JSON array of objects into CSV with unioned headers. Useful for spreadsheets and quick exports.",
+    blurb: "Array of objects → CSV table",
+    keywords: ["json to csv", "csv converter", "json export csv", "array to csv"],
+    category: "json",
+    guide: {
+      heading: "How to convert JSON to CSV",
+      intro:
+        "Spreadsheets expect rows. Feed an array of flat objects and export a CSV with a header row built from all keys.",
+      steps: [
+        "Paste a JSON array of objects.",
+        "Click To CSV.",
+        "Copy the result into Excel, Sheets, or a .csv file.",
+      ],
+      tips: [
+        "Missing keys become empty cells.",
+        "Values with commas or quotes are escaped per CSV rules.",
+      ],
+    },
+    faq: [
+      {
+        question: "What shape of JSON works?",
+        answer: "A non-empty array where every item is an object.",
+      },
+      {
+        question: "Are nested objects supported?",
+        answer:
+          "Nested values are stringified. Prefer flat objects for clean spreadsheet columns.",
+      },
+    ],
+  },
+  {
+    slug: "json-diff",
+    name: "JSON Diff / Compare",
+    shortName: "JSON Diff",
+    description:
+      "Compare two JSON documents and list path-level changes. Spot missing keys, value edits, and array shifts.",
+    blurb: "Path-level left vs right compare",
+    keywords: ["json diff", "compare json", "json compare", "json difference"],
+    category: "json",
+    guide: {
+      heading: "How to compare JSON",
+      intro:
+        "When two API responses disagree, a path list is faster than eye-scanning. Paste left and right JSON to see every change.",
+      steps: [
+        "Paste the original JSON on the left.",
+        "Paste the new JSON on the right.",
+        "Click Compare and read the path-level diff.",
+      ],
+      tips: [
+        "Identical documents report “No differences”.",
+        "Sort keys first if order-only noise is distracting.",
+      ],
+    },
+    faq: [
+      {
+        question: "Is this a visual side-by-side merge?",
+        answer: "It lists path changes as text so you can copy them into tickets or reviews.",
+      },
+      {
+        question: "Does comparison leave my machine?",
+        answer: "No. Diffing runs in the browser.",
+      },
+    ],
+  },
+  {
+    slug: "json-to-ts",
+    name: "JSON to TypeScript",
+    shortName: "JSON → TS",
+    description:
+      "Infer a TypeScript type from a JSON sample. Handy for typing API responses quickly.",
+    blurb: "Infer TypeScript type from sample",
+    keywords: [
+      "json to typescript",
+      "json to ts",
+      "typescript interface generator",
+      "infer type from json",
+    ],
+    category: "json",
+    guide: {
+      heading: "How to generate a TypeScript type",
+      intro:
+        "Paste a representative JSON payload and get a starting `Root` type. Refine unions and optionals by hand for production types.",
+      steps: [
+        "Paste sample JSON from an API or fixture.",
+        "Click To TypeScript.",
+        "Copy the type into your project and tighten nullability as needed.",
+      ],
+      tips: [
+        "Arrays infer from the first element — use a rich sample.",
+        "Treat output as a draft, not a full schema.",
+      ],
+    },
+    faq: [
+      {
+        question: "Does it create interfaces or types?",
+        answer: "It emits an `export type Root = …` alias.",
+      },
+      {
+        question: "Are optional fields detected?",
+        answer:
+          "Not automatically. Missing keys in some samples still need manual `?` markers.",
+      },
+    ],
+  },
+  {
+    slug: "json-escape",
+    name: "JSON Escape String",
+    shortName: "JSON Escape",
+    description:
+      "Escape raw text into a JSON string literal — quotes, newlines, and control characters handled for you.",
+    blurb: "Escape text as a JSON string",
+    keywords: ["json escape", "escape json string", "json stringify", "escape quotes"],
+    category: "json",
+    guide: {
+      heading: "How to escape a JSON string",
+      intro:
+        "Embedding text inside JSON needs proper escaping. This tool wraps your input with JSON.stringify so quotes and newlines stay valid.",
+      steps: [
+        "Paste the raw string (not necessarily JSON).",
+        "Click Escape.",
+        "Copy the quoted JSON string into your document or code.",
+      ],
+      tips: [
+        "Output includes surrounding quotes — that is intentional for JSON strings.",
+        "Use the studio Escape action when working on a whole JSON document.",
+      ],
+    },
+    faq: [
+      {
+        question: "Is this the same as Format?",
+        answer:
+          "No. Escape turns arbitrary text into one JSON string value; Format pretty-prints a full JSON document.",
+      },
+      {
+        question: "Can I unescape?",
+        answer: "Paste a JSON string into a JSON.parse workflow or the JSON studio unescape action.",
+      },
+    ],
+  },
+  {
+    slug: "jwt-decoder",
+    name: "JWT Decoder",
+    shortName: "JWT Decoder",
+    description:
+      "Decode JWT header and payload (Base64URL) without verifying the signature. Inspect claims locally.",
+    blurb: "Decode header & payload claims",
+    keywords: ["jwt decoder", "decode jwt", "jwt debugger", "json web token decode"],
+    category: "json",
+    guide: {
+      heading: "How to decode a JWT",
+      intro:
+        "JWTs are three Base64URL parts. This decoder shows header and payload as JSON so you can inspect claims — it does not verify signatures.",
+      steps: [
+        "Paste a JWT (header.payload.signature).",
+        "Click Decode JWT.",
+        "Read the header and payload JSON.",
+      ],
+      tips: [
+        "Never paste production secrets into untrusted sites; this tool stays local.",
+        "Signature verification requires the signing key and is out of scope here.",
+      ],
+    },
+    faq: [
+      {
+        question: "Does this verify the signature?",
+        answer: "No. It only decodes. Treat decoded claims as untrusted until verified.",
+      },
+      {
+        question: "Is the token uploaded?",
+        answer: "No. Decoding runs in your browser.",
       },
     ],
   },

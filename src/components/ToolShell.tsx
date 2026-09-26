@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ToolDefinition } from "@/lib/tools";
-import { getRelatedTools } from "@/lib/tools";
+import { categories, getRelatedTools } from "@/lib/tools";
 import { AdSlot } from "@/components/AdSlot";
 import { ShareButton } from "@/components/ShareButton";
 
@@ -25,7 +25,7 @@ export function ToolShell({ tool, children }: ToolShellProps) {
         </nav>
 
         <header className="tool-header">
-          <p className="eyebrow">{tool.category}</p>
+          <p className="eyebrow">{categories[tool.category].label}</p>
           <h1>{tool.name}</h1>
           <p className="lede">{tool.description}</p>
           <div className="tool-actions header-actions">

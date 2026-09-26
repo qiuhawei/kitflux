@@ -3,7 +3,16 @@ import { AiTokenCounterTool } from "@/components/tools/AiTokenCounterTool";
 import { Base64Tool } from "@/components/tools/Base64Tool";
 import { CaseConverterTool } from "@/components/tools/CaseConverterTool";
 import { HashGeneratorTool } from "@/components/tools/HashGeneratorTool";
+import { JsonCsvTool } from "@/components/tools/JsonCsvTool";
+import { JsonDiffTool } from "@/components/tools/JsonDiffTool";
+import { JsonEscapeTool } from "@/components/tools/JsonEscapeTool";
 import { JsonFormatterTool } from "@/components/tools/JsonFormatterTool";
+import { JsonMinifyTool } from "@/components/tools/JsonMinifyTool";
+import { JsonSortTool } from "@/components/tools/JsonSortTool";
+import { JsonToTsTool } from "@/components/tools/JsonToTsTool";
+import { JsonValidateTool } from "@/components/tools/JsonValidateTool";
+import { JsonYamlTool } from "@/components/tools/JsonYamlTool";
+import { JwtDecoderTool } from "@/components/tools/JwtDecoderTool";
 import { LoremIpsumTool } from "@/components/tools/LoremIpsumTool";
 import { PasswordGeneratorTool } from "@/components/tools/PasswordGeneratorTool";
 import { PromptBuilderTool } from "@/components/tools/PromptBuilderTool";
@@ -17,6 +26,15 @@ const toolComponents = {
   "prompt-builder": PromptBuilderTool,
   "ai-cost-calculator": AiCostCalculatorTool,
   "json-formatter": JsonFormatterTool,
+  "json-validate": JsonValidateTool,
+  "json-minify": JsonMinifyTool,
+  "json-sort": JsonSortTool,
+  "json-yaml": JsonYamlTool,
+  "json-csv": JsonCsvTool,
+  "json-diff": JsonDiffTool,
+  "json-to-ts": JsonToTsTool,
+  "json-escape": JsonEscapeTool,
+  "jwt-decoder": JwtDecoderTool,
   "password-generator": PasswordGeneratorTool,
   "word-counter": WordCounterTool,
   "uuid-generator": UuidGeneratorTool,
