@@ -14,9 +14,9 @@ function normalizeSiteUrl(raw: string) {
 
 export const siteConfig = {
   name: "Fluxkit",
-  tagline: "Free online tools that just work",
+  tagline: "Weigh every prompt before you ship",
   description:
-    "Private AI Lab for ChatGPT & Claude: draft prompts, compare tokens across models, and estimate API cost in one workspace — plus JSON and developer utilities. No signup.",
+    "Free private AI token counter and cost calculator for GPT, Claude, Gemini, DeepSeek, and Grok. Optimize prompts locally in your browser — no signup.",
   url: normalizeSiteUrl(
     process.env.NEXT_PUBLIC_SITE_URL || "https://www.kitflux.com",
   ),

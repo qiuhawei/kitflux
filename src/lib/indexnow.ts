@@ -1,23 +1,17 @@
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import { guides } from "@/lib/guides";
-import { tools } from "@/lib/tools";
 
 /** All public URLs we want search engines to discover quickly. */
 export function allIndexableUrls() {
   return [
     absoluteUrl("/"),
-    absoluteUrl("/ai"),
-    absoluteUrl("/models"),
+    absoluteUrl("/compare"),
     absoluteUrl("/guides"),
     ...guides.map((guide) => absoluteUrl(`/guides/${guide.slug}`)),
-    absoluteUrl("/json"),
-    absoluteUrl("/video"),
-    absoluteUrl("/tools"),
     absoluteUrl("/about"),
     absoluteUrl("/contact"),
     absoluteUrl("/privacy"),
     absoluteUrl("/terms"),
-    ...tools.map((tool) => absoluteUrl(`/tools/${tool.slug}`)),
   ];
 }
 

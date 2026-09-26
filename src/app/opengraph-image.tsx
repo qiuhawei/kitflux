@@ -49,10 +49,10 @@ export default function OpenGraphImage() {
               maxWidth: 900,
             }}
           >
-            Free AI tools for ChatGPT &amp; Claude
+            Every token has a price
           </div>
           <div style={{ fontSize: 28, color: "rgba(248,250,252,0.78)", maxWidth: 820 }}>
-            Token counter · Prompt builder · API cost calculator — private in your browser
+            Private token counter · multi-model cost · prompt optimizer
           </div>
         </div>
       </div>

@@ -41,7 +41,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — Free AI Tools, JSON & Developer Utilities`,
+    default: `${siteConfig.name} — AI Token Counter & Cost Calculator`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -50,11 +50,11 @@ export const metadata: Metadata = {
     "ai token counter",
     "chatgpt token counter",
     "claude token counter",
-    "ai prompt builder",
     "openai cost calculator",
-    "free ai tools",
-    "json formatter",
-    "chatgpt tools",
+    "prompt optimizer",
+    "llm cost estimator",
+    "deepseek api cost",
+    "grok token counter",
   ],
   alternates: {
     canonical: absoluteUrl("/"),
@@ -64,12 +64,12 @@ export const metadata: Metadata = {
     locale: siteConfig.locale,
     url: siteConfig.url,
     siteName: siteConfig.name,
-    title: `${siteConfig.name} — Free Online Tools`,
+    title: `${siteConfig.name} — AI Token Counter & Cost Calculator`,
     description: siteConfig.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} — Free Online Tools`,
+    title: `${siteConfig.name} — AI Token Counter & Cost Calculator`,
     description: siteConfig.description,
   },
   icons: {
@@ -92,7 +92,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${syne.variable} ${outfit.variable} ${notoSansSc.variable} ${jetbrainsMono.variable} h-full`}
     >
       <head>
-        {/* AdSense site ownership verification — required in <head> */}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3195860835704762"

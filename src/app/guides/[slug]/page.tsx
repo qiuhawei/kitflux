@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/AdSlot";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import { getGuide, guides } from "@/lib/guides";
-import { getTool } from "@/lib/tools";
 
 type Props = PageProps<"/guides/[slug]">;
 
@@ -36,10 +35,6 @@ export default async function GuideArticlePage({ params }: Props) {
   const { slug } = await params;
   const guide = getGuide(slug);
   if (!guide) notFound();
-
-  const related = guide.relatedToolSlugs
-    .map((toolSlug) => getTool(toolSlug))
-    .filter(Boolean);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -97,12 +92,12 @@ export default async function GuideArticlePage({ params }: Props) {
           <h1>{guide.title}</h1>
           <p className="lede">{guide.description}</p>
           <p className="guide-meta">Updated {guide.updated}</p>
-          <div className="hero-actions">
-            <Link href="/ai" className="btn btn-primary">
-              Try AI Lab
+          <div className="wx-actions" style={{ marginTop: "0.85rem" }}>
+            <Link href="/" className="btn btn-primary">
+              Open token counter
             </Link>
-            <Link href="/tools/ai-token-counter" className="btn btn-secondary">
-              Token counter
+            <Link href="/compare" className="btn btn-secondary">
+              Compare models
             </Link>
           </div>
         </header>
@@ -137,28 +132,12 @@ export default async function GuideArticlePage({ params }: Props) {
           </div>
         </section>
 
-        <section className="guide-section">
-          <h2>Related tools</h2>
-          <ul className="guide-related">
-            {related.map((tool) =>
-              tool ? (
-                <li key={tool.slug}>
-                  <Link href={tool.slug === "ai-lab" ? "/ai" : `/tools/${tool.slug}`}>
-                    {tool.shortName}
-                  </Link>
-                  <span> — {tool.blurb ?? tool.description}</span>
-                </li>
-              ) : null,
-            )}
-          </ul>
-        </section>
-
         <p className="portal-foot">
           <Link href="/guides">All guides</Link>
           {" · "}
-          <Link href="/ai">AI Lab</Link>
+          <Link href="/">Token counter</Link>
           {" · "}
-          <Link href="/tools">All tools</Link>
+          <Link href="/compare">Compare</Link>
         </p>
       </article>
     </>

@@ -1,46 +1,42 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { absoluteUrl, siteConfig } from "@/lib/site";
-import { tools } from "@/lib/tools";
+import { PRICE_MODELS, PROVIDER_COUNT } from "@/lib/aiLab";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `About ${siteConfig.name}: free AI tools for ChatGPT and Claude (token counter, prompt builder, cost calculator) plus JSON and developer utilities — private in your browser.`,
+  description: `About ${siteConfig.name}: a private browser AI token counter and cost calculator for GPT, Claude, Gemini, DeepSeek, Grok, and more.`,
   alternates: { canonical: absoluteUrl("/about") },
 };
 
 export default function AboutPage() {
-  const aiCount = tools.filter((tool) => tool.category === "ai").length;
-
   return (
     <article className="shell prose-page">
       <h1>About {siteConfig.name}</h1>
       <p>
-        {siteConfig.name} is a free toolkit for AI workflows and everyday developer jobs. Start
-        with the <Link href="/ai">AI suite</Link> — token counting for ChatGPT/Claude/Gemini,
-        prompt building, and API cost planning — then jump into JSON, video, and classic utilities.
-        Open a page, finish the job, move on. No account required.
+        {siteConfig.name} is a free, private workspace to weigh AI prompts before you ship. Paste a
+        draft, count tokens, compare planning cost across {PRICE_MODELS.length} models and{" "}
+        {PROVIDER_COUNT} providers, optimize filler locally, and export API snippets — without
+        uploading your text.
       </p>
-      <h2>What we offer</h2>
+      <h2>What we focus on</h2>
       <p>
-        The kit currently includes {tools.length} utilities, including {aiCount} AI-focused tools
-        such as the <Link href="/tools/ai-token-counter">AI Token Counter</Link>,{" "}
-        <Link href="/tools/prompt-builder">Prompt Builder</Link>, and{" "}
-        <Link href="/tools/ai-cost-calculator">AI Cost Calculator</Link>, plus a JSON studio and
-        more. For deeper workflows, start in the <Link href="/ai">AI Lab</Link> or read the{" "}
-        <Link href="/guides">AI guides</Link> on tokens, API cost, and private counting.
+        One product direction: prompt weighing. Token counting, multi-model cost compare, context
+        fill, optimizer tips, heatmap, versions, and share links. No JSON portal, no video
+        downloaders, no kitchen-sink tool directory.
       </p>
-      <h2>Privacy by design</h2>
+      <h2>Privacy</h2>
       <p>
-        Tool input is processed in your browser with standard Web APIs. We do not require signup
-        to use the utilities listed on the homepage. See our{" "}
-        <Link href="/privacy">Privacy Policy</Link> for details about cookies and advertising.
+        Estimates run in your browser. See the <Link href="/privacy">Privacy Policy</Link> for
+        cookies and advertising details.
       </p>
       <h2>Contact</h2>
       <p>
-        Questions about the site or a specific tool? Email{" "}
-        <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a> or visit the{" "}
-        <Link href="/contact">contact page</Link>.
+        Email <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a> or visit{" "}
+        <Link href="/contact">contact</Link>.
+      </p>
+      <p>
+        <Link href="/">Open the token counter →</Link>
       </p>
     </article>
   );

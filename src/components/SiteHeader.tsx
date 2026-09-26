@@ -6,12 +6,9 @@ import { useEffect, useState } from "react";
 import { siteConfig } from "@/lib/site";
 
 const links = [
-  { href: "/ai", label: "AI Lab" },
-  { href: "/models", label: "Models" },
+  { href: "/", label: "Token Counter" },
+  { href: "/compare", label: "Compare" },
   { href: "/guides", label: "Guides" },
-  { href: "/json", label: "JSON" },
-  { href: "/video", label: "Video" },
-  { href: "/tools", label: "Tools" },
   { href: "/about", label: "About" },
 ] as const;
 
@@ -32,14 +29,10 @@ export function SiteHeader() {
     setOpen(false);
   }, [pathname]);
 
-  function close() {
-    setOpen(false);
-  }
-
   return (
     <header className="site-header">
       <div className="shell header-inner">
-        <Link href="/" className="brand" aria-label={`${siteConfig.name} home`} onClick={close}>
+        <Link href="/" className="brand" aria-label={`${siteConfig.name} home`} onClick={() => setOpen(false)}>
           <span className="brand-mark" aria-hidden />
           <span className="brand-name">{siteConfig.name}</span>
         </Link>
@@ -62,13 +55,15 @@ export function SiteHeader() {
         >
           {links.map((link) => {
             const active =
-              pathname === link.href || pathname.startsWith(`${link.href}/`);
+              link.href === "/"
+                ? pathname === "/"
+                : pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 className={active ? "nav-link nav-link-active" : "nav-link"}
-                onClick={close}
+                onClick={() => setOpen(false)}
                 aria-current={active ? "page" : undefined}
               >
                 {link.label}

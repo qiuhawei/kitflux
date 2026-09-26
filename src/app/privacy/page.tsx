@@ -20,9 +20,9 @@ export default function PrivacyPage() {
 
       <h2>Information we process in your browser</h2>
       <p>
-        Most tools on this site (for example JSON formatting, password generation, hashing, and
-        encoding) run locally in your browser. Text you paste into those tools is not uploaded to
-        our servers for processing as part of the tool’s normal operation.
+        The Fluxkit token counter, cost calculator, optimizer, versions, and history run locally in
+        your browser. Prompt text you paste is not uploaded to our servers for tokenization or cost
+        estimates as part of normal operation. Share links keep drafts in the URL fragment.
       </p>
 
       <h2>Information we may collect</h2>
