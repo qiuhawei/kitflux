@@ -7,6 +7,7 @@ import { siteConfig } from "@/lib/site";
 
 const links = [
   { href: "/ai", label: "AI Lab" },
+  { href: "/models", label: "Models" },
   { href: "/guides", label: "Guides" },
   { href: "/json", label: "JSON" },
   { href: "/video", label: "Video" },

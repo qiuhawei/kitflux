@@ -9,6 +9,7 @@ import {
   compareTokens,
   estimateCost,
   loadLabHistory,
+  optimizePrompt,
   saveLabHistory,
   buildPrompt,
   labShareUrl,
@@ -61,6 +62,17 @@ export function AiLabTool() {
 
   function applyTemplate() {
     setText(buildPrompt(template, topic, extra));
+  }
+
+  function applyOptimize() {
+    const result = optimizePrompt(text);
+    setText(result.text);
+    const saved = result.beforeChars - result.afterChars;
+    setShareInfo(
+      saved > 0
+        ? `Optimized locally (−${saved} chars, ${result.hits.length} cleanup rules).`
+        : "Already lean — no filler rules matched.",
+    );
   }
 
   function persist() {
@@ -136,6 +148,9 @@ export function AiLabTool() {
             <button type="button" className="btn btn-primary" onClick={applyTemplate}>
               Apply template
             </button>
+            <button type="button" className="btn btn-secondary" onClick={applyOptimize}>
+              Optimize (local)
+            </button>
             <button type="button" className="btn btn-secondary" onClick={persist}>
               Save locally
             </button>
@@ -162,7 +177,7 @@ export function AiLabTool() {
           <section className="tool-panel">
             <div className="lab-section-head">
               <h2>2. Compare tokens</h2>
-              <p>Same text, three model-family estimates.</p>
+              <p>Same text across GPT / Claude / Gemini / DeepSeek / Grok / Mistral.</p>
             </div>
             <div className="lab-compare" aria-live="polite">
               {comparisons.map((row) => (
@@ -239,6 +254,9 @@ export function AiLabTool() {
             </div>
             <div className="tool-actions">
               <CopyButton value={summary} label="Copy lab summary" />
+              <a className="btn btn-ghost btn-small" href="/models">
+                Full price table
+              </a>
             </div>
           </section>
 

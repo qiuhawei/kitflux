@@ -3,6 +3,7 @@ import { AiLabTool } from "@/components/tools/AiLabTool";
 import { AiTokenCounterTool } from "@/components/tools/AiTokenCounterTool";
 import { Base64Tool } from "@/components/tools/Base64Tool";
 import { CaseConverterTool } from "@/components/tools/CaseConverterTool";
+import { ContextWindowTool } from "@/components/tools/ContextWindowTool";
 import { HashGeneratorTool } from "@/components/tools/HashGeneratorTool";
 import { JsonCsvTool } from "@/components/tools/JsonCsvTool";
 import { JsonDiffTool } from "@/components/tools/JsonDiffTool";
@@ -16,8 +17,10 @@ import { JsonYamlTool } from "@/components/tools/JsonYamlTool";
 import { JwtDecoderTool } from "@/components/tools/JwtDecoderTool";
 import { LocalVideoInfoTool } from "@/components/tools/LocalVideoInfoTool";
 import { LoremIpsumTool } from "@/components/tools/LoremIpsumTool";
+import { ModelPricingTool } from "@/components/tools/ModelPricingTool";
 import { PasswordGeneratorTool } from "@/components/tools/PasswordGeneratorTool";
 import { PromptBuilderTool } from "@/components/tools/PromptBuilderTool";
+import { PromptOptimizerTool } from "@/components/tools/PromptOptimizerTool";
 import { TiktokCoverTool } from "@/components/tools/TiktokCoverTool";
 import { TimestampConverterTool } from "@/components/tools/TimestampConverterTool";
 import { UrlEncoderTool } from "@/components/tools/UrlEncoderTool";
@@ -33,6 +36,9 @@ const toolComponents = {
   "ai-token-counter": AiTokenCounterTool,
   "prompt-builder": PromptBuilderTool,
   "ai-cost-calculator": AiCostCalculatorTool,
+  "prompt-optimizer": PromptOptimizerTool,
+  "context-window": ContextWindowTool,
+  "model-pricing": ModelPricingTool,
   "json-formatter": JsonFormatterTool,
   "json-validate": JsonValidateTool,
   "json-minify": JsonMinifyTool,

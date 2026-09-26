@@ -313,6 +313,149 @@ export const tools: ToolDefinition[] = [
     ],
   },
   {
+    slug: "prompt-optimizer",
+    name: "Prompt Optimizer — Cut Tokens Without an API Call",
+    shortName: "Prompt Optimizer",
+    description:
+      "Free local prompt optimizer for ChatGPT, Claude, DeepSeek, and Grok drafts. Strip filler phrases, collapse whitespace, and see tokens saved before you pay for an API rewrite.",
+    blurb: "Compress prompts locally — see tokens saved",
+    keywords: [
+      "prompt optimizer",
+      "token optimizer",
+      "compress chatgpt prompt",
+      "reduce prompt tokens",
+      "prompt compression tool",
+      "cut llm api cost",
+      "shorten system prompt",
+    ],
+    category: "ai",
+    guide: {
+      heading: "How to optimize a prompt before you send it",
+      intro:
+        "Every filler phrase in a system prompt is billed on every request. This optimizer applies deterministic cleanup rules in your browser — no upload, no paid rewrite model — then shows estimated tokens saved for GPT, Claude, Gemini, DeepSeek, Grok, and Mistral families.",
+      steps: [
+        "Paste your system prompt or agent instructions.",
+        "Review the optimized preview and the hit list (what was removed).",
+        "Click Apply optimized when the meaning still holds.",
+        "Re-check spend in AI Lab or the model pricing compare page.",
+      ],
+      tips: [
+        "Rule-based cleanup is safe for secrets; LLM rewriters send text to a vendor.",
+        "After compression, smoke-test quality — never ship blind.",
+        "Pair with the Context Window tool when RAG payloads dominate size.",
+      ],
+    },
+    faq: [
+      {
+        question: "Does this call an AI model to rewrite my prompt?",
+        answer:
+          "No. It uses local rules (filler phrases, whitespace, duplicate lines). Meaning-preserving AI rewrites still require your own model call.",
+      },
+      {
+        question: "Will optimization change my prompt’s intent?",
+        answer:
+          "It aims to keep intent while cutting padding. Always read the preview before applying.",
+      },
+      {
+        question: "Is this the same as CuToken or WeighMyPrompt optimize?",
+        answer:
+          "No. Fluxkit’s optimizer is an original local rule set wired into AI Lab — not a clone of another product’s UI or copy.",
+      },
+    ],
+  },
+  {
+    slug: "context-window",
+    name: "Context Window Calculator for GPT, Claude, Gemini & More",
+    shortName: "Context Window",
+    description:
+      "Free context window calculator. Paste a prompt (plus RAG/history), reserve output tokens, and see how full GPT, Claude, Gemini, DeepSeek, or Grok windows get before you overflow.",
+    blurb: "How full is your LLM context window?",
+    keywords: [
+      "context window calculator",
+      "chatgpt context limit",
+      "claude context window",
+      "gemini 1m context",
+      "rag token budget",
+      "prompt context fill",
+      "llm context usage",
+    ],
+    category: "ai",
+    guide: {
+      heading: "How to check context window fill",
+      intro:
+        "Long RAG dumps and chat history silently fill context windows. This calculator estimates input tokens for your draft, adds a reserved output size, and shows percent fill against each model’s planning window.",
+      steps: [
+        "Paste system instructions, retrieved chunks, and recent turns.",
+        "Pick the model tier you ship on.",
+        "Set reserved output tokens for the reply you expect.",
+        "If fill is high, trim retrieval first — then history — then instructions.",
+      ],
+      tips: [
+        "Gemini and some DeepSeek tiers advertise very large windows; still budget for cost, not just fit.",
+        "Grok-style long-context pricing can step up after large prompts — measure before agents run long.",
+        "Use Prompt Optimizer when filler instructions waste early budget.",
+      ],
+    },
+    faq: [
+      {
+        question: "Are context window sizes official?",
+        answer:
+          "They are planning defaults that change over time. Confirm on the provider’s model card before production limits.",
+      },
+      {
+        question: "Does this include tool/schema overhead?",
+        answer:
+          "Only what you paste. Add tool JSON and function results to the box for a more honest fill estimate.",
+      },
+    ],
+  },
+  {
+    slug: "model-pricing",
+    name: "AI Model Pricing Compare — GPT, Claude, DeepSeek, Grok",
+    shortName: "Model Pricing",
+    description:
+      "Compare estimated API cost for the same prompt across GPT, Claude, Gemini, DeepSeek, Grok, and Mistral. Private browser calculator with context-fill hints.",
+    blurb: "Same prompt, many model price tags",
+    keywords: [
+      "ai model pricing comparison",
+      "deepseek vs gpt cost",
+      "grok api pricing",
+      "claude vs gpt cost calculator",
+      "llm price comparison",
+      "cheapest ai api",
+      "gemini flash pricing",
+    ],
+    category: "ai",
+    guide: {
+      heading: "How to compare LLM prices on one prompt",
+      intro:
+        "Price-per-million charts lie when your prompt tokenizes differently per family. Paste one draft, set output ratio and volume, and rank estimated totals across popular tiers — including DeepSeek and Grok, which dominated 2026 cost discussions.",
+      steps: [
+        "Paste a production-like prompt.",
+        "Set output size relative to input and expected request volume.",
+        "Sort by estimated total (cheapest first).",
+        "Open AI Lab to trim the draft, then re-compare.",
+      ],
+      tips: [
+        "Cheapest per token is not always cheapest per successful task.",
+        "Watch context fill — long agents can cross expensive tiers on some vendors.",
+        "Re-check vendor pages; promo rates move fast.",
+      ],
+    },
+    faq: [
+      {
+        question: "Are these live vendor prices?",
+        answer:
+          "No. They are planning defaults for comparison. Confirm current rates before locking a budget.",
+      },
+      {
+        question: "Why include DeepSeek and Grok?",
+        answer:
+          "Public developer chatter in 2026 focused on deep cost gaps between cheap long-context APIs and premium agent models — Fluxkit surfaces that tradeoff in one table.",
+      },
+    ],
+  },
+  {
     slug: "json-formatter",
     name: "JSON Formatter & Validator",
     shortName: "JSON Formatter",

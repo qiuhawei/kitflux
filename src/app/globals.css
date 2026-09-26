@@ -1529,7 +1529,7 @@ textarea {
 
 .lab-compare {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
   gap: 0.55rem;
 }
 
@@ -1914,6 +1914,98 @@ textarea {
   .hero {
     padding-top: 3rem;
   }
+}
+
+.optimize-hits {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.optimize-hits li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f8fafc;
+  font-size: 0.88rem;
+}
+
+.optimize-hits strong {
+  color: var(--brand-deep);
+}
+
+.optimize-hits span {
+  color: var(--ink-soft);
+}
+
+.context-meter {
+  height: 0.65rem;
+  border-radius: 999px;
+  background: #e8eef5;
+  overflow: hidden;
+  margin: 0.35rem 0 0.25rem;
+}
+
+.context-meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--brand);
+  transition: width 0.2s ease;
+}
+
+.context-meter-warn span {
+  background: #d97706;
+}
+
+.context-meter-critical span {
+  background: #dc2626;
+}
+
+.model-table-wrap {
+  overflow-x: auto;
+  margin: 0.75rem 0 1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.model-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.model-table th,
+.model-table td {
+  padding: 0.65rem 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.model-table th {
+  background: #f1f5f9;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.model-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.model-family {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+  text-transform: uppercase;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -104,7 +104,11 @@ export default function AiHubPage() {
                 <strong>Workflow, not widgets</strong> — one draft drives tokens and cost together
               </li>
               <li>
-                <strong>Multi-model compare</strong> — GPT / Claude / Gemini estimates side-by-side
+                <strong>Multi-model compare</strong> — GPT / Claude / Gemini / DeepSeek / Grok /
+                Mistral estimates side-by-side
+              </li>
+              <li>
+                <strong>Local optimize</strong> — cut filler tokens without uploading a rewrite
               </li>
               <li>
                 <strong>Shareable hashes</strong> — <code>#prompt=</code> links open the same draft
@@ -115,13 +119,12 @@ export default function AiHubPage() {
               </li>
             </ul>
             <p>
-              New here? Read the{" "}
-              <Link href="/guides/chatgpt-token-counter-guide">token guide</Link>,{" "}
-              <Link href="/guides/estimate-openai-api-cost">API cost</Link>,{" "}
-              <Link href="/guides/reduce-chatgpt-api-cost">cut spend</Link>,{" "}
-              <Link href="/guides/private-ai-token-counter">private counting</Link>,{" "}
-              <Link href="/guides/prompt-token-budget">token budgets</Link>, or{" "}
-              <Link href="/guides/gpt-vs-claude-tokens">GPT vs Claude</Link> — then open the lab.
+              New here? Try{" "}
+              <Link href="/models">model pricing</Link>, the{" "}
+              <Link href="/tools/prompt-optimizer">prompt optimizer</Link>,{" "}
+              <Link href="/tools/context-window">context window</Link>, or guides on{" "}
+              <Link href="/guides/deepseek-vs-gpt-api-cost">DeepSeek vs GPT</Link> and{" "}
+              <Link href="/guides/prompt-optimizer-cut-tokens">token cuts</Link>.
             </p>
           </article>
         </div>

@@ -322,6 +322,158 @@ export const guides: GuideArticle[] = [
       },
     ],
   },
+  {
+    slug: "prompt-optimizer-cut-tokens",
+    title: "Prompt Optimizer Guide: Cut Tokens Before You Pay for a Rewrite",
+    description:
+      "How a local prompt optimizer removes filler and duplicate lines so ChatGPT, Claude, DeepSeek, and Grok calls cost less — without uploading your draft.",
+    keywords: [
+      "prompt optimizer",
+      "cut prompt tokens",
+      "compress system prompt",
+      "token optimizer free",
+    ],
+    updated: "2026-09-26",
+    readingMinutes: 6,
+    relatedToolSlugs: ["prompt-optimizer", "ai-lab", "ai-cost-calculator"],
+    sections: [
+      {
+        heading: "Why optimize before you call a model",
+        paragraphs: [
+          "Paid “AI rewrite” optimizers send your text to another model. That helps for deep compression, but it is the wrong first step for secret prompts and high-volume system messages. A local rule pass removes padding you never meant to bill.",
+          "Fluxkit’s Prompt Optimizer collapses whitespace, strips common softener phrases, and drops consecutive duplicate lines — then shows estimated tokens saved across major families.",
+        ],
+      },
+      {
+        heading: "What high-traffic AI demand actually needs",
+        paragraphs: [
+          "ChatGPT, Claude, Gemini, DeepSeek, and Grok own consumer attention. Builders still need a private pre-flight: measure, compress, compare price. That is the gap Fluxkit fills instead of cloning another single-box counter.",
+        ],
+        bullets: [
+          "Run Optimize inside AI Lab on the same draft you will price.",
+          "Smoke-test quality after compression — never ship blind.",
+          "Use Model Pricing when you are choosing DeepSeek vs GPT for volume jobs.",
+        ],
+      },
+      {
+        heading: "When to escalate to an LLM rewriter",
+        paragraphs: [
+          "If the prompt is still huge after filler removal, use your own model with a compress template — or tighten retrieval. Local rules will not invent better instructions; they only delete waste.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Is local optimization enough?",
+        answer:
+          "For padding and duplicates, yes. For semantic rewriting, call a model you trust with a clear compress brief.",
+      },
+      {
+        question: "Does Fluxkit upload my prompt to optimize it?",
+        answer: "No. The optimizer runs entirely in your browser.",
+      },
+    ],
+  },
+  {
+    slug: "context-window-calculator",
+    title: "Context Window Calculator: Know When Your Prompt Will Overflow",
+    description:
+      "Learn how to estimate context fill for GPT, Claude, Gemini, DeepSeek, and Grok — including RAG chunks and reserved output — with Fluxkit’s private calculator.",
+    keywords: [
+      "context window calculator",
+      "chatgpt context limit",
+      "rag context fill",
+      "claude 200k window",
+    ],
+    updated: "2026-09-26",
+    readingMinutes: 6,
+    relatedToolSlugs: ["context-window", "ai-lab", "prompt-optimizer"],
+    sections: [
+      {
+        heading: "Fit is not free",
+        paragraphs: [
+          "A million-token window can still be expensive and slow. The useful question is: how full is my window for this request, and what should I cut first?",
+          "Paste system text, retrieved chunks, and history into Fluxkit’s Context Window tool, reserve output tokens, and read percent fill before agents accumulate turns.",
+        ],
+      },
+      {
+        heading: "Cut order that saves money",
+        paragraphs: [
+          "Trim low-signal retrieval first, then old chat turns, then decorative instructions. Re-measure after each cut. If you are evaluating cheap long-context APIs versus premium models, check both fill and the Model Pricing table on the same draft.",
+        ],
+        bullets: [
+          "Reserve output — replies count against the window too.",
+          "Tool schemas and function results belong in the paste box.",
+          "Share an AI Lab hash link when teammates argue about “it fit yesterday.”",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Do published context sizes stay fixed?",
+        answer:
+          "No. Treat them as planning defaults and confirm on the provider’s model card.",
+      },
+      {
+        question: "Why do Grok long prompts matter?",
+        answer:
+          "Some vendors price long prompts differently. Measuring fill early prevents surprise bills when agents run long.",
+      },
+    ],
+  },
+  {
+    slug: "deepseek-vs-gpt-api-cost",
+    title: "DeepSeek vs GPT API Cost: How to Compare on Your Real Prompt",
+    description:
+      "A practical way to compare DeepSeek and GPT (plus Claude, Gemini, Grok) cost on the same draft — using Fluxkit’s model pricing table and AI Lab.",
+    keywords: [
+      "deepseek vs gpt cost",
+      "deepseek api pricing",
+      "cheapest llm api 2026",
+      "grok vs deepseek cost",
+    ],
+    updated: "2026-09-26",
+    readingMinutes: 7,
+    relatedToolSlugs: ["model-pricing", "ai-lab", "ai-cost-calculator"],
+    sections: [
+      {
+        heading: "Traffic follows chatbots; cost follows tokens",
+        paragraphs: [
+          "The world’s most-visited AI sites are chat products. The money question for builders is quieter: which API should this workload hit? In 2026, public threads repeatedly contrasted cheap DeepSeek-class pricing with premium GPT/Claude/Grok agent rates.",
+          "Do not compare sticker prices alone. Paste one production-like prompt into Fluxkit Model Pricing, set output ratio and volume, and rank estimated totals. Tokenization differs by family, so the same English text is not the same bill everywhere.",
+        ],
+      },
+      {
+        heading: "Route by job, not by hype",
+        paragraphs: [
+          "Classification, extraction, and summarization often tolerate cheaper tiers. Hard reasoning, tool-heavy agents, and brand-critical copy may justify a premium model. Use AI Lab to trim the draft, then re-rank the table.",
+        ],
+        bullets: [
+          "Measure with real prompts, not word-count guesses.",
+          "Watch context fill on long agent sessions.",
+          "Re-check vendor pages — promo rates move quickly.",
+        ],
+      },
+      {
+        heading: "What Fluxkit will not do",
+        paragraphs: [
+          "We will not scrape or republish another site’s articles or UI. The comparison table and guides are original planning tools that fuse market demand (multi-model cost pressure) into Fluxkit’s private workspace.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Is DeepSeek always cheaper?",
+        answer:
+          "Often on list rates for routine text work — but quality, latency, and rate limits matter. Compare on your prompt and task success rate.",
+      },
+      {
+        question: "Does Fluxkit use live DeepSeek prices?",
+        answer:
+          "No. Tiers are planning defaults. Confirm on the provider’s pricing page before budgeting.",
+      },
+    ],
+  },
 ];
 
 export function getGuide(slug: string) {

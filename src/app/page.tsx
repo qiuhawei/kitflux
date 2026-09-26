@@ -23,8 +23,8 @@ export default function HomePage() {
             <h1 className="home-brand">Fluxkit</h1>
             <p className="home-lede">
               Not another clone counter. <strong>AI Lab</strong> drafts prompts, compares GPT /
-              Claude / Gemini tokens, and estimates API cost in one private workspace — plus JSON
-              &amp; video utilities.
+              Claude / Gemini / DeepSeek / Grok tokens, optimizes locally, and estimates API cost —
+              plus JSON &amp; video utilities.
             </p>
           </div>
           <div className="home-intro-actions">
@@ -42,17 +42,16 @@ export default function HomePage() {
         <div className="shell diff-strip-grid">
           <div>
             <strong>Workflow, not widgets</strong>
-            <p>Prompt → multi-model tokens → cost in one screen.</p>
+            <p>Prompt → optimize → multi-model tokens → cost.</p>
           </div>
           <div>
             <strong>Share without upload</strong>
             <p>Send drafts via <code>#prompt=</code> hash links.</p>
           </div>
           <div>
-            <strong>Guides that rank</strong>
+            <strong>Price the real draft</strong>
             <p>
-              Long-tail articles that funnel into the{" "}
-              <Link href="/ai">Lab</Link>.
+              Rank GPT / DeepSeek / Grok on <Link href="/models">one table</Link>.
             </p>
           </div>
         </div>

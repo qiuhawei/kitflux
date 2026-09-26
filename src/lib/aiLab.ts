@@ -5,12 +5,15 @@ export type TokenPreset = {
   charsPerToken: number;
 };
 
+export type ModelFamily = "gpt" | "claude" | "gemini" | "deepseek" | "grok" | "mistral";
+
 export type PriceModel = {
   id: string;
   label: string;
-  family: "gpt" | "claude" | "gemini";
+  family: ModelFamily;
   inputPerMillion: number;
   outputPerMillion: number;
+  contextWindow: number;
 };
 
 export type PromptTemplate = {
@@ -21,12 +24,35 @@ export type PromptTemplate = {
   format: string;
 };
 
+export type OptimizeHit = {
+  id: string;
+  label: string;
+  detail: string;
+  savedChars: number;
+};
+
+export type OptimizeResult = {
+  text: string;
+  hits: OptimizeHit[];
+  beforeChars: number;
+  afterChars: number;
+};
+
+/** Planning approximations — labeled as estimates in the UI. */
 export const TOKEN_PRESETS: TokenPreset[] = [
   { id: "gpt", label: "ChatGPT / GPT", short: "GPT", charsPerToken: 4 },
   { id: "claude", label: "Claude", short: "Claude", charsPerToken: 3.5 },
   { id: "gemini", label: "Gemini", short: "Gemini", charsPerToken: 4 },
+  { id: "deepseek", label: "DeepSeek", short: "DeepSeek", charsPerToken: 3.8 },
+  { id: "grok", label: "Grok / xAI", short: "Grok", charsPerToken: 4 },
+  { id: "mistral", label: "Mistral", short: "Mistral", charsPerToken: 3.9 },
 ];
 
+/**
+ * Planning price tiers (USD / 1M tokens). Always confirm on vendor pages.
+ * Inspired by 2026 market pressure from DeepSeek + Grok long-context tiers —
+ * not copied from any competitor UI.
+ */
 export const PRICE_MODELS: PriceModel[] = [
   {
     id: "gpt-4o-mini",
@@ -34,6 +60,7 @@ export const PRICE_MODELS: PriceModel[] = [
     family: "gpt",
     inputPerMillion: 0.15,
     outputPerMillion: 0.6,
+    contextWindow: 128_000,
   },
   {
     id: "gpt-4o",
@@ -41,6 +68,7 @@ export const PRICE_MODELS: PriceModel[] = [
     family: "gpt",
     inputPerMillion: 2.5,
     outputPerMillion: 10,
+    contextWindow: 128_000,
   },
   {
     id: "claude-sonnet",
@@ -48,6 +76,7 @@ export const PRICE_MODELS: PriceModel[] = [
     family: "claude",
     inputPerMillion: 3,
     outputPerMillion: 15,
+    contextWindow: 200_000,
   },
   {
     id: "claude-haiku",
@@ -55,6 +84,47 @@ export const PRICE_MODELS: PriceModel[] = [
     family: "claude",
     inputPerMillion: 0.8,
     outputPerMillion: 4,
+    contextWindow: 200_000,
+  },
+  {
+    id: "gemini-flash",
+    label: "Gemini Flash",
+    family: "gemini",
+    inputPerMillion: 0.1,
+    outputPerMillion: 0.4,
+    contextWindow: 1_000_000,
+  },
+  {
+    id: "deepseek-chat",
+    label: "DeepSeek Chat",
+    family: "deepseek",
+    inputPerMillion: 0.27,
+    outputPerMillion: 1.1,
+    contextWindow: 128_000,
+  },
+  {
+    id: "deepseek-flash",
+    label: "DeepSeek Flash",
+    family: "deepseek",
+    inputPerMillion: 0.14,
+    outputPerMillion: 0.28,
+    contextWindow: 1_000_000,
+  },
+  {
+    id: "grok",
+    label: "Grok",
+    family: "grok",
+    inputPerMillion: 2,
+    outputPerMillion: 6,
+    contextWindow: 500_000,
+  },
+  {
+    id: "mistral-small",
+    label: "Mistral Small",
+    family: "mistral",
+    inputPerMillion: 0.1,
+    outputPerMillion: 0.3,
+    contextWindow: 128_000,
   },
 ];
 
@@ -94,6 +164,64 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
     task: "Propose a clean REST (or RPC) shape for the feature.",
     format: "Return endpoints, request/response JSON examples, and edge cases.",
   },
+  {
+    id: "compress",
+    name: "Compress prompt",
+    role: "You are a prompt compression specialist.",
+    task: "Rewrite the instructions to keep the same intent with fewer tokens.",
+    format: "Return only the compressed prompt.",
+  },
+];
+
+const FILLER_PATTERNS: { id: string; label: string; pattern: RegExp; replace: string }[] = [
+  {
+    id: "please-note",
+    label: "Softener phrases",
+    pattern: /\bplease\s+note\s+that\b/gi,
+    replace: "",
+  },
+  {
+    id: "in-order-to",
+    label: "Wordy connectors",
+    pattern: /\bin\s+order\s+to\b/gi,
+    replace: "to",
+  },
+  {
+    id: "it-is-important",
+    label: "Padding openers",
+    pattern: /\bit\s+is\s+(important|essential|critical)\s+to\s+(note|remember|understand)\s+that\b/gi,
+    replace: "",
+  },
+  {
+    id: "as-well-as",
+    label: "Inflated conjunctions",
+    pattern: /\bas\s+well\s+as\b/gi,
+    replace: "and",
+  },
+  {
+    id: "due-to-the-fact",
+    label: "Wordy causation",
+    pattern: /\bdue\s+to\s+the\s+fact\s+that\b/gi,
+    replace: "because",
+  },
+  {
+    id: "at-this-point-in-time",
+    label: "Time padding",
+    pattern: /\bat\s+this\s+(point|moment)\s+in\s+time\b/gi,
+    replace: "now",
+  },
+  {
+    id: "make-sure-to",
+    label: "Soft instructions",
+    pattern: /\bmake\s+sure\s+to\b/gi,
+    replace: "",
+  },
+  {
+    id: "feel-free-to",
+    label: "Optional fluff",
+    pattern: /\bfeel\s+free\s+to\b/gi,
+    replace: "",
+  },
 ];
 
 export function estimateTokens(text: string, charsPerToken: number) {
@@ -125,6 +253,99 @@ export function estimateCost(options: {
     outputCost,
     total,
     perRequest: requests > 0 ? total / requests : 0,
+  };
+}
+
+export function contextFill(inputTokens: number, outputTokens: number, contextWindow: number) {
+  const used = inputTokens + outputTokens;
+  const pct = contextWindow > 0 ? (used / contextWindow) * 100 : 0;
+  return {
+    used,
+    remaining: Math.max(0, contextWindow - used),
+    pct: Math.min(999, pct),
+    status: pct >= 90 ? "critical" : pct >= 70 ? "warn" : "ok",
+  } as const;
+}
+
+export function compareCostsAcrossModels(options: {
+  text: string;
+  outputRatio: number;
+  requests: number;
+}) {
+  const { text, outputRatio, requests } = options;
+  return PRICE_MODELS.map((model) => {
+    const preset =
+      TOKEN_PRESETS.find((item) => item.id === model.family) ?? TOKEN_PRESETS[0];
+    const inputTokens = estimateTokens(text, preset.charsPerToken).tokens;
+    const outputTokens = Math.max(0, Math.round(inputTokens * outputRatio));
+    const cost = estimateCost({ model, inputTokens, outputTokens, requests });
+    const fill = contextFill(inputTokens, outputTokens, model.contextWindow);
+    return { model, inputTokens, outputTokens, cost, fill };
+  }).sort((a, b) => a.cost.total - b.cost.total);
+}
+
+/** Local, rule-based prompt compression — no API call. */
+export function optimizePrompt(input: string): OptimizeResult {
+  const beforeChars = input.length;
+  let text = input;
+  const hits: OptimizeHit[] = [];
+
+  const collapsed = text.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").replace(/[ \t]{2,}/g, " ");
+  if (collapsed.length < text.length) {
+    hits.push({
+      id: "whitespace",
+      label: "Whitespace",
+      detail: "Collapsed extra spaces and blank lines",
+      savedChars: text.length - collapsed.length,
+    });
+    text = collapsed;
+  }
+
+  for (const rule of FILLER_PATTERNS) {
+    const next = text.replace(rule.pattern, rule.replace);
+    if (next !== text) {
+      hits.push({
+        id: rule.id,
+        label: rule.label,
+        detail: `Applied: ${rule.label.toLowerCase()}`,
+        savedChars: text.length - next.length,
+      });
+      text = next;
+    }
+  }
+
+  const lines = text.split("\n");
+  const deduped: string[] = [];
+  let dupSaved = 0;
+  for (const line of lines) {
+    const prev = deduped[deduped.length - 1];
+    if (prev !== undefined && prev.trim() && prev.trim() === line.trim()) {
+      dupSaved += line.length + 1;
+      continue;
+    }
+    deduped.push(line);
+  }
+  if (dupSaved > 0) {
+    hits.push({
+      id: "dup-lines",
+      label: "Duplicate lines",
+      detail: "Removed consecutive identical lines",
+      savedChars: dupSaved,
+    });
+    text = deduped.join("\n");
+  }
+
+  text = text
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/^\s+|\s+$/g, "")
+    .replace(/ {2,}/g, " ");
+
+  return {
+    text,
+    hits,
+    beforeChars,
+    afterChars: text.length,
   };
 }
 

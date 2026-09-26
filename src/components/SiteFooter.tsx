@@ -4,9 +4,9 @@ import { tools } from "@/lib/tools";
 
 const popular = [
   "ai-lab",
+  "prompt-optimizer",
+  "model-pricing",
   "ai-token-counter",
-  "prompt-builder",
-  "ai-cost-calculator",
   "json-formatter",
 ];
 
@@ -32,7 +32,15 @@ export function SiteFooter() {
               tool ? (
                 <li key={tool.slug}>
                   <Link
-                    href={tool.slug === "json-formatter" ? "/json" : `/tools/${tool.slug}`}
+                    href={
+                      tool.slug === "json-formatter"
+                        ? "/json"
+                        : tool.slug === "ai-lab"
+                          ? "/ai"
+                          : tool.slug === "model-pricing"
+                            ? "/models"
+                            : `/tools/${tool.slug}`
+                    }
                   >
                     {tool.shortName}
                   </Link>
@@ -46,6 +54,9 @@ export function SiteFooter() {
           <ul>
             <li>
               <Link href="/ai">AI Lab</Link>
+            </li>
+            <li>
+              <Link href="/models">Model pricing</Link>
             </li>
             <li>
               <Link href="/guides">Guides</Link>

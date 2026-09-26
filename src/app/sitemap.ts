@@ -26,6 +26,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.97,
     },
     {
+      url: absoluteUrl("/models"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.98,
+    },
+    {
       url: absoluteUrl("/json"),
       lastModified: now,
       changeFrequency: "weekly",

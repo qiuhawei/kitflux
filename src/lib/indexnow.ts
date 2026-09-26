@@ -7,6 +7,7 @@ export function allIndexableUrls() {
   return [
     absoluteUrl("/"),
     absoluteUrl("/ai"),
+    absoluteUrl("/models"),
     absoluteUrl("/guides"),
     ...guides.map((guide) => absoluteUrl(`/guides/${guide.slug}`)),
     absoluteUrl("/json"),
