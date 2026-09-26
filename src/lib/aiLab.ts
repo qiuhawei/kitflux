@@ -7,7 +7,8 @@ export type ModelFamily =
   | "deepseek"
   | "grok"
   | "mistral"
-  | "llama";
+  | "llama"
+  | "qwen";
 
 export type PriceModel = {
   id: string;
@@ -17,7 +18,6 @@ export type PriceModel = {
   inputPerMillion: number;
   outputPerMillion: number;
   contextWindow: number;
-  /** Exact browser tokenizer for GPT-family via gpt-tokenizer */
   exact: boolean;
   charsPerToken: number;
 };
@@ -48,28 +48,58 @@ export type ChatTurn = {
   content: string;
 };
 
-/** Planning price tiers — confirm on vendor pages before budgeting. */
+export type PromptTemplate = {
+  id: string;
+  name: string;
+  blurb: string;
+  text: string;
+};
+
+export type ChainStep = {
+  id: string;
+  name: string;
+  modelId: string;
+  prompt: string;
+};
+
+/** Planning tiers — confirm on vendor pages. */
 export const PRICE_MODELS: PriceModel[] = [
   { id: "gpt-4o", label: "GPT-4o", provider: "OpenAI", family: "gpt", inputPerMillion: 2.5, outputPerMillion: 10, contextWindow: 128_000, exact: true, charsPerToken: 4 },
   { id: "gpt-4o-mini", label: "GPT-4o mini", provider: "OpenAI", family: "gpt", inputPerMillion: 0.15, outputPerMillion: 0.6, contextWindow: 128_000, exact: true, charsPerToken: 4 },
-  { id: "gpt-4.1", label: "GPT-4.1", provider: "OpenAI", family: "gpt", inputPerMillion: 2, outputPerMillion: 8, contextWindow: 1_000_000, exact: true, charsPerToken: 4 },
+  { id: "gpt-4.1", label: "GPT-4.1", provider: "OpenAI", family: "gpt", inputPerMillion: 2, outputPerMillion: 8, contextWindow: 1_047_576, exact: true, charsPerToken: 4 },
+  { id: "gpt-4.1-mini", label: "GPT-4.1 mini", provider: "OpenAI", family: "gpt", inputPerMillion: 0.4, outputPerMillion: 1.6, contextWindow: 1_047_576, exact: true, charsPerToken: 4 },
+  { id: "gpt-4.1-nano", label: "GPT-4.1 nano", provider: "OpenAI", family: "gpt", inputPerMillion: 0.1, outputPerMillion: 0.4, contextWindow: 1_047_576, exact: true, charsPerToken: 4 },
   { id: "o3", label: "o3", provider: "OpenAI", family: "gpt", inputPerMillion: 10, outputPerMillion: 40, contextWindow: 200_000, exact: true, charsPerToken: 4 },
+  { id: "o3-mini", label: "o3-mini", provider: "OpenAI", family: "gpt", inputPerMillion: 1.1, outputPerMillion: 4.4, contextWindow: 200_000, exact: true, charsPerToken: 4 },
   { id: "o4-mini", label: "o4-mini", provider: "OpenAI", family: "gpt", inputPerMillion: 1.1, outputPerMillion: 4.4, contextWindow: 200_000, exact: true, charsPerToken: 4 },
-  { id: "claude-opus", label: "Claude Opus", provider: "Anthropic", family: "claude", inputPerMillion: 15, outputPerMillion: 75, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
-  { id: "claude-sonnet", label: "Claude Sonnet", provider: "Anthropic", family: "claude", inputPerMillion: 3, outputPerMillion: 15, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
-  { id: "claude-haiku", label: "Claude Haiku", provider: "Anthropic", family: "claude", inputPerMillion: 0.8, outputPerMillion: 4, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
+  { id: "gpt-4-turbo", label: "GPT-4 Turbo", provider: "OpenAI", family: "gpt", inputPerMillion: 10, outputPerMillion: 30, contextWindow: 128_000, exact: true, charsPerToken: 4 },
+  { id: "gpt-3.5-turbo", label: "GPT-3.5 Turbo", provider: "OpenAI", family: "gpt", inputPerMillion: 0.5, outputPerMillion: 1.5, contextWindow: 16_385, exact: true, charsPerToken: 4 },
+  { id: "claude-opus-4", label: "Claude Opus 4", provider: "Anthropic", family: "claude", inputPerMillion: 15, outputPerMillion: 75, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
+  { id: "claude-sonnet-4", label: "Claude Sonnet 4", provider: "Anthropic", family: "claude", inputPerMillion: 3, outputPerMillion: 15, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
+  { id: "claude-haiku-3.5", label: "Claude Haiku 3.5", provider: "Anthropic", family: "claude", inputPerMillion: 0.8, outputPerMillion: 4, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
+  { id: "claude-3.7-sonnet", label: "Claude 3.7 Sonnet", provider: "Anthropic", family: "claude", inputPerMillion: 3, outputPerMillion: 15, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
+  { id: "claude-3.5-sonnet", label: "Claude 3.5 Sonnet", provider: "Anthropic", family: "claude", inputPerMillion: 3, outputPerMillion: 15, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
+  { id: "claude-3-opus", label: "Claude 3 Opus", provider: "Anthropic", family: "claude", inputPerMillion: 15, outputPerMillion: 75, contextWindow: 200_000, exact: false, charsPerToken: 3.5 },
   { id: "gemini-2.5-pro", label: "Gemini 2.5 Pro", provider: "Google", family: "gemini", inputPerMillion: 1.25, outputPerMillion: 10, contextWindow: 1_000_000, exact: false, charsPerToken: 4 },
   { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash", provider: "Google", family: "gemini", inputPerMillion: 0.15, outputPerMillion: 0.6, contextWindow: 1_000_000, exact: false, charsPerToken: 4 },
+  { id: "gemini-2.0-flash", label: "Gemini 2.0 Flash", provider: "Google", family: "gemini", inputPerMillion: 0.1, outputPerMillion: 0.4, contextWindow: 1_000_000, exact: false, charsPerToken: 4 },
+  { id: "gemini-1.5-pro", label: "Gemini 1.5 Pro", provider: "Google", family: "gemini", inputPerMillion: 1.25, outputPerMillion: 5, contextWindow: 2_000_000, exact: false, charsPerToken: 4 },
   { id: "gemini-1.5-flash", label: "Gemini 1.5 Flash", provider: "Google", family: "gemini", inputPerMillion: 0.075, outputPerMillion: 0.3, contextWindow: 1_000_000, exact: false, charsPerToken: 4 },
-  { id: "grok", label: "Grok", provider: "xAI", family: "grok", inputPerMillion: 2, outputPerMillion: 6, contextWindow: 500_000, exact: false, charsPerToken: 4 },
+  { id: "grok-2", label: "Grok 2", provider: "xAI", family: "grok", inputPerMillion: 2, outputPerMillion: 10, contextWindow: 131_072, exact: false, charsPerToken: 4 },
+  { id: "grok-3", label: "Grok 3", provider: "xAI", family: "grok", inputPerMillion: 3, outputPerMillion: 15, contextWindow: 131_072, exact: false, charsPerToken: 4 },
   { id: "deepseek-v3", label: "DeepSeek V3", provider: "DeepSeek", family: "deepseek", inputPerMillion: 0.27, outputPerMillion: 1.1, contextWindow: 128_000, exact: false, charsPerToken: 3.8 },
   { id: "deepseek-r1", label: "DeepSeek R1", provider: "DeepSeek", family: "deepseek", inputPerMillion: 0.55, outputPerMillion: 2.19, contextWindow: 128_000, exact: false, charsPerToken: 3.8 },
+  { id: "deepseek-chat", label: "DeepSeek Chat", provider: "DeepSeek", family: "deepseek", inputPerMillion: 0.14, outputPerMillion: 0.28, contextWindow: 64_000, exact: false, charsPerToken: 3.8 },
   { id: "mistral-large", label: "Mistral Large", provider: "Mistral", family: "mistral", inputPerMillion: 2, outputPerMillion: 6, contextWindow: 128_000, exact: false, charsPerToken: 3.9 },
   { id: "mistral-small", label: "Mistral Small", provider: "Mistral", family: "mistral", inputPerMillion: 0.1, outputPerMillion: 0.3, contextWindow: 128_000, exact: false, charsPerToken: 3.9 },
+  { id: "mistral-nemo", label: "Mistral Nemo", provider: "Mistral", family: "mistral", inputPerMillion: 0.15, outputPerMillion: 0.15, contextWindow: 128_000, exact: false, charsPerToken: 3.9 },
   { id: "llama-3.1-70b", label: "Llama 3.1 70B", provider: "Meta", family: "llama", inputPerMillion: 0.59, outputPerMillion: 0.79, contextWindow: 128_000, exact: false, charsPerToken: 4 },
+  { id: "llama-3.3-70b", label: "Llama 3.3 70B", provider: "Meta", family: "llama", inputPerMillion: 0.59, outputPerMillion: 0.79, contextWindow: 128_000, exact: false, charsPerToken: 4 },
+  { id: "qwen-2.5-72b", label: "Qwen 2.5 72B", provider: "Alibaba", family: "qwen", inputPerMillion: 0.35, outputPerMillion: 0.4, contextWindow: 131_072, exact: false, charsPerToken: 3.7 },
 ];
 
-export const PROVIDER_COUNT = new Set(PRICE_MODELS.map((m) => m.provider)).size;
+export const PROVIDERS = [...new Set(PRICE_MODELS.map((m) => m.provider))];
+export const PROVIDER_COUNT = PROVIDERS.length;
 
 export const SAMPLE_PROMPT = `You are a senior software engineer with deep expertise in TypeScript and React. You prioritize correctness, clarity, and maintainability.
 
@@ -78,7 +108,134 @@ Review the following code. For each issue found:
 2. Explain the problem in one sentence
 3. Suggest a concrete fix
 
-Skip praise. Be direct.`;
+Skip praise. Be direct.
+
+\`\`\`ts
+export function fetchUser(id: string) {
+  return fetch("/api/users/" + id).then((r) => r.json());
+}
+\`\`\``;
+
+export const PROMPT_TEMPLATES: PromptTemplate[] = [
+  {
+    id: "system-strict",
+    name: "Strict system",
+    blurb: "Role + rules + output contract",
+    text: `You are {{role}}.
+Follow these rules:
+- Be concise
+- Never invent facts
+- If unsure, say so
+
+Output format:
+{{format}}`,
+  },
+  {
+    id: "cot",
+    name: "Chain-of-thought",
+    blurb: "Reason then answer",
+    text: `Task: {{task}}
+
+Think step by step. Put reasoning under "Reasoning", then the final answer under "Answer".
+Keep the Answer section short.`,
+  },
+  {
+    id: "few-shot",
+    name: "Few-shot",
+    blurb: "Examples then query",
+    text: `Classify the input.
+
+Example 1:
+Input: {{ex1_in}}
+Output: {{ex1_out}}
+
+Example 2:
+Input: {{ex2_in}}
+Output: {{ex2_out}}
+
+Now classify:
+Input: {{query}}
+Output:`,
+  },
+  {
+    id: "code-review",
+    name: "Code review",
+    blurb: "Severity-ranked findings",
+    text: SAMPLE_PROMPT,
+  },
+  {
+    id: "summarize",
+    name: "Summarize",
+    blurb: "Fixed-length summary",
+    text: `Summarize the text below in at most {{bullets}} bullets.
+No preamble. No closing remarks.
+
+Text:
+{{text}}`,
+  },
+  {
+    id: "extract-json",
+    name: "Extract JSON",
+    blurb: "Schema-constrained extraction",
+    text: `Extract fields into JSON matching this schema:
+{{schema}}
+
+Return JSON only.
+
+Source:
+{{source}}`,
+  },
+  {
+    id: "rewrite",
+    name: "Rewrite",
+    blurb: "Tone + length control",
+    text: `Rewrite the text for {{audience}} in a {{tone}} tone.
+Max {{words}} words. Keep meaning. Return only the rewrite.
+
+Text:
+{{text}}`,
+  },
+  {
+    id: "rag-qa",
+    name: "RAG Q&A",
+    blurb: "Answer only from chunks",
+    text: `Answer using ONLY the chunks. If missing, say "Not in context."
+Cite chunk ids.
+
+Question: {{question}}
+
+Chunks:
+{{chunks}}`,
+  },
+  {
+    id: "seo-outline",
+    name: "SEO outline",
+    blurb: "H2/H3 brief",
+    text: `Create an outline for "{{keyword}}".
+Return H2/H3 only, with one-line intent under each.`,
+  },
+  {
+    id: "agent-tool",
+    name: "Tool-using agent",
+    blurb: "Plan then tool calls",
+    text: `You can call tools. Decide the minimum tools needed for: {{goal}}
+
+Return:
+1) Plan (bullets)
+2) Tool calls as JSON array
+3) Stop condition`,
+  },
+  {
+    id: "compress",
+    name: "Compress prompt",
+    blurb: "Keep intent, cut tokens",
+    text: `Rewrite the instructions below to keep the same intent with fewer tokens.
+Return only the compressed prompt.
+
+Instructions:
+{{text}}`,
+  },
+];
 
 const FILLER_PATTERNS: { id: string; label: string; pattern: RegExp; replace: string }[] = [
   { id: "please-note", label: "Softener phrases", pattern: /\bplease\s+note\s+that\b/gi, replace: "" },
@@ -89,6 +246,10 @@ const FILLER_PATTERNS: { id: string; label: string; pattern: RegExp; replace: st
   { id: "at-this-point", label: "Time padding", pattern: /\bat\s+this\s+(point|moment)\s+in\s+time\b/gi, replace: "now" },
   { id: "make-sure-to", label: "Soft instructions", pattern: /\bmake\s+sure\s+to\b/gi, replace: "" },
   { id: "feel-free-to", label: "Optional fluff", pattern: /\bfeel\s+free\s+to\b/gi, replace: "" },
+  { id: "i-would-like", label: "Polite padding", pattern: /\bi\s+would\s+like\s+you\s+to\b/gi, replace: "" },
+  { id: "kindly", label: "Kindly fluff", pattern: /\bkindly\b/gi, replace: "" },
+  { id: "in-this-regard", label: "Empty transitions", pattern: /\bin\s+this\s+regard\b/gi, replace: "" },
+  { id: "it-should-be-noted", label: "Passive openers", pattern: /\bit\s+should\s+be\s+noted\s+that\b/gi, replace: "" },
 ];
 
 export function countTokens(text: string, model: PriceModel) {
@@ -121,6 +282,12 @@ export function estimateCost(options: {
   const outputCost = (outputTokens / 1_000_000) * model.outputPerMillion * requests;
   const total = inputCost + outputCost;
   return { inputCost, outputCost, total, perRequest: requests > 0 ? total / requests : 0 };
+}
+
+/** Rough latency heuristic from tokens (planning only). */
+export function estimateLatencyMs(inputTokens: number, outputTokens: number) {
+  if (inputTokens + outputTokens === 0) return 0;
+  return Math.round(180 + inputTokens * 0.35 + outputTokens * 12);
 }
 
 export function contextFill(inputTokens: number, outputTokens: number, contextWindow: number) {
@@ -234,6 +401,13 @@ export function promptTips(text: string): PromptTip[] {
       body: "For hard tasks, explicit reasoning cuts retries — which often costs more than a longer first pass.",
     });
   }
+  if (text.length > 2500 && !/\b(only|must|never|do not)\b/i.test(text)) {
+    tips.push({
+      id: "constraints",
+      title: "Add hard constraints",
+      body: "Long prompts without must/never rules invite wandering answers and higher output tokens.",
+    });
+  }
   if (tips.length === 0) {
     tips.push({
       id: "lean",
@@ -262,6 +436,42 @@ export function turnsToText(turns: ChatTurn[]) {
     .filter((t) => t.content.trim())
     .map((t) => `${t.role.toUpperCase()}:\n${t.content.trim()}`)
     .join("\n\n");
+}
+
+export function buildFromParts(parts: {
+  role: string;
+  task: string;
+  context: string;
+  constraints: string;
+  format: string;
+  examples: string;
+}) {
+  return [
+    parts.role.trim() ? `Role: ${parts.role.trim()}` : null,
+    parts.task.trim() ? `Task: ${parts.task.trim()}` : null,
+    parts.context.trim() ? `Context:\n${parts.context.trim()}` : null,
+    parts.constraints.trim() ? `Constraints:\n${parts.constraints.trim()}` : null,
+    parts.format.trim() ? `Output format:\n${parts.format.trim()}` : null,
+    parts.examples.trim() ? `Examples:\n${parts.examples.trim()}` : null,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+export function chainToText(steps: ChainStep[]) {
+  return steps
+    .map(
+      (step, i) =>
+        `### Step ${i + 1}: ${step.name || "untitled"} (model: ${step.modelId})\n${step.prompt.trim()}`,
+    )
+    .join("\n\n");
+}
+
+export function measureOutputRatio(prompt: string, response: string, model: PriceModel) {
+  const inTok = countTokens(prompt, model).tokens;
+  const outTok = countTokens(response, model).tokens;
+  const ratio = inTok > 0 ? outTok / inTok : 0;
+  return { inTok, outTok, ratio };
 }
 
 export function exportSnippets(prompt: string, model: PriceModel) {
@@ -314,6 +524,8 @@ export type LabHistoryItem = {
 const HISTORY_KEY = "fluxkit-weigh-history-v1";
 const VERSIONS_KEY = "fluxkit-weigh-versions-v1";
 const SNIPPETS_KEY = "fluxkit-weigh-snippets-v1";
+const ACCUM_KEY = "fluxkit-weigh-accum-v1";
+const SESSION_KEY = "fluxkit-weigh-session-v1";
 
 function readList<T>(key: string): T[] {
   if (typeof window === "undefined") return [];
@@ -341,11 +553,7 @@ export function loadHistory() {
 }
 
 export function pushHistory(item: Omit<LabHistoryItem, "id" | "savedAt">, existing: LabHistoryItem[]) {
-  const next: LabHistoryItem = {
-    ...item,
-    id: `${Date.now()}`,
-    savedAt: Date.now(),
-  };
+  const next: LabHistoryItem = { ...item, id: `${Date.now()}`, savedAt: Date.now() };
   const list = [next, ...existing.filter((x) => x.text !== item.text)].slice(0, 20);
   writeList(HISTORY_KEY, list);
   return list;
@@ -387,6 +595,47 @@ export function saveSnippet(text: string, existing: LabHistoryItem[]) {
   return list;
 }
 
+export function loadAccumulator(): string[] {
+  return readList<string>(ACCUM_KEY).slice(0, 30);
+}
+
+export function saveAccumulator(chunks: string[]) {
+  writeList(ACCUM_KEY, chunks.slice(0, 30));
+}
+
+export type SessionStats = {
+  prompts: number;
+  tokens: number;
+  cost: number;
+};
+
+export function loadSession(): SessionStats {
+  if (typeof window === "undefined") return { prompts: 0, tokens: 0, cost: 0 };
+  try {
+    const raw = window.localStorage.getItem(SESSION_KEY);
+    if (!raw) return { prompts: 0, tokens: 0, cost: 0 };
+    return JSON.parse(raw) as SessionStats;
+  } catch {
+    return { prompts: 0, tokens: 0, cost: 0 };
+  }
+}
+
+export function bumpSession(prev: SessionStats, tokens: number, cost: number): SessionStats {
+  const next = {
+    prompts: prev.prompts + 1,
+    tokens: prev.tokens + tokens,
+    cost: prev.cost + cost,
+  };
+  if (typeof window !== "undefined") {
+    try {
+      window.localStorage.setItem(SESSION_KEY, JSON.stringify(next));
+    } catch {
+      /* ignore */
+    }
+  }
+  return next;
+}
+
 export function encodeShareHash(text: string) {
   return `#prompt=${encodeURIComponent(text)}`;
 }
@@ -404,4 +653,17 @@ export function readShareHash(): string | null {
 
 export function shareUrl(text: string, origin = typeof window !== "undefined" ? window.location.origin : "") {
   return `${origin}/${encodeShareHash(text)}`;
+}
+
+export function diffLines(a: string, b: string) {
+  const left = a.split("\n");
+  const right = b.split("\n");
+  const max = Math.max(left.length, right.length);
+  const rows: { left: string; right: string; changed: boolean }[] = [];
+  for (let i = 0; i < max; i++) {
+    const L = left[i] ?? "";
+    const R = right[i] ?? "";
+    rows.push({ left: L, right: R, changed: L !== R });
+  }
+  return rows;
 }

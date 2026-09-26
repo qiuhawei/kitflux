@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AdSlot } from "@/components/AdSlot";
 import { PromptWorkspace } from "@/components/workspace/PromptWorkspace";
 import { guides } from "@/lib/guides";
-import { PRICE_MODELS, PROVIDER_COUNT } from "@/lib/aiLab";
+import { PRICE_MODELS, PROVIDERS } from "@/lib/aiLab";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
 export default function HomePage() {
@@ -78,7 +78,7 @@ export default function HomePage() {
           <article>
             <h3>2. Pick a model</h3>
             <p>
-              {PRICE_MODELS.length} models across {PROVIDER_COUNT} providers. Exact browser
+              {PRICE_MODELS.length} models across {PROVIDERS.length} providers. Exact browser
               tokenization for GPT-family; estimates elsewhere, clearly labeled.
             </p>
           </article>

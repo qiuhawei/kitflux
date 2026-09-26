@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { absoluteUrl, siteConfig } from "@/lib/site";
-import { PRICE_MODELS, PROVIDER_COUNT } from "@/lib/aiLab";
+import { PRICE_MODELS, PROVIDERS } from "@/lib/aiLab";
 
 export const metadata: Metadata = {
   title: "About",
@@ -16,7 +16,7 @@ export default function AboutPage() {
       <p>
         {siteConfig.name} is a free, private workspace to weigh AI prompts before you ship. Paste a
         draft, count tokens, compare planning cost across {PRICE_MODELS.length} models and{" "}
-        {PROVIDER_COUNT} providers, optimize filler locally, and export API snippets — without
+        {PROVIDERS.length} providers, optimize filler locally, and export API snippets — without
         uploading your text.
       </p>
       <h2>What we focus on</h2>
