@@ -6,17 +6,17 @@ const iconGlyph: Record<string, string> = {
   "json-formatter": "{}",
   "json-validate": "✓",
   "json-minify": "⟦⟧",
-  "json-sort": "↕",
+  "json-sort": "A↕",
   "json-yaml": "Y",
-  "json-csv": "▦",
+  "json-csv": "CSV",
   "json-diff": "≠",
   "json-to-ts": "TS",
-  "json-escape": "\\",
+  "json-escape": "\\“",
   "jwt-decoder": "JWT",
   "youtube-thumbnail": "YT",
   "youtube-embed": "▶",
   "tiktok-cover": "TT",
-  "vimeo-thumbnail": "Vim",
+  "vimeo-thumbnail": "V",
   "video-url-parser": "URL",
   "local-video-info": "MP4",
   "ai-token-counter": "AI",
@@ -41,13 +41,16 @@ type PortalCardProps = {
 export function PortalCard({ tool, href }: PortalCardProps) {
   const to = href ?? `/tools/${tool.slug}`;
   return (
-    <Link href={to} className="portal-card">
+    <Link href={to} className="portal-card" data-cat={tool.category}>
       <span className="portal-card-icon" aria-hidden>
         {iconGlyph[tool.slug] ?? tool.shortName.slice(0, 2)}
       </span>
       <span className="portal-card-body">
         <strong>{tool.shortName}</strong>
         <span>{tool.blurb ?? tool.description}</span>
+      </span>
+      <span className="portal-card-go" aria-hidden>
+        →
       </span>
     </Link>
   );
@@ -76,7 +79,7 @@ type CategoryChipsProps = {
 
 export function CategoryChips({ active, counts, basePath = "/tools" }: CategoryChipsProps) {
   const chips: { id: ToolCategory | "all"; label: string }[] = [
-    { id: "all", label: "All tools" },
+    { id: "all", label: "All" },
     ...categoryOrder.map((id) => ({
       id,
       label: categories[id].label,
@@ -96,6 +99,7 @@ export function CategoryChips({ active, counts, basePath = "/tools" }: CategoryC
             key={chip.id}
             href={href}
             className={isActive ? "portal-cat portal-cat-active" : "portal-cat"}
+            data-cat={chip.id}
             aria-current={isActive ? "page" : undefined}
           >
             <span className="portal-cat-label">{chip.label}</span>

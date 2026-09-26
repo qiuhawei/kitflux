@@ -8,7 +8,7 @@ import { tools } from "@/lib/tools";
 export const metadata: Metadata = {
   title: "Video Tools — YouTube Thumbnail, TikTok Cover & More",
   description:
-    "Free video utilities: YouTube thumbnail downloader, YouTube embed generator, TikTok cover & info, Vimeo thumbnails, URL parser, and local video file info. No unauthorized stream rippers.",
+    "Free video utilities: YouTube thumbnail downloader, YouTube embed generator, TikTok cover & info, Vimeo thumbnails, URL parser, and local video file info.",
   keywords: [
     "youtube thumbnail downloader",
     "tiktok cover",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Video Tools | ${siteConfig.name}`,
     description:
-      "YouTube thumbnails, TikTok covers, embeds, and local file info — AdSense-safe video utilities.",
+      "YouTube thumbnails, TikTok covers, embeds, and local file info — private video utilities.",
     url: absoluteUrl("/video"),
   },
 };
@@ -35,13 +35,12 @@ export default function VideoHubPage() {
           <p className="eyebrow">Video suite</p>
           <h1>Video tools</h1>
           <p className="lede">
-            {videoTools.length} free utilities for covers, embeds, and files you already own.
-            We do <strong>not</strong> offer YouTube/TikTok MP4 rippers — those violate platform
-            terms and risk AdSense rejection.
+            Grab covers, build embeds, parse links, and inspect files you already own —{" "}
+            {videoTools.length} free utilities in your browser.
           </p>
         </div>
         <Link href="/tools?cat=video" className="btn btn-secondary">
-          All video tools
+          Filter: Video
         </Link>
       </header>
 
@@ -49,14 +48,14 @@ export default function VideoHubPage() {
 
       <section className="portal-section">
         <div className="portal-section-head">
-          <h2>Video tools</h2>
-          <p>Thumbnails, embeds, URL parsing, and local inspection.</p>
+          <h2>All video tools</h2>
+          <p>Thumbnails · embeds · URL parsing · local inspection</p>
         </div>
         <PortalGrid tools={videoTools} />
       </section>
 
       <article className="prose-narrow">
-        <h2>What these tools are for</h2>
+        <h2>Built for creators — not rippers</h2>
         <ul>
           <li>Download public YouTube / Vimeo / TikTok cover images</li>
           <li>Generate official YouTube embed codes</li>
@@ -64,8 +63,7 @@ export default function VideoHubPage() {
           <li>Inspect duration and resolution of videos already on your device</li>
         </ul>
         <p>
-          Need JSON utilities instead? Open the{" "}
-          <Link href="/json">JSON studio</Link> or browse{" "}
+          Need JSON utilities? Open the <Link href="/json">JSON studio</Link> or browse{" "}
           <Link href="/tools">all tools</Link>.
         </p>
       </article>

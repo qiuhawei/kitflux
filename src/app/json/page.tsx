@@ -38,10 +38,10 @@ export default function JsonPage() {
       <div className="json-page-top shell">
         <div>
           <p className="eyebrow">JSON suite</p>
-          <h1>JSON online formatter &amp; tools</h1>
+          <h1>Format, convert, and explore JSON</h1>
           <p className="lede">
-            Format, validate, compress, sort, convert, and decode — {jsonTools.length} JSON
-            utilities, all local in your browser.
+            {jsonTools.length} local utilities — studio below, specialist tools in the grid.
+            Nothing leaves your browser.
           </p>
         </div>
         <Link href="/tools?cat=json" className="btn btn-secondary">

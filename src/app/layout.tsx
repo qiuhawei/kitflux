@@ -1,25 +1,27 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Manrope, Space_Grotesk } from "next/font/google";
+import { JetBrains_Mono, Outfit, Syne } from "next/font/google";
 import { AdSenseScript } from "@/components/AdSenseScript";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
 });
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains",
+  subsets: ["latin"],
   weight: ["400", "500"],
-  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -36,6 +38,7 @@ export const metadata: Metadata = {
     "openai cost calculator",
     "free online tools",
     "json formatter",
+    "youtube thumbnail downloader",
     "password generator",
     "chatgpt tools",
   ],
@@ -65,7 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${manrope.variable} ${ibmPlexMono.variable} h-full`}
+      className={`${syne.variable} ${outfit.variable} ${jetbrainsMono.variable} h-full`}
     >
       <head>
         {/* AdSense site ownership verification — required in <head> */}

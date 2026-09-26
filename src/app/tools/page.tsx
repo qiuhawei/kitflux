@@ -58,17 +58,18 @@ export default async function ToolsIndexPage({ searchParams }: Props) {
             <p className="eyebrow">Directory</p>
             <h1>All free online tools</h1>
             <p className="lede">
-              {tools.length} utilities on {siteConfig.name} — JSON suite, AI helpers, and everyday
-              developer tools. Everything runs in your browser.
+              {tools.length} utilities — JSON, video, AI, and everyday converters. Private by
+              design. No account required.
             </p>
           </div>
-          <Link href="/json" className="btn btn-secondary">
-            JSON studio
+          <Link href="/json" className="btn btn-primary">
+            Open JSON studio
           </Link>
         </header>
 
-        <CategoryChips active={active} counts={counts} />
-
+        <div className="portal-rail">
+          <CategoryChips active={active} counts={counts} />
+        </div>
         <AdSlot format="horizontal" />
 
         {sections.map(({ category, items }) => (

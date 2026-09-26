@@ -2,24 +2,42 @@ import Link from "next/link";
 import { siteConfig } from "@/lib/site";
 import { tools } from "@/lib/tools";
 
+const popular = [
+  "json-formatter",
+  "youtube-thumbnail",
+  "tiktok-cover",
+  "ai-token-counter",
+  "password-generator",
+];
+
 export function SiteFooter() {
+  const popularTools = popular
+    .map((slug) => tools.find((tool) => tool.slug === slug))
+    .filter(Boolean);
+
   return (
     <footer className="site-footer">
       <div className="shell footer-grid">
         <div>
           <p className="footer-brand">{siteConfig.name}</p>
           <p className="footer-copy">
-            Free browser tools. Private by design. Built for speed.
+            Private browser tools for builders — JSON, video, AI, and everyday utilities.
           </p>
         </div>
         <div>
           <p className="footer-label">Popular</p>
           <ul>
-            {tools.slice(0, 5).map((tool) => (
-              <li key={tool.slug}>
-                <Link href={`/tools/${tool.slug}`}>{tool.shortName}</Link>
-              </li>
-            ))}
+            {popularTools.map((tool) =>
+              tool ? (
+                <li key={tool.slug}>
+                  <Link
+                    href={tool.slug === "json-formatter" ? "/json" : `/tools/${tool.slug}`}
+                  >
+                    {tool.shortName}
+                  </Link>
+                </li>
+              ) : null,
+            )}
           </ul>
         </div>
         <div>
@@ -50,7 +68,9 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="shell footer-bottom">
-        <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
+        <p>
+          © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+        </p>
       </div>
     </footer>
   );
