@@ -24,6 +24,8 @@ export const siteConfig = {
   twitter: "@kitflux",
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "wyhoyau@gmail.com",
   adsenseClient: process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-3195860835704762",
+  /** Google Search Console HTML meta verification token (content= only) */
+  googleSiteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
   /** IndexNow key for Bing/Yandex faster discovery */
   indexNowKey: "kitflux-indexnow-7f3a9c2e",
 } as const;
