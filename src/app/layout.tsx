@@ -1,23 +1,38 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Noto_Sans_SC, Outfit, Syne } from "next/font/google";
+import {
+  Instrument_Serif,
+  Inter,
+  JetBrains_Mono,
+  Noto_Sans_SC,
+  Space_Grotesk,
+} from "next/font/google";
 import { AdSenseScript } from "@/components/AdSenseScript";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import "./globals.css";
 
-const syne = Syne({
-  variable: "--font-syne",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["500", "600", "700"],
   display: "swap",
   preload: true,
 });
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
+  preload: true,
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["italic", "normal"],
   display: "swap",
   preload: true,
 });
@@ -89,7 +104,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${outfit.variable} ${notoSansSc.variable} ${jetbrainsMono.variable} h-full`}
+      className={`${spaceGrotesk.variable} ${inter.variable} ${instrumentSerif.variable} ${notoSansSc.variable} ${jetbrainsMono.variable} h-full`}
     >
       <head>
         <script
@@ -98,7 +113,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           crossOrigin="anonymous"
         />
       </head>
-      <body className={`${outfit.className} min-h-full flex flex-col antialiased`}>
+      <body className={`${inter.className} min-h-full flex flex-col antialiased`}>
         <AdSenseScript />
         <SiteHeader />
         <main className="flex-1">{children}</main>

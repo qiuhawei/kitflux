@@ -32,9 +32,9 @@ export function SiteHeader() {
   return (
     <header className="site-header">
       <div className="shell header-inner">
-        <Link href="/" className="brand" aria-label={`${siteConfig.name} home`} onClick={() => setOpen(false)}>
+        <Link href="/" className="brand brand-compact" onClick={() => setOpen(false)}>
           <span className="brand-mark" aria-hidden />
-          <span className="brand-name">{siteConfig.name}</span>
+          <span className="brand-name">{siteConfig.name.toLowerCase()}</span>
         </Link>
 
         <button
@@ -42,17 +42,13 @@ export function SiteHeader() {
           className="nav-toggle"
           aria-expanded={open}
           aria-controls="primary-nav"
-          onClick={() => setOpen((value) => !value)}
+          onClick={() => setOpen((v) => !v)}
         >
           <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
           <span aria-hidden>{open ? "✕" : "☰"}</span>
         </button>
 
-        <nav
-          id="primary-nav"
-          className={open ? "nav nav-open" : "nav"}
-          aria-label="Primary"
-        >
+        <nav id="primary-nav" className={open ? "nav nav-open" : "nav"} aria-label="Primary">
           {links.map((link) => {
             const active =
               link.href === "/"
