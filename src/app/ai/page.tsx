@@ -107,17 +107,19 @@ export default function AiHubPage() {
                 <strong>Multi-model compare</strong> — GPT / Claude / Gemini estimates side-by-side
               </li>
               <li>
-                <strong>Local history</strong> — revisit drafts without creating an account
+                <strong>Shareable hashes</strong> — <code>#prompt=</code> links open the same draft
+                locally (no upload)
               </li>
               <li>
-                <strong>Privacy-first</strong> — prompts are not uploaded for these calculations
+                <strong>Local history</strong> — revisit drafts without creating an account
               </li>
             </ul>
             <p>
-              Prefer a single job? Open the{" "}
-              <Link href="/tools/ai-token-counter">token counter</Link>,{" "}
-              <Link href="/tools/prompt-builder">prompt builder</Link>, or{" "}
-              <Link href="/tools/ai-cost-calculator">cost calculator</Link>.
+              New here? Read the{" "}
+              <Link href="/guides/chatgpt-token-counter-guide">token counter guide</Link>,{" "}
+              <Link href="/guides/estimate-openai-api-cost">API cost guide</Link>, or{" "}
+              <Link href="/guides/gpt-vs-claude-tokens">GPT vs Claude tokens</Link> — then open the
+              lab.
             </p>
           </article>
         </div>

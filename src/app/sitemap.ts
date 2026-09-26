@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/site";
+import { guides } from "@/lib/guides";
 import { tools } from "@/lib/tools";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -17,6 +18,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.99,
+    },
+    {
+      url: absoluteUrl("/guides"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.97,
     },
     {
       url: absoluteUrl("/json"),
@@ -62,6 +69,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
+  const guideRoutes: MetadataRoute.Sitemap = guides.map((guide) => ({
+    url: absoluteUrl(`/guides/${guide.slug}`),
+    lastModified: new Date(guide.updated),
+    changeFrequency: "monthly",
+    priority: 0.88,
+  }));
+
   const toolRoutes: MetadataRoute.Sitemap = tools.map((tool) => ({
     url: absoluteUrl(`/tools/${tool.slug}`),
     lastModified: now,
@@ -69,5 +83,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: tool.slug === "ai-lab" || tool.category === "ai" ? 0.96 : 0.9,
   }));
 
-  return [...staticRoutes, ...toolRoutes];
+  return [...staticRoutes, ...guideRoutes, ...toolRoutes];
 }

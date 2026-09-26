@@ -45,7 +45,10 @@ export function SiteFooter() {
           <p className="footer-label">Site</p>
           <ul>
             <li>
-              <Link href="/ai">AI tools</Link>
+              <Link href="/ai">AI Lab</Link>
+            </li>
+            <li>
+              <Link href="/guides">Guides</Link>
             </li>
             <li>
               <Link href="/json">JSON studio</Link>

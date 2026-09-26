@@ -6,12 +6,12 @@ import { useEffect, useState } from "react";
 import { siteConfig } from "@/lib/site";
 
 const links = [
-  { href: "/ai", label: "AI" },
+  { href: "/ai", label: "AI Lab" },
+  { href: "/guides", label: "Guides" },
   { href: "/json", label: "JSON" },
   { href: "/video", label: "Video" },
   { href: "/tools", label: "Tools" },
   { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
 ] as const;
 
 export function SiteHeader() {

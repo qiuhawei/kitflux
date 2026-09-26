@@ -183,3 +183,24 @@ export function clearLabHistory() {
   if (typeof window === "undefined") return;
   window.localStorage.removeItem(HISTORY_KEY);
 }
+
+/** Share drafts via URL hash without uploading (same idea as JSON studio #data=). */
+export function encodeLabShareHash(text: string) {
+  return `#prompt=${encodeURIComponent(text)}`;
+}
+
+export function readLabShareHash(): string | null {
+  if (typeof window === "undefined") return null;
+  const hash = window.location.hash;
+  if (!hash.startsWith("#prompt=")) return null;
+  try {
+    return decodeURIComponent(hash.slice("#prompt=".length));
+  } catch {
+    return null;
+  }
+}
+
+export function labShareUrl(text: string, origin = typeof window !== "undefined" ? window.location.origin : "") {
+  const path = "/ai";
+  return `${origin}${path}${encodeLabShareHash(text)}`;
+}

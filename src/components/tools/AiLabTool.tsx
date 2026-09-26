@@ -11,6 +11,8 @@ import {
   loadLabHistory,
   saveLabHistory,
   buildPrompt,
+  labShareUrl,
+  readLabShareHash,
   type LabHistoryItem,
 } from "@/lib/aiLab";
 
@@ -29,9 +31,15 @@ export function AiLabTool() {
   const [outputRatio, setOutputRatio] = useState(0.35);
   const [requests, setRequests] = useState(100);
   const [history, setHistory] = useState<LabHistoryItem[]>([]);
+  const [shareInfo, setShareInfo] = useState("");
 
   useEffect(() => {
     setHistory(loadLabHistory());
+    const shared = readLabShareHash();
+    if (shared && shared.trim()) {
+      setText(shared);
+      setShareInfo("Loaded prompt from share link.");
+    }
   }, []);
 
   const template = PROMPT_TEMPLATES.find((item) => item.id === templateId) ?? PROMPT_TEMPLATES[0];
@@ -57,6 +65,22 @@ export function AiLabTool() {
 
   function persist() {
     setHistory(saveLabHistory(text, history));
+    setShareInfo("Saved on this device.");
+  }
+
+  function copyShareLink() {
+    if (text.length > 6000) {
+      setShareInfo("Prompt too long for a URL — save locally or shorten it.");
+      return;
+    }
+    const url = labShareUrl(text);
+    void navigator.clipboard.writeText(url).then(
+      () => {
+        window.location.hash = url.slice(url.indexOf("#"));
+        setShareInfo("Share link copied — opens the same draft in the browser, no upload.");
+      },
+      () => setShareInfo("Could not copy — copy from the address bar after saving."),
+    );
   }
 
   const summary = [
@@ -115,8 +139,12 @@ export function AiLabTool() {
             <button type="button" className="btn btn-secondary" onClick={persist}>
               Save locally
             </button>
+            <button type="button" className="btn btn-secondary" onClick={copyShareLink}>
+              Copy share link
+            </button>
             <CopyButton value={text} label="Copy prompt" />
           </div>
+          {shareInfo ? <p className="tool-info">{shareInfo}</p> : null}
 
           <label className="field">
             <span>Working prompt</span>

@@ -31,9 +31,29 @@ export default function HomePage() {
             <Link href="/ai" className="btn btn-primary">
               Open AI Lab
             </Link>
-            <Link href="/tools/ai-token-counter" className="btn btn-secondary">
-              Token counter
+            <Link href="/guides" className="btn btn-secondary">
+              SEO guides
             </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="diff-strip">
+        <div className="shell diff-strip-grid">
+          <div>
+            <strong>Workflow, not widgets</strong>
+            <p>Prompt → multi-model tokens → cost in one screen.</p>
+          </div>
+          <div>
+            <strong>Share without upload</strong>
+            <p>Send drafts via <code>#prompt=</code> hash links.</p>
+          </div>
+          <div>
+            <strong>Guides that rank</strong>
+            <p>
+              Long-tail articles that funnel into the{" "}
+              <Link href="/ai">Lab</Link>.
+            </p>
           </div>
         </div>
       </section>
