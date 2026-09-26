@@ -5,6 +5,7 @@ import { Chip } from "@/components/Chip";
 import {
   DEPRECATIONS,
   DEPRECATIONS_UPDATED,
+  allEnriched,
   upcomingDeprecations,
   retiredDeprecations,
 } from "@/lib/deprecations";
@@ -32,6 +33,7 @@ export const metadata: Metadata = {
 export default function DeprecationsPage() {
   const upcoming = upcomingDeprecations();
   const retired = retiredDeprecations();
+  const catalog = allEnriched();
   const urgent = upcoming.filter((d) => d.urgency === "urgent").length;
   const soon = upcoming.filter((d) => d.urgency === "soon").length;
 
@@ -74,6 +76,9 @@ export default function DeprecationsPage() {
           </span>
           <span>
             <strong>{urgent}</strong> within 30 days
+          </span>
+          <span>
+            <strong>{soon}</strong> within 60 days
           </span>
           <span>
             <strong>{DEPRECATIONS.length}</strong> tracked
@@ -129,6 +134,57 @@ export default function DeprecationsPage() {
                 <span className="wx-linkish">See migration →</span>
               </Link>
             ))}
+          </div>
+        </section>
+
+        <section className="wx-learn">
+          <h2>Full catalog</h2>
+          <p className="lede">Every tracked model id — sort by shutdown date, open a row for migration snippets.</p>
+          <div className="model-table-wrap">
+            <table className="model-table">
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Provider</th>
+                  <th>Status</th>
+                  <th>Shutdown</th>
+                  <th>Days</th>
+                  <th>Complexity</th>
+                  <th>Replacement</th>
+                </tr>
+              </thead>
+              <tbody>
+                {catalog.map((item) => (
+                  <tr key={item.slug}>
+                    <td>
+                      <Link href={`/deprecations/${item.slug}`}>{item.modelId}</Link>
+                    </td>
+                    <td>{item.provider}</td>
+                    <td>
+                      <Chip
+                        tone={
+                          item.urgency === "urgent"
+                            ? "urgent"
+                            : item.urgency === "soon"
+                              ? "soon"
+                              : item.urgency === "upcoming"
+                                ? "upcoming"
+                                : "retired"
+                        }
+                      >
+                        {item.urgency}
+                      </Chip>
+                    </td>
+                    <td>{item.shutdown}</td>
+                    <td>{item.daysLeft}</td>
+                    <td>
+                      <Chip tone={item.complexity}>{item.complexity}</Chip>
+                    </td>
+                    <td>{item.replacement}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
 

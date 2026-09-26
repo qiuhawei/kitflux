@@ -57,7 +57,11 @@ export function SystemPromptsCatalog() {
       </div>
 
       <p className="wx-muted" style={{ marginBottom: "0.85rem" }}>
-        Showing {filtered.length} of {SYSTEM_PROMPTS.length} educational reconstructions
+        Showing {filtered.length} of {SYSTEM_PROMPTS.length} catalog prompts
+        {" · "}
+        <Link href="/system-prompts/compare" className="wx-linkish">
+          Compare two →
+        </Link>
       </p>
 
       <div className="catalog-grid">

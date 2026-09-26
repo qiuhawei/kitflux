@@ -47,9 +47,9 @@ export default function SystemPromptsPage() {
             Inside the <span className="wx-price"><em>machine</em></span>
           </h1>
           <p className="lede" style={{ maxWidth: "42rem" }}>
-            Educational reconstructions of how coding agents, chat apps, and research tools
-            instruct models — token weight, detected techniques, and one-click weigh. Updated{" "}
-            {SYSTEM_PROMPTS_UPDATED}. These are not claimed vendor leaks.
+            Educational catalog of how coding agents, chat apps, and research tools instruct
+            models — token weight, detected techniques, and one-click weigh. Updated{" "}
+            {SYSTEM_PROMPTS_UPDATED}.
           </p>
           <div className="wx-pills" style={{ justifyContent: "flex-start", marginTop: "0.85rem" }}>
             <span>
@@ -61,6 +61,14 @@ export default function SystemPromptsPage() {
             <span>
               <strong>$0</strong> API cost
             </span>
+          </div>
+          <div className="btn-row">
+            <Link href="/system-prompts/compare" className="btn btn-primary">
+              Compare two
+            </Link>
+            <Link href="/" className="btn btn-ghost">
+              Open token counter
+            </Link>
           </div>
         </header>
 

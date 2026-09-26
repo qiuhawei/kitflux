@@ -63,6 +63,46 @@ export default function HomePage() {
         <AdSlot format="horizontal" />
 
         <section className="wx-learn">
+          <h2>Also in Fluxkit</h2>
+          <p className="lede">Same weighing stack — catalog prompts and API shutdown tracker.</p>
+          <div className="wx-steps">
+            <article>
+              <h3>
+                <Link href="/system-prompts">System Prompts</Link>
+              </h3>
+              <p>
+                Browse owned catalog prompts, detect techniques, compare two, and open any prompt in
+                the counter.
+              </p>
+              <Link href="/system-prompts/compare" className="wx-linkish">
+                Compare two →
+              </Link>
+            </article>
+            <article>
+              <h3>
+                <Link href="/deprecations">Deprecations</Link>
+              </h3>
+              <p>
+                Track OpenAI, Anthropic, and Google model shutdowns with days left and migration
+                snippets.
+              </p>
+              <Link href="/deprecations" className="wx-linkish">
+                Open tracker →
+              </Link>
+            </article>
+            <article>
+              <h3>
+                <Link href="/compare">Model compare</Link>
+              </h3>
+              <p>Rank the same prompt across providers for planning cost and context fill.</p>
+              <Link href="/compare" className="wx-linkish">
+                Compare models →
+              </Link>
+            </article>
+          </div>
+        </section>
+
+        <section className="wx-learn">
           <h2>How the counter works</h2>
           <p className="lede">Three steps from raw text to a planning cost estimate.</p>
           <div className="wx-steps">

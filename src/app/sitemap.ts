@@ -21,6 +21,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.99,
     },
     {
+      url: absoluteUrl("/system-prompts/compare"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+    {
       url: absoluteUrl("/deprecations"),
       lastModified: now,
       changeFrequency: "daily",

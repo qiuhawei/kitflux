@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import { PRICE_MODELS, PROVIDERS } from "@/lib/aiLab";
+import { SYSTEM_PROMPTS } from "@/lib/systemPrompts";
+import { DEPRECATIONS } from "@/lib/deprecations";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `About ${siteConfig.name}: a private browser AI token counter and cost calculator for GPT, Claude, Gemini, DeepSeek, Grok, and more.`,
+  description: `About ${siteConfig.name}: private AI token counter, system prompt catalog, and model deprecation tracker.`,
   alternates: { canonical: absoluteUrl("/about") },
 };
 
@@ -19,11 +21,29 @@ export default function AboutPage() {
         {PROVIDERS.length} providers, optimize filler locally, and export API snippets — without
         uploading your text.
       </p>
-      <h2>What we focus on</h2>
+      <h2>What we ship</h2>
+      <ul>
+        <li>
+          <Link href="/">Token Counter</Link> — browser-side weighing, conversation mode, heatmap,
+          and cost compare
+        </li>
+        <li>
+          <Link href="/system-prompts">System Prompts</Link> — {SYSTEM_PROMPTS.length} catalog
+          prompts with technique detection and{" "}
+          <Link href="/system-prompts/compare">side-by-side compare</Link>
+        </li>
+        <li>
+          <Link href="/deprecations">Deprecations</Link> — {DEPRECATIONS.length} tracked API model
+          shutdowns with migration snippets
+        </li>
+        <li>
+          <Link href="/compare">Model compare</Link> and <Link href="/guides">guides</Link>
+        </li>
+      </ul>
+      <h2>Lineage</h2>
       <p>
-        One product direction: prompt weighing. Token counting, multi-model cost compare, context
-        fill, optimizer tips, heatmap, versions, and share links. No JSON portal, no video
-        downloaders, no kitchen-sink tool directory.
+        Catalog content and product direction continue the WeighMyPrompt lineage under Fluxkit.
+        Counts and estimates still run in your browser.
       </p>
       <h2>Privacy</h2>
       <p>

@@ -98,8 +98,8 @@ export default async function SystemPromptDetailPage({ params }: Props) {
           <Link href="/system-prompts" className="btn btn-ghost">
             Back to directory
           </Link>
-          <Link href="/compare" className="btn btn-ghost">
-            Compare
+          <Link href="/system-prompts/compare" className="btn btn-ghost">
+            Compare prompts
           </Link>
         </div>
 
