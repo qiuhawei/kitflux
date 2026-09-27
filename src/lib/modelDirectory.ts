@@ -72,3 +72,32 @@ export function usersOfModel(model: PriceModel): {
     exact: exactPrompts.length > 0,
   };
 }
+
+export const MODEL_SERIES = [
+  { id: "gpt", label: "GPT" },
+  { id: "claude", label: "Claude" },
+  { id: "gemini", label: "Gemini" },
+  { id: "grok", label: "Grok" },
+  { id: "deepseek", label: "DeepSeek" },
+  { id: "llama", label: "Llama" },
+  { id: "qwen", label: "Qwen" },
+  { id: "mistral", label: "Mistral" },
+] as const;
+
+export function modelBlurb(model: PriceModel) {
+  const job =
+    model.inputPerMillion >= 5
+      ? "frontier reasoning and hard coding tasks"
+      : model.inputPerMillion <= 0.5
+        ? "high-volume classification, drafts, and agent loops"
+        : "everyday coding, writing, and tool use";
+  return `${model.label} from ${model.provider} is priced for ${job}. Context window ${model.contextWindow.toLocaleString()} tokens. Input $${model.inputPerMillion} and output $${model.outputPerMillion} per 1M tokens.`;
+}
+
+export function formatContext(tokens: number) {
+  if (tokens >= 1_000_000) {
+    const millions = tokens / 1_000_000;
+    return `${Number.isInteger(millions) ? millions.toFixed(0) : millions.toFixed(2)}M context`;
+  }
+  return `${Math.round(tokens / 1000)}k context`;
+}

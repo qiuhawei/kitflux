@@ -50,7 +50,7 @@ export default function ModelsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="shell portal-page">
+      <div className="shell shell-wide portal-page">
         <header className="page-head">
           <div>
             <p className="eyebrow">Models</p>

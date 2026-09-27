@@ -401,11 +401,11 @@ export function PromptWorkspace() {
           <span className="wx-logo-word">fluxkit</span>
         </div>
         <h1 className="wx-headline">
-          Every token
+          Free AI
           <br />
-          has a{" "}
+          token{" "}
           <span className="wx-price">
-            <em>price</em>
+            <em>counter</em>
             <svg className="wx-price-line" viewBox="0 0 120 8" fill="none" aria-hidden>
               <path
                 d="M2 6 Q30 0 60 4 T118 2"

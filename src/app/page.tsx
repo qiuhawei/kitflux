@@ -3,6 +3,7 @@ import { AdSlot } from "@/components/AdSlot";
 import { PromptWorkspace } from "@/components/workspace/PromptWorkspace";
 import { guides } from "@/lib/guides";
 import { PRICE_MODELS, PROVIDERS } from "@/lib/aiLab";
+import { formatContext, modelHref } from "@/lib/modelDirectory";
 import { siteConfig } from "@/lib/site";
 
 export default function HomePage() {
@@ -115,6 +116,43 @@ export default function HomePage() {
                 Open directory →
               </Link>
             </article>
+          </div>
+        </section>
+
+        <section className="wx-learn">
+          <div className="wx-learn-head">
+            <h2>API price list</h2>
+            <Link href="/models">Filter models →</Link>
+          </div>
+          <p className="lede">
+            Input price, output price, and context window for {PRICE_MODELS.length} models. Open a
+            row for the full rate card.
+          </p>
+          <div className="model-table-wrap">
+            <table className="model-table">
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Provider</th>
+                  <th>Input / 1M</th>
+                  <th>Output / 1M</th>
+                  <th>Context</th>
+                </tr>
+              </thead>
+              <tbody>
+                {PRICE_MODELS.map((model) => (
+                  <tr key={model.id}>
+                    <td>
+                      <Link href={modelHref(model)}>{model.label}</Link>
+                    </td>
+                    <td>{model.provider}</td>
+                    <td>${model.inputPerMillion}</td>
+                    <td>${model.outputPerMillion}</td>
+                    <td>{formatContext(model.contextWindow)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
 
