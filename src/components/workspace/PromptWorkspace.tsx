@@ -114,6 +114,10 @@ export function PromptWorkspace() {
       setText(shared);
       setStatus("Loaded from share link.");
     }
+    const requested = new URLSearchParams(window.location.search).get("model");
+    if (requested && PRICE_MODELS.some((model) => model.id === requested)) {
+      setModelId(requested);
+    }
   }, []);
 
   useEffect(() => {

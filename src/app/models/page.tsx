@@ -13,9 +13,9 @@ import {
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "AI Models — Price, Context & Side-by-Side Compare",
+  title: "LLM API Prices and Context Windows",
   description:
-    "Compare AI models by planning price and context window. Filter by provider, sort by cost, and open a model page to weigh a real prompt.",
+    "API price per 1M tokens, context window, and which prompts use each model. Sort by cost and open a model to weigh your prompt.",
   keywords: [
     "ai model comparison",
     "llm pricing",
@@ -54,45 +54,34 @@ export default function ModelsPage() {
         <header className="page-head">
           <div>
             <p className="eyebrow">Models</p>
-            <h1>Compare models on price and context</h1>
+            <h1>LLM API prices and context windows</h1>
             <p className="lede">
-              {PRICE_MODELS.length} models · {PROVIDERS.length} providers. Catalog updated{" "}
-              {MODELS_UPDATED}. Sort the directory, compare up to four, then weigh your prompt in
-              the <Link href="/">token counter</Link>.
+              {PRICE_MODELS.length} models · {PROVIDERS.length} providers · updated {MODELS_UPDATED}.
+              Cheapest now:{" "}
+              {cheap.map((model, index) => (
+                <span key={model.id}>
+                  {index > 0 ? ", " : ""}
+                  <Link href={modelHref(model)}>
+                    {model.label} {formatUsd(blendedPerMillion(model))}/1M
+                  </Link>
+                </span>
+              ))}
+              . Largest context:{" "}
+              {wide.map((model, index) => (
+                <span key={model.id}>
+                  {index > 0 ? ", " : ""}
+                  <Link href={modelHref(model)}>
+                    {model.label} {model.contextWindow.toLocaleString()}
+                  </Link>
+                </span>
+              ))}
+              .
             </p>
           </div>
           <Link href="/" className="btn btn-primary">
             Weigh a prompt
           </Link>
         </header>
-
-        <div className="detail-grid" style={{ marginBottom: "1.25rem" }}>
-          <section className="detail-panel">
-            <h2>Lowest blended price</h2>
-            <ul>
-              {cheap.map((model) => (
-                <li key={model.id}>
-                  <Link href={modelHref(model)}>{model.label}</Link>
-                  <span className="wx-muted"> · {formatUsd(blendedPerMillion(model))}/1M</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-          <section className="detail-panel">
-            <h2>Largest context</h2>
-            <ul>
-              {wide.map((model) => (
-                <li key={model.id}>
-                  <Link href={modelHref(model)}>{model.label}</Link>
-                  <span className="wx-muted">
-                    {" "}
-                    · {model.contextWindow.toLocaleString()} tokens
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
 
         <AdSlot format="horizontal" />
         <ModelsDirectory />

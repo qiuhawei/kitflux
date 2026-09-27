@@ -9,6 +9,7 @@ import {
   deprecationForModel,
   formatUsd,
   modelHref,
+  usersOfModel,
 } from "@/lib/modelDirectory";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
@@ -23,9 +24,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const model = PRICE_MODELS.find((item) => item.id === slug);
   if (!model) return {};
   const url = absoluteUrl(`/models/${model.id}`);
-  const description = `${model.label} planning price: ${formatUsd(model.inputPerMillion)} input and ${formatUsd(model.outputPerMillion)} output per 1M tokens, ${model.contextWindow.toLocaleString()} context.`;
+  const description = `${model.label} API price is $${model.inputPerMillion} input and $${model.outputPerMillion} output per 1M tokens. Context window ${model.contextWindow.toLocaleString()} tokens.`;
   return {
-    title: `${model.label} API price and context window`,
+    title: `${model.label} API price: $${model.inputPerMillion} in / $${model.outputPerMillion} out`,
     description,
     alternates: { canonical: url },
     openGraph: {
@@ -46,7 +47,8 @@ export default async function ModelDetailPage({ params }: Props) {
   const retired = deprecationForModel(model);
   const peers = PRICE_MODELS.filter(
     (item) => item.provider === model.provider && item.id !== model.id,
-  ).slice(0, 4);
+  ).slice(0, 6);
+  const used = usersOfModel(model);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -77,15 +79,43 @@ export default async function ModelDetailPage({ params }: Props) {
               {model.exact ? "Exact tokenizer" : "Estimated tokenizer"}
             </Chip>
           </div>
-          <h1 style={{ margin: "0.45rem 0 0.4rem" }}>{model.label}</h1>
+          <h1 style={{ margin: "0.45rem 0 0.4rem" }}>{model.label} API price</h1>
           <p className="lede">
-            Planning rates for the {model.provider} API. Blended price{" "}
-            {formatUsd(blendedPerMillion(model))} per 1M tokens at a 3:1 input-to-output mix.
+            {model.provider} charges ${model.inputPerMillion} per 1M input tokens and $
+            {model.outputPerMillion} per 1M output tokens. Context window{" "}
+            {model.contextWindow.toLocaleString()} tokens. A 10k-in / 2k-out request is about $
+            {sample.total.toFixed(4)}.
           </p>
         </header>
+        <div className="catalog-meta model-spec">
+          <div>
+            <span>Input</span>
+            <strong>${model.inputPerMillion} / 1M</strong>
+          </div>
+          <div>
+            <span>Output</span>
+            <strong>${model.outputPerMillion} / 1M</strong>
+          </div>
+          <div>
+            <span>Blended</span>
+            <strong>{formatUsd(blendedPerMillion(model))} / 1M</strong>
+          </div>
+          <div>
+            <span>Context</span>
+            <strong>{model.contextWindow.toLocaleString()}</strong>
+          </div>
+          <div>
+            <span>10k + 2k</span>
+            <strong>${sample.total.toFixed(4)}</strong>
+          </div>
+          <div>
+            <span>100k + 8k</span>
+            <strong>${heavy.total.toFixed(4)}</strong>
+          </div>
+        </div>
         <div className="btn-row">
-          <Link href="/" className="btn btn-primary">
-            Weigh a prompt
+          <Link href={`/?model=${encodeURIComponent(model.id)}`} className="btn btn-primary">
+            Weigh with {model.label}
           </Link>
           <Link
             href={`/models/compare?ids=${encodeURIComponent(model.id)},${encodeURIComponent(peers[0]?.id ?? model.id)}`}
@@ -93,50 +123,33 @@ export default async function ModelDetailPage({ params }: Props) {
           >
             Compare
           </Link>
-          <Link href="/models" className="btn btn-ghost">
-            All models
-          </Link>
+          {retired ? (
+            <Link href={`/deprecations/${retired.slug}`} className="btn btn-ghost">
+              Shutdown date
+            </Link>
+          ) : null}
         </div>
         <AdSlot format="horizontal" />
-        <div className="detail-grid">
-          <section className="detail-panel">
-            <h2>Price</h2>
-            <div className="catalog-stat is-green">{formatUsd(blendedPerMillion(model))}</div>
-            <p className="wx-muted">blended per 1M tokens</p>
-            <div className="catalog-meta" style={{ marginTop: "0.85rem" }}>
-              <div>
-                <span>Input</span>
-                <strong>${model.inputPerMillion} / 1M</strong>
-              </div>
-              <div>
-                <span>Output</span>
-                <strong>${model.outputPerMillion} / 1M</strong>
-              </div>
-              <div>
-                <span>10k in + 2k out</span>
-                <strong>${sample.total.toFixed(4)}</strong>
-              </div>
-              <div>
-                <span>100k in + 8k out</span>
-                <strong>${heavy.total.toFixed(4)}</strong>
-              </div>
-            </div>
-          </section>
-          <section className="detail-panel">
-            <h2>Context</h2>
-            <div className="catalog-stat">{model.contextWindow.toLocaleString()}</div>
-            <p className="wx-muted">token context window</p>
-            <p style={{ marginTop: "0.85rem" }}>
-              Family {model.family}. {model.exact ? "GPT-family counts use the browser tokenizer." : "Non-GPT counts on the counter are labeled estimates."}
-            </p>
-            {retired ? (
-              <p>
-                Shutdown tracker:{" "}
-                <Link href={`/deprecations/${retired.slug}`}>{retired.modelId}</Link>
-              </p>
-            ) : null}
-          </section>
-        </div>
+        <section className="wx-learn">
+          <h2>Who uses {model.label}</h2>
+          <p className="lede">
+            {used.exact
+              ? "Catalog prompts weighed on this model."
+              : "Catalog prompts in the same model family, plus coding agents from this provider."}
+          </p>
+          <div className="catalog-tags">
+            {used.prompts.map((prompt) => (
+              <Link key={prompt.slug} href={`/system-prompts/${prompt.slug}`}>
+                <Chip tone="neutral">{prompt.name}</Chip>
+              </Link>
+            ))}
+            {used.agents.map((agent) => (
+              <Link key={agent.id} href="/coding-agents">
+                <Chip tone="brand">{agent.name}</Chip>
+              </Link>
+            ))}
+          </div>
+        </section>
         {peers.length > 0 ? (
           <section className="wx-learn">
             <h2>More from {model.provider}</h2>
