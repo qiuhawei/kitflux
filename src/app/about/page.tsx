@@ -37,7 +37,8 @@ export default function AboutPage() {
           shutdowns with migration snippets
         </li>
         <li>
-          <Link href="/compare">Model compare</Link> and <Link href="/guides">guides</Link>
+          <Link href="/models">Models</Link> directory, <Link href="/compare">price table</Link>, and{" "}
+          <Link href="/guides">guides</Link>
         </li>
       </ul>
       <h2>Lineage</h2>

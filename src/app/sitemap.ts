@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/site";
 import { guides } from "@/lib/guides";
+import { PRICE_MODELS } from "@/lib/aiLab";
 import { DEPRECATIONS } from "@/lib/deprecations";
 import { SYSTEM_PROMPTS } from "@/lib/systemPrompts";
 
@@ -33,6 +34,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.98,
     },
     {
+      url: absoluteUrl("/models"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.98,
+    },
+    {
+      url: absoluteUrl("/models/compare"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: absoluteUrl("/compare"),
       lastModified: now,
       changeFrequency: "weekly",
@@ -44,6 +57,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.96,
     },
+    ...PRICE_MODELS.map((model) => ({
+      url: absoluteUrl(`/models/${model.id}`),
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.86,
+    })),
     ...SYSTEM_PROMPTS.map((item) => ({
       url: absoluteUrl(`/system-prompts/${item.slug}`),
       lastModified: now,

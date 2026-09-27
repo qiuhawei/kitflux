@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/site";
 const links = [
   { href: "/", label: "Token Counter" },
   { href: "/system-prompts", label: "System Prompts" },
-  { href: "/compare", label: "Compare" },
+  { href: "/models", label: "Models" },
   { href: "/deprecations", label: "Deprecations" },
 ] as const;
 

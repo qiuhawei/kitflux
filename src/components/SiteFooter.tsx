@@ -22,7 +22,7 @@ export function SiteFooter() {
               <Link href="/system-prompts">System Prompts</Link>
             </li>
             <li>
-              <Link href="/compare">Model Compare</Link>
+              <Link href="/models">Models</Link>
             </li>
             <li>
               <Link href="/deprecations">Deprecations</Link>

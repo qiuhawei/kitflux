@@ -1,5 +1,6 @@
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import { guides } from "@/lib/guides";
+import { PRICE_MODELS } from "@/lib/aiLab";
 import { DEPRECATIONS } from "@/lib/deprecations";
 import { SYSTEM_PROMPTS } from "@/lib/systemPrompts";
 
@@ -7,7 +8,10 @@ import { SYSTEM_PROMPTS } from "@/lib/systemPrompts";
 export function allIndexableUrls() {
   return [
     absoluteUrl("/"),
+    absoluteUrl("/models"),
+    absoluteUrl("/models/compare"),
     absoluteUrl("/compare"),
+    ...PRICE_MODELS.map((model) => absoluteUrl(`/models/${model.id}`)),
     absoluteUrl("/system-prompts"),
     absoluteUrl("/system-prompts/compare"),
     absoluteUrl("/deprecations"),

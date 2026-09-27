@@ -92,11 +92,11 @@ export default function HomePage() {
             </article>
             <article>
               <h3>
-                <Link href="/compare">Model compare</Link>
+                <Link href="/models">Models</Link>
               </h3>
-              <p>Rank the same prompt across providers for planning cost and context fill.</p>
-              <Link href="/compare" className="wx-linkish">
-                Compare models →
+              <p>Sort by price and context, compare up to four, then open a model page.</p>
+              <Link href="/models" className="wx-linkish">
+                Open directory →
               </Link>
             </article>
           </div>

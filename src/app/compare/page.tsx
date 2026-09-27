@@ -49,8 +49,9 @@ export default function ComparePage() {
             <h1>AI model pricing & context</h1>
             <p className="lede">
               {PRICE_MODELS.length} planning tiers across {PROVIDERS.length} providers. Catalog
-              updated {MODELS_UPDATED}. Sticker prices lie without your prompt — open the{" "}
-              <Link href="/">token counter</Link> to weigh a real draft.
+              updated {MODELS_UPDATED}. For sortable price and context, use the{" "}
+              <Link href="/models">models directory</Link>. Sticker prices lie without your prompt —
+              open the <Link href="/">token counter</Link> to weigh a real draft.
             </p>
           </div>
           <Link href="/" className="btn btn-primary">
