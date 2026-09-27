@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
       { source: "/json", destination: "/", permanent: true },
       { source: "/video", destination: "/", permanent: true },
       { source: "/tools", destination: "/", permanent: true },
+      { source: "/tools/ai-token-counter", destination: "/", permanent: true },
+      { source: "/tools/ai-cost-calculator", destination: "/models", permanent: true },
+      { source: "/tools/prompt-builder", destination: "/system-prompts", permanent: true },
       { source: "/tools/:slug", destination: "/", permanent: true },
     ];
   },

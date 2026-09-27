@@ -45,6 +45,22 @@ export default function HomePage() {
               text: "Yes. The sidebar ranks the same prompt across all supported models.",
             },
           },
+          {
+            "@type": "Question",
+            name: "How do I count tokens?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Paste text into the token counter. GPT-family models are counted in the browser. Other models are labeled estimates.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Is there an AI cost calculator?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Yes. The same prompt is priced across models, and the model directory lists input and output rates.",
+            },
+          },
         ],
       },
     ],
@@ -152,6 +168,20 @@ export default function HomePage() {
             <details>
               <summary>Do you store prompts on a server?</summary>
               <p>No. Work stays in the browser. Share links use the URL hash only.</p>
+            </details>
+            <details>
+              <summary>How do I count tokens?</summary>
+              <p>
+                Paste text into the token counter. GPT-family models are counted in the browser.
+                Other models are labeled estimates.
+              </p>
+            </details>
+            <details>
+              <summary>Is there an AI cost calculator?</summary>
+              <p>
+                Yes. The same prompt is priced across models. Open the{" "}
+                <Link href="/models">model directory</Link> for input and output rates.
+              </p>
             </details>
             <details>
               <summary>Where do prices come from?</summary>

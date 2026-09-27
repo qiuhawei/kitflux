@@ -56,7 +56,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — AI Token Counter & Cost Calculator`,
+    default: `Free AI Token Counter & Cost Calculator — ${siteConfig.name}`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -79,12 +79,12 @@ export const metadata: Metadata = {
     locale: siteConfig.locale,
     url: siteConfig.url,
     siteName: siteConfig.name,
-    title: `${siteConfig.name} — AI Token Counter & Cost Calculator`,
+    title: `Free AI Token Counter & Cost Calculator — ${siteConfig.name}`,
     description: siteConfig.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} — AI Token Counter & Cost Calculator`,
+    title: `Free AI Token Counter & Cost Calculator — ${siteConfig.name}`,
     description: siteConfig.description,
   },
   icons: {

@@ -8,7 +8,7 @@ import { absoluteUrl, siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Coding Agents — Index, Cost, Time, and Tokens",
   description:
-    "Compare coding agents on index, cost per task, execution time, and token usage. See which agents sit in the high-score, low-cost quadrant.",
+    "Compare RooCode, Cline, OpenHands, Aider, Continue, and other coding agents on index, cost per task, time, and token usage.",
   alternates: { canonical: absoluteUrl("/coding-agents") },
   openGraph: {
     title: `Coding Agents | ${siteConfig.name}`,

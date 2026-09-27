@@ -6,15 +6,16 @@ import { SYSTEM_PROMPTS, SYSTEM_PROMPTS_UPDATED } from "@/lib/systemPrompts";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "AI System Prompts Directory — Techniques, Tokens, Costs",
+  title: "RooCode, Cline, Aider, OpenHands & Continue System Prompts",
   description:
-    "Browse educational system-prompt reconstructions from coding agents, chat assistants, and research tools. See token weight, detected techniques, and open them in the Fluxkit counter.",
+    "System prompts for RooCode, Cline, Aider, OpenHands, and Continue. See token weight, techniques, and open any prompt in the free token counter.",
   keywords: [
-    "system prompt examples",
-    "prompt engineering techniques",
-    "cursor system prompt",
-    "ai agent prompt patterns",
-    "llm system prompt analysis",
+    "roocode system prompt",
+    "cline system prompt",
+    "aider system prompt",
+    "openhands system prompt",
+    "continue.dev system prompt",
+    "coding agent system prompt",
   ],
   alternates: { canonical: absoluteUrl("/system-prompts") },
   openGraph: {
@@ -70,6 +71,24 @@ export default function SystemPromptsPage() {
               Open token counter
             </Link>
           </div>
+          <section className="wx-learn" style={{ marginTop: "1.5rem" }}>
+            <h2>Coding agent system prompts</h2>
+            <p className="lede">
+              RooCode, Cline, OpenHands, Aider, and Continue each have a catalog prompt with token
+              weight and detected techniques.
+            </p>
+            <p>
+              <Link href="/system-prompts/roocode">RooCode system prompt</Link>
+              {" · "}
+              <Link href="/system-prompts/cline-agent">Cline system prompt</Link>
+              {" · "}
+              <Link href="/system-prompts/openhands">OpenHands system prompt</Link>
+              {" · "}
+              <Link href="/system-prompts/aider-pair">Aider system prompt</Link>
+              {" · "}
+              <Link href="/system-prompts/continue-dev">Continue system prompt</Link>
+            </p>
+          </section>
         </header>
 
         <AdSlot format="horizontal" />
