@@ -8,6 +8,7 @@ import { SYSTEM_PROMPTS } from "@/lib/systemPrompts";
 export function allIndexableUrls() {
   return [
     absoluteUrl("/"),
+    absoluteUrl("/coding-agents"),
     absoluteUrl("/models"),
     absoluteUrl("/models/compare"),
     absoluteUrl("/compare"),

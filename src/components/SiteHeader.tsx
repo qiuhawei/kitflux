@@ -9,6 +9,7 @@ const links = [
   { href: "/", label: "Token Counter" },
   { href: "/system-prompts", label: "System Prompts" },
   { href: "/models", label: "Models" },
+  { href: "/coding-agents", label: "Coding Agents" },
   { href: "/deprecations", label: "Deprecations" },
 ] as const;
 

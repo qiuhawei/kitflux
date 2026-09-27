@@ -25,6 +25,9 @@ export function SiteFooter() {
               <Link href="/models">Models</Link>
             </li>
             <li>
+              <Link href="/coding-agents">Coding Agents</Link>
+            </li>
+            <li>
               <Link href="/deprecations">Deprecations</Link>
             </li>
             <li>
